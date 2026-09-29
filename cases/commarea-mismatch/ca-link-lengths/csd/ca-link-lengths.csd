@@ -1,0 +1,5 @@
+* cics-crucible commarea-mismatch / ca-link-lengths
+* CAGONE is deliberately NOT defined (program autoinstall is off).
+DEFINE PROGRAM(CALINK) GROUP(CRUCCA1) LANGUAGE(COBOL)
+DEFINE PROGRAM(CASUB) GROUP(CRUCCA1) LANGUAGE(COBOL)
+DEFINE TRANSACTION(CA01) GROUP(CRUCCA1) PROGRAM(CALINK)

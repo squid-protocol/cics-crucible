@@ -1,0 +1,28 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-terminal-coalesce",
+  "trap": "ghost-tasks",
+  "title": "START TERMID: several expired requests for one transaction and terminal become ONE task; staggered expiry; CANCEL REQID before and after expiry",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {"cobol": ["src/GTTERM.cbl", "src/GTSHOW.cbl"], "bms": [], "csd": ["csd/gt-terminal-coalesce.csd"],
+              "copy": [], "data": []},
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {"id": "three-in-one", "path": "trap",
+     "summary": "three STARTs of GT12 for T001 expire while GT11 holds the terminal: one GT12 task RETRIEVEs all three, in order",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "GT11 3"}], "until": 60},
+    {"id": "staggered", "path": "happy",
+     "summary": "INTERVAL(0) and INTERVAL(10): the first GT12 sees only ALPHA (BRAVO has not expired), a second GT12 at +10s sees BRAVO",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "GT11 S"}], "until": 60},
+    {"id": "cancel-in-time", "path": "happy",
+     "summary": "START INTERVAL(30) REQID, then CANCEL at +10s: NORMAL, and GT12 never runs",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "GT11 C"}, {"at": 10, "aid": "ENTER", "text": "GT11 K",
+                "note": "the operator first presses CLEAR (no TRANSID is pending, so it starts nothing) and types on the cleared screen"}], "until": 120},
+    {"id": "cancel-too-late", "path": "trap",
+     "summary": "the same START, CANCEL at +40s: the request already expired and ran at +30s, so CANCEL is NOTFND",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "GT11 C"}, {"at": 40, "aid": "ENTER", "text": "GT11 K",
+                "note": "the operator first presses CLEAR (no TRANSID is pending, so it starts nothing) and types on the cleared screen"}], "until": 120}
+  ]
+}

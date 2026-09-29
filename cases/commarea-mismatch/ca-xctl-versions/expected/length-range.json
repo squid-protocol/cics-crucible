@@ -1,0 +1,63 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-xctl-versions",
+ "scenario": "length-range",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA02",
+   "program": "CAXA",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "CAXA",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "CA02 X"
+     }
+    },
+    {
+     "event": "XCTL",
+     "program": "CAXA",
+     "target": "CAXB",
+     "length": 32767,
+     "resp": "LENGERR",
+     "resp2": 11,
+     "commarea": {
+      "length": 32767,
+      "text": ""
+     },
+     "note": "LENGTH outside 0-32763: LENGERR RESP2 11, nothing is transferred and control stays in CAXA (RESP given); commarea shows the area named on the command (WS-BIG, all blanks)"
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "CAXA",
+     "text": "XCTL FAILED RESP=22 RESP2=11",
+     "length": 40,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "CAXA",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

@@ -1,0 +1,38 @@
+***********************************************************************
+* cics-crucible  hex-attributes / hx-attr-bytes   (Apache-2.0)
+* Mapset HXSET1, map HXM1. Every INITIAL is exactly its field length.
+***********************************************************************
+HXSET1   DFHMSD TYPE=&SYSPARM,MODE=INOUT,LANG=COBOL,STORAGE=AUTO,      X
+               TIOAPFX=YES,CTRL=(FREEKB)
+HXM1     DFHMDI SIZE=(24,80),LINE=1,COLUMN=1
+         DFHMDF POS=(1,1),LENGTH=24,ATTRB=(ASKIP,BRT),                 X
+               INITIAL='HX01 ATTRIBUTE BYTE TRAP'
+STAT     DFHMDF POS=(3,1),LENGTH=12,ATTRB=(ASKIP,NORM),                X
+               INITIAL='MAP-DEFAULTS'
+BRITE    DFHMDF POS=(4,1),LENGTH=12,ATTRB=(ASKIP,NORM),                X
+               INITIAL='INITIAL-TEXT'
+         DFHMDF POS=(6,1),LENGTH=5,ATTRB=(ASKIP,NORM),INITIAL='NAME:'
+NAME     DFHMDF POS=(6,7),LENGTH=10,ATTRB=(UNPROT,NORM,IC),            X
+               JUSTIFY=(LEFT,BLANK)
+         DFHMDF POS=(6,18),LENGTH=1,ATTRB=(ASKIP,NORM)
+SECRET   DFHMDF POS=(7,7),LENGTH=8,ATTRB=(UNPROT,NORM),                X
+               JUSTIFY=(LEFT,BLANK)
+         DFHMDF POS=(7,16),LENGTH=1,ATTRB=(ASKIP,NORM)
+RAW      DFHMDF POS=(8,7),LENGTH=8,ATTRB=(UNPROT,NORM),                X
+               JUSTIFY=(LEFT,BLANK)
+         DFHMDF POS=(8,16),LENGTH=1,ATTRB=(ASKIP,NORM)
+BLINKY   DFHMDF POS=(9,7),LENGTH=8,ATTRB=(ASKIP,NORM),                 X
+               INITIAL='NOBLINK!'
+TWIDDLE  DFHMDF POS=(10,7),LENGTH=8,ATTRB=(UNPROT,NORM),               X
+               JUSTIFY=(LEFT,BLANK)
+         DFHMDF POS=(10,16),LENGTH=1,ATTRB=(ASKIP,NORM)
+LEFTOVR  DFHMDF POS=(11,7),LENGTH=8,ATTRB=(UNPROT,NORM),               X
+               JUSTIFY=(LEFT,BLANK),INITIAL='MAPDFLT8'
+         DFHMDF POS=(11,16),LENGTH=1,ATTRB=(ASKIP,NORM)
+NULATR   DFHMDF POS=(12,7),LENGTH=8,ATTRB=(ASKIP,BRT),                 X
+               INITIAL='ZEROATTR'
+FSETF    DFHMDF POS=(13,7),LENGTH=8,ATTRB=(UNPROT,NORM,FSET),          X
+               JUSTIFY=(LEFT,BLANK),INITIAL='KEEPME!!'
+         DFHMDF POS=(13,16),LENGTH=1,ATTRB=(ASKIP,NORM)
+         DFHMSD TYPE=FINAL
+         END

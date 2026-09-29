@@ -1,0 +1,177 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-xctl-versions",
+ "scenario": "short-upgrade",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA02",
+   "program": "CAXA",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "CAXA",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "CA02 S"
+     }
+    },
+    {
+     "event": "XCTL",
+     "program": "CAXA",
+     "target": "CAXB",
+     "length": 10,
+     "resp": "NORMAL",
+     "commarea": {
+      "length": 10,
+      "layout": "V1BLOCK",
+      "fields": {
+       "V1-VERSION": "1",
+       "V1-CUSTID": "C0042",
+       "V1-VISITS": "7"
+      }
+     }
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "CAXB",
+     "text": "V=2 C=C0042 N=0008 T=STANDARD   B=+0000000.00 L=0010 UPGRADED FROM V1",
+     "length": 80,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "CAXB",
+     "level": 1,
+     "transid": "CA03",
+     "commarea": {
+      "length": 80,
+      "layout": "V2",
+      "fields": {
+       "V2-VERSION": "2",
+       "V2-CUSTID": "C0042",
+       "V2-VISITS": "8",
+       "V2-TIER": "STANDARD",
+       "V2-BALANCE": "0",
+       "V2-NOTE": "UPGRADED FROM V1"
+      }
+     },
+     "note": "EIBCALEN 10 < 80: 10 bytes copied, TIER/BALANCE/NOTE defaulted, VERSION set to 2"
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 2,
+   "transid": "CA03",
+   "program": "CAXB",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:20",
+   "trigger": {
+    "kind": "terminal",
+    "step": 1
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 80,
+   "commarea": {
+    "length": 80,
+    "layout": "V2",
+    "fields": {
+     "V2-VERSION": "2",
+     "V2-CUSTID": "C0042",
+     "V2-VISITS": "8",
+     "V2-TIER": "STANDARD",
+     "V2-BALANCE": "0",
+     "V2-NOTE": "UPGRADED FROM V1"
+    }
+   },
+   "events": [
+    {
+     "event": "SEND-TEXT",
+     "program": "CAXB",
+     "text": "V=2 C=C0042 N=0009 T=STANDARD   B=+0000000.00 L=0080 UPGRADED FROM V1",
+     "length": 80,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "CAXB",
+     "level": 1,
+     "transid": "CA03",
+     "commarea": {
+      "length": 80,
+      "layout": "V2",
+      "fields": {
+       "V2-VERSION": "2",
+       "V2-CUSTID": "C0042",
+       "V2-VISITS": "9",
+       "V2-TIER": "STANDARD",
+       "V2-BALANCE": "0",
+       "V2-NOTE": "UPGRADED FROM V1"
+      }
+     }
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 3,
+   "transid": "CA03",
+   "program": "CAXB",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:40",
+   "trigger": {
+    "kind": "terminal",
+    "step": 2
+   },
+   "eibaid": "PF3",
+   "eibcalen": 80,
+   "commarea": {
+    "length": 80,
+    "layout": "V2",
+    "fields": {
+     "V2-VERSION": "2",
+     "V2-CUSTID": "C0042",
+     "V2-VISITS": "9",
+     "V2-TIER": "STANDARD",
+     "V2-BALANCE": "0",
+     "V2-NOTE": "UPGRADED FROM V1"
+    }
+   },
+   "events": [
+    {
+     "event": "SEND-TEXT",
+     "program": "CAXB",
+     "text": "SESSION ENDED",
+     "length": 13,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "CAXB",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

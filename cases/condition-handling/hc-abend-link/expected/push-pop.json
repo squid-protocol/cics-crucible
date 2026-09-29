@@ -1,0 +1,16 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "hc-abend-link",
+  "scenario": "push-pop",
+  "tasks": [
+    {"seq": 1, "transid": "HC02", "program": "HCMAIN", "termid": "T001", "at": "2026-03-02T10:00:00", "trigger": {"kind": "terminal", "step": 0}, "eibaid": "ENTER", "eibcalen": 0, "commarea": null,
+     "events": [
+       {"event": "READQ-TS", "program": "HCMAIN", "queue": "HCMODE", "item": 1, "resp": "NORMAL", "length": 1, "data": {"length": 1, "text": "O"}},
+       {"event": "READQ-TS", "program": "HCMAIN", "queue": "HCNONE", "item": 1, "resp": "QIDERR", "data": null,
+        "note": "after POP HANDLE the QIDERR handler is in effect again"},
+       {"event": "SEND-TEXT", "program": "HCMAIN", "text": "muoq", "length": 40, "options": ["ERASE"]},
+       {"event": "RETURN", "program": "HCMAIN", "level": 1, "transid": null, "commarea": null}
+     ],
+     "end": "normal"}
+  ]
+}

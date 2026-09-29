@@ -1,0 +1,215 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "gt-start-retrieve",
+ "scenario": "time-six-hours",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "GT01",
+   "program": "GTSTART",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "GTSTART",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "GT01 T"
+     }
+    },
+    {
+     "event": "START",
+     "program": "GTSTART",
+     "transid": "GT02",
+     "termid": null,
+     "time": "103000",
+     "from": {
+      "length": 20,
+      "text": "ORDER 0001 READY"
+     },
+     "protect": false,
+     "resp": "NORMAL",
+     "expires": "2026-03-02T10:30:00"
+    },
+    {
+     "event": "START",
+     "program": "GTSTART",
+     "transid": "GT02",
+     "termid": null,
+     "time": "093000",
+     "from": {
+      "length": 20,
+      "text": "ORDER 0002 LATE"
+     },
+     "protect": false,
+     "resp": "NORMAL",
+     "expires": "2026-03-02T10:00:00",
+     "note": "09:30 is before 10:00 but within the preceding six hours: expires immediately"
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "GTSTART",
+     "text": "STARTS ISSUED",
+     "length": 20,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "GTSTART",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 2,
+   "transid": "GT02",
+   "program": "GTWORK",
+   "termid": null,
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "start",
+    "task": 1,
+    "event": 2
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RETRIEVE",
+     "program": "GTWORK",
+     "resp": "NORMAL",
+     "length": 20,
+     "data": {
+      "length": 20,
+      "text": "ORDER 0002 LATE"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTWORK",
+     "queue": "GTLOG",
+     "data": {
+      "length": 34,
+      "text": "R=00 L=0020 D=ORDER 0002 LATE"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "RETRIEVE",
+     "program": "GTWORK",
+     "resp": "ENDDATA",
+     "data": null
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTWORK",
+     "queue": "GTLOG",
+     "data": {
+      "length": 34,
+      "text": "R=29 L=0000 D="
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "RETURN",
+     "program": "GTWORK",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 3,
+   "transid": "GT02",
+   "program": "GTWORK",
+   "termid": null,
+   "at": "2026-03-02T10:30:00",
+   "trigger": {
+    "kind": "start",
+    "task": 1,
+    "event": 1
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RETRIEVE",
+     "program": "GTWORK",
+     "resp": "NORMAL",
+     "length": 20,
+     "data": {
+      "length": 20,
+      "text": "ORDER 0001 READY"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTWORK",
+     "queue": "GTLOG",
+     "data": {
+      "length": 34,
+      "text": "R=00 L=0020 D=ORDER 0001 READY"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "RETRIEVE",
+     "program": "GTWORK",
+     "resp": "ENDDATA",
+     "data": null
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTWORK",
+     "queue": "GTLOG",
+     "data": {
+      "length": 34,
+      "text": "R=29 L=0000 D="
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "RETURN",
+     "program": "GTWORK",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "GTLOG": [
+    "R=00 L=0020 D=ORDER 0002 LATE",
+    "R=29 L=0000 D=",
+    "R=00 L=0020 D=ORDER 0001 READY",
+    "R=29 L=0000 D="
+   ]
+  }
+ }
+}

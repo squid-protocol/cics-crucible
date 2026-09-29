@@ -1,0 +1,27 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "ca-link-lengths",
+  "trap": "commarea-mismatch",
+  "title": "LINK with a COMMAREA shorter than, longer than, or absent from what the callee declares; LINK to an undefined program",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {"cobol": ["src/CALINK.cbl", "src/CASUB.cbl"], "bms": [], "csd": ["csd/ca-link-lengths.csd"],
+              "copy": ["copy"], "data": []},
+  "layouts": {"CALLER": {"source": "src/CALINK.cbl", "record": "WS-BLOCK"}},
+  "maps": {},
+  "undefined_programs": ["CAGONE"],
+  "scenarios": [
+    {"id": "short-100", "path": "happy",
+     "summary": "LENGTH(100) to a callee declaring 500 bytes: EIBCALEN 100, the callee leaves the extension alone",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "CA01 S"}]},
+    {"id": "long-500", "path": "trap",
+     "summary": "LENGTH(500) naming a 100-byte item: the callee addresses 500 bytes of the caller's storage and its writes to the extension land in the caller's WS-AFTER",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "CA01 L"}]},
+    {"id": "no-commarea", "path": "trap",
+     "summary": "LINK without COMMAREA: EIBCALEN 0, the callee must not touch DFHCOMMAREA",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "CA01 Z"}]},
+    {"id": "undefined-program", "path": "trap",
+     "summary": "LINK to a program with no definition (autoinstall off): PGMIDERR, RESP2 1, caught by RESP",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "CA01 P"}]}
+  ]
+}

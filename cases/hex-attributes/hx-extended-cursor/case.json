@@ -1,0 +1,26 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hx-extended-cursor",
+  "trap": "hex-attributes",
+  "title": "Extended colour/highlight bytes vs the base attribute byte, symbolic cursor positioning, NUM right-justify on input",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {"cobol": ["src/HXEXT.cbl"], "bms": ["bms/HXSET2.bms"], "csd": ["csd/hx-extended-cursor.csd"],
+              "copy": ["copy"], "data": []},
+  "layouts": {},
+  "maps": {"HXM2": {"mapset": "HXSET2", "copybook": "copy/HXSET2.cpy"}},
+  "scenarios": [
+    {"id": "bad-account", "path": "trap",
+     "summary": "a 4-character account: the field is re-sent bright, red and blinking with the cursor on it by -1 in its length field",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "HX02"},
+               {"at": 20, "aid": "ENTER", "map": "HXM2", "fields": {"ACCT": "AB12", "AMOUNT": "125"}}]},
+    {"id": "good-entry", "path": "happy",
+     "summary": "a valid account; the amount typed as 125 arrives as 0000125 (NUM, JUSTIFY=(RIGHT,ZERO))",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "HX02"},
+               {"at": 20, "aid": "ENTER", "map": "HXM2", "fields": {"ACCT": "123456", "AMOUNT": "125"}}]},
+    {"id": "pf5-blink", "path": "trap",
+     "summary": "PF5: X'F1' moved to the attribute byte (autoskip + MDT, no blink) next to DFHBLINK moved to the highlight byte (blink)",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "HX02"},
+               {"at": 20, "aid": "PF5", "map": "HXM2", "fields": {}}]}
+  ]
+}

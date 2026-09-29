@@ -1,0 +1,21 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "hc-perform-range",
+  "scenario": "no-queue",
+  "tasks": [
+    {"seq": 1, "transid": "HC01", "program": "HCQREAD", "termid": "T001", "at": "2026-03-02T10:00:00",
+     "trigger": {"kind": "terminal", "step": 0}, "eibaid": "ENTER", "eibcalen": 0, "commarea": null,
+     "events": [
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCQ1", "item": 1, "resp": "QIDERR", "data": null,
+        "note": "GO TO NO-QUEUE; it falls through PAST-END into READ-ITEMS-EXIT, the end of the active PERFORM range"},
+       {"event": "WRITEQ-TS", "program": "HCQREAD", "queue": "HCWORK", "data": {"length": 1, "text": "W"}, "resp": "NORMAL", "item": 1},
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCWORK", "item": 2, "resp": "ITEMERR", "data": null},
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCWORK", "item": 3, "resp": "ITEMERR", "data": null},
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCWORK", "item": 4, "resp": "ITEMERR", "data": null},
+       {"event": "SEND-TEXT", "program": "HCQREAD", "text": "mqpbr26i26t", "length": 40, "options": ["ERASE"]},
+       {"event": "RETURN", "program": "HCQREAD", "level": 1, "transid": null, "commarea": null}
+     ],
+     "end": "normal"}
+  ],
+  "final": {"ts_queues": {"HCWORK": ["W"]}}
+}

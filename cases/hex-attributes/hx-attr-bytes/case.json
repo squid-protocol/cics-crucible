@@ -1,0 +1,27 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hx-attr-bytes",
+  "trap": "hex-attributes",
+  "title": "Raw 3270 attribute bytes in a BMS symbolic map: names vs literals, non-graphic bytes, bit arithmetic, left-over input flags",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {"cobol": ["src/HXATTR.cbl"], "bms": ["bms/HXSET1.bms"], "csd": ["csd/hx-attr-bytes.csd"],
+              "copy": ["copy"], "data": []},
+  "layouts": {},
+  "maps": {"HXM1": {"mapset": "HXSET1", "copybook": "copy/HXSET1.cpy"}},
+  "scenarios": [
+    {"id": "first-display", "path": "trap",
+     "summary": "the first screen: every attribute byte as BMS sends it, including which ones BMS ignores",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "HX01"}]},
+    {"id": "echo-dataonly", "path": "trap",
+     "summary": "ENTER after typing a name and ERASE-EOF on LEFTOVR: the fields whose MDT the program turned on come back untouched, and DATAONLY sends only fields with data or a real attribute",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "HX01"},
+               {"at": 30, "aid": "ENTER", "map": "HXM1", "cursor": "LEFTOVR",
+                "fields": {"NAME": "JONES", "SECRET": "PASSWORD", "BLINKY": "BLINK?  ", "TWIDDLE": "TWIDDLED",
+                           "LEFTOVR": "", "FSETF": "KEEPME!!"},
+                "note": "SECRET (X'4D'), BLINKY (X'F1'), TWIDDLE (X'41') and FSETF (map FSET) have the MDT bit on and are transmitted although untouched; RAW (X'3C') has it off; LEFTOVR was cleared with ERASE EOF"}]},
+    {"id": "clear-maponly", "path": "happy",
+     "summary": "CLEAR on the second task: the map is resent with MAPONLY, every attribute and data value from the map",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "HX01"}, {"at": 30, "aid": "CLEAR"}]}
+  ]
+}

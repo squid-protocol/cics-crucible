@@ -1,0 +1,18 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "hc-perform-range",
+  "scenario": "length-trap",
+  "tasks": [
+    {"seq": 1, "transid": "HC01", "program": "HCQREAD", "termid": "T001", "at": "2026-03-02T10:00:00",
+     "trigger": {"kind": "terminal", "step": 0}, "eibaid": "ENTER", "eibcalen": 0, "commarea": null,
+     "events": [
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCQ1", "item": 1, "resp": "NORMAL", "length": 1, "data": {"length": 1, "text": "A"},
+        "note": "LENGTH(WS-ILEN) is set to the item's length, 1"},
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCQ1", "item": 2, "resp": "LENGERR", "length": 5, "data": {"length": 1, "text": "B"},
+        "note": "5-byte item into LENGTH 1: truncated to 1 byte, LENGTH set to 5; no LENGERR handler, so the ERROR label ANY-ERROR (outside the PERFORM range) gets control"},
+       {"event": "SEND-TEXT", "program": "HCQREAD", "text": "mAe22", "length": 40, "options": ["ERASE"]},
+       {"event": "RETURN", "program": "HCQREAD", "level": 1, "transid": null, "commarea": null}
+     ],
+     "end": "normal"}
+  ]
+}

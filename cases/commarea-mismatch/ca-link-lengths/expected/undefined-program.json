@@ -1,0 +1,72 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-link-lengths",
+ "scenario": "undefined-program",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA01",
+   "program": "CALINK",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "CALINK",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "CA01 P"
+     }
+    },
+    {
+     "event": "LINK",
+     "program": "CALINK",
+     "target": "CAGONE",
+     "length": 100,
+     "resp": "PGMIDERR",
+     "resp2": 1,
+     "commarea": {
+      "length": 100,
+      "layout": "CALLER",
+      "fields": {
+       "CA-EYE": "CAHD",
+       "CA-VERSION": "1",
+       "CA-RC": "",
+       "CA-SEEN-LEN": "0",
+       "CA-REQUEST": "PING",
+       "CA-REPLY": "",
+       "CA-SPARE": ""
+      }
+     },
+     "note": "no installed definition and program autoinstall off (SPEC section 2): PGMIDERR, RESP2 1; RESP given, so no abend (AEI0)"
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "CALINK",
+     "text": "MODE=P RC=   SEEN=0000 REPLY=     AFTER=N CALLER-OWNED      RESP=27/01",
+     "length": 80,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "CALINK",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}
