@@ -1,0 +1,83 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-link-lengths",
+ "scenario": "no-commarea",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA01",
+   "program": "CALINK",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "CALINK",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "CA01 Z"
+     }
+    },
+    {
+     "event": "LINK",
+     "program": "CALINK",
+     "target": "CASUB",
+     "length": 0,
+     "resp": "NORMAL",
+     "commarea": null
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CASUB",
+     "queue": "CATRACE",
+     "data": {
+      "length": 11,
+      "text": "NO COMMAREA"
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "EIBCALEN = 0: the callee has no COMMAREA addressability and says so"
+    },
+    {
+     "event": "RETURN",
+     "program": "CASUB",
+     "level": 2,
+     "caller_commarea": null
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "CALINK",
+     "text": "MODE=Z RC=   SEEN=0000 REPLY=     AFTER=N CALLER-OWNED      RESP=00/00",
+     "length": 80,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "CALINK",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "CATRACE": [
+    "NO COMMAREA"
+   ]
+  }
+ }
+}

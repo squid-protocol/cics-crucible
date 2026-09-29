@@ -1,0 +1,37 @@
+***********************************************************************
+* cics-crucible  pseudo-conversational / pc-wizard   (Apache-2.0)
+* Mapset PCSET: PCM1 (name), PCM2 (amount), PCM3 (confirm).
+***********************************************************************
+PCSET    DFHMSD TYPE=&SYSPARM,MODE=INOUT,LANG=COBOL,STORAGE=AUTO,      X
+               TIOAPFX=YES,CTRL=(FREEKB)
+PCM1     DFHMDI SIZE=(24,80),LINE=1,COLUMN=1
+         DFHMDF POS=(1,1),LENGTH=17,ATTRB=(ASKIP,BRT),                 X
+               INITIAL='STEP 1 OF 3: NAME'
+         DFHMDF POS=(3,1),LENGTH=5,ATTRB=(ASKIP,NORM),INITIAL='NAME:'
+NAME     DFHMDF POS=(3,7),LENGTH=15,ATTRB=(UNPROT,NORM,IC),            X
+               JUSTIFY=(LEFT,BLANK)
+         DFHMDF POS=(3,23),LENGTH=1,ATTRB=(ASKIP,NORM)
+MSG1     DFHMDF POS=(5,1),LENGTH=40,ATTRB=(ASKIP,NORM)
+         DFHMDF POS=(24,1),LENGTH=22,ATTRB=(ASKIP,NORM),               X
+               INITIAL='ENTER=NEXT  PF3=CANCEL'
+PCM2     DFHMDI SIZE=(24,80),LINE=1,COLUMN=1
+         DFHMDF POS=(1,1),LENGTH=19,ATTRB=(ASKIP,BRT),                 X
+               INITIAL='STEP 2 OF 3: AMOUNT'
+         DFHMDF POS=(3,1),LENGTH=5,ATTRB=(ASKIP,NORM),INITIAL='NAME:'
+NAMEOUT  DFHMDF POS=(3,7),LENGTH=15,ATTRB=(ASKIP,NORM)
+         DFHMDF POS=(4,1),LENGTH=6,ATTRB=(ASKIP,NORM),INITIAL='CENTS:'
+AMT      DFHMDF POS=(4,8),LENGTH=7,ATTRB=(UNPROT,NUM,NORM,IC),         X
+               JUSTIFY=(RIGHT,ZERO)
+         DFHMDF POS=(4,16),LENGTH=1,ATTRB=(ASKIP,NORM)
+MSG2     DFHMDF POS=(6,1),LENGTH=40,ATTRB=(ASKIP,NORM)
+PCM3     DFHMDI SIZE=(24,80),LINE=1,COLUMN=1
+         DFHMDF POS=(1,1),LENGTH=20,ATTRB=(ASKIP,BRT),                 X
+               INITIAL='STEP 3 OF 3: CONFIRM'
+         DFHMDF POS=(3,1),LENGTH=5,ATTRB=(ASKIP,NORM),INITIAL='NAME:'
+SUMNAME  DFHMDF POS=(3,7),LENGTH=15,ATTRB=(ASKIP,NORM)
+         DFHMDF POS=(4,1),LENGTH=6,ATTRB=(ASKIP,NORM),INITIAL='TOTAL:'
+SUMAMT   DFHMDF POS=(4,8),LENGTH=10,ATTRB=(ASKIP,NORM)
+MSG3     DFHMDF POS=(6,1),LENGTH=40,ATTRB=(ASKIP,NORM),                X
+               INITIAL='ENTER=POST  PF7=BACK  PF3=CANCEL        '
+         DFHMSD TYPE=FINAL
+         END

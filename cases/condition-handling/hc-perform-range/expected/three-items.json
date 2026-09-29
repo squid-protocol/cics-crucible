@@ -1,0 +1,27 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "hc-perform-range",
+  "scenario": "three-items",
+  "tasks": [
+    {"seq": 1, "transid": "HC01", "program": "HCQREAD", "termid": "T001", "at": "2026-03-02T10:00:00",
+     "trigger": {"kind": "terminal", "step": 0}, "eibaid": "ENTER", "eibcalen": 0, "commarea": null,
+     "events": [
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCQ1", "item": 1, "resp": "NORMAL", "length": 3, "data": {"length": 3, "text": "AAA"}},
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCQ1", "item": 2, "resp": "NORMAL", "length": 3, "data": {"length": 3, "text": "BBB"}},
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCQ1", "item": 3, "resp": "NORMAL", "length": 3, "data": {"length": 3, "text": "CCC"}},
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCQ1", "item": 4, "resp": "ITEMERR", "data": null,
+        "note": "HANDLE CONDITION ITEMERR(PAST-END): GO TO PAST-END, inside the PERFORM READ-ITEMS THRU READ-ITEMS-EXIT range"},
+       {"event": "WRITEQ-TS", "program": "HCQREAD", "queue": "HCWORK", "data": {"length": 1, "text": "W"}, "resp": "NORMAL", "item": 1},
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCWORK", "item": 2, "resp": "ITEMERR", "data": null,
+        "note": "RESP given: the active ITEMERR handler is not taken"},
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCWORK", "item": 3, "resp": "ITEMERR", "data": null,
+        "note": "IGNORE CONDITION ITEMERR: control returns after the command, EIBRESP = 26"},
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCWORK", "item": 4, "resp": "ITEMERR", "data": null,
+        "note": "HANDLE CONDITION ITEMERR(LATE-ITEM) issued after the IGNORE overrides it"},
+       {"event": "SEND-TEXT", "program": "HCQREAD", "text": "mABCpbr26i26t", "length": 40, "options": ["ERASE"]},
+       {"event": "RETURN", "program": "HCQREAD", "level": 1, "transid": null, "commarea": null}
+     ],
+     "end": "normal"}
+  ],
+  "final": {"ts_queues": {"HCWORK": ["W"]}}
+}

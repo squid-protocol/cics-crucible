@@ -1,0 +1,89 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-link-lengths",
+ "scenario": "short-100",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA01",
+   "program": "CALINK",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "CALINK",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "CA01 S"
+     }
+    },
+    {
+     "event": "LINK",
+     "program": "CALINK",
+     "target": "CASUB",
+     "length": 100,
+     "resp": "NORMAL",
+     "commarea": {
+      "length": 100,
+      "layout": "CALLER",
+      "fields": {
+       "CA-EYE": "CAHD",
+       "CA-VERSION": "1",
+       "CA-RC": "",
+       "CA-SEEN-LEN": "0",
+       "CA-REQUEST": "PING",
+       "CA-REPLY": "",
+       "CA-SPARE": ""
+      }
+     }
+    },
+    {
+     "event": "RETURN",
+     "program": "CASUB",
+     "level": 2,
+     "caller_commarea": {
+      "length": 100,
+      "layout": "CALLER",
+      "fields": {
+       "CA-EYE": "CAHD",
+       "CA-VERSION": "1",
+       "CA-RC": "04",
+       "CA-SEEN-LEN": "100",
+       "CA-REQUEST": "PING",
+       "CA-REPLY": "PONG",
+       "CA-SPARE": ""
+      }
+     },
+     "note": "EIBCALEN 100 < LENGTH OF DFHCOMMAREA (500): CA-EXT is not touched"
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "CALINK",
+     "text": "MODE=S RC=04 SEEN=0100 REPLY=PONG AFTER=N CALLER-OWNED      RESP=00/00",
+     "length": 80,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "CALINK",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

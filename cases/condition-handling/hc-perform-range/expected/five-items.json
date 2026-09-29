@@ -1,0 +1,25 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "hc-perform-range",
+  "scenario": "five-items",
+  "tasks": [
+    {"seq": 1, "transid": "HC01", "program": "HCQREAD", "termid": "T001", "at": "2026-03-02T10:00:00",
+     "trigger": {"kind": "terminal", "step": 0}, "eibaid": "ENTER", "eibcalen": 0, "commarea": null,
+     "events": [
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCQ1", "item": 1, "resp": "NORMAL", "length": 1, "data": {"length": 1, "text": "A"}},
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCQ1", "item": 2, "resp": "NORMAL", "length": 1, "data": {"length": 1, "text": "B"}},
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCQ1", "item": 3, "resp": "NORMAL", "length": 1, "data": {"length": 1, "text": "C"}},
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCQ1", "item": 4, "resp": "NORMAL", "length": 1, "data": {"length": 1, "text": "D"}},
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCQ1", "item": 5, "resp": "NORMAL", "length": 1, "data": {"length": 1, "text": "E"},
+        "note": "the loop ends (WS-N = 6); READ-ITEMS falls into NO-QUEUE and PAST-END: 'l', 'q', 'p'"},
+       {"event": "WRITEQ-TS", "program": "HCQREAD", "queue": "HCWORK", "data": {"length": 1, "text": "W"}, "resp": "NORMAL", "item": 1},
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCWORK", "item": 2, "resp": "ITEMERR", "data": null},
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCWORK", "item": 3, "resp": "ITEMERR", "data": null},
+       {"event": "READQ-TS", "program": "HCQREAD", "queue": "HCWORK", "item": 4, "resp": "ITEMERR", "data": null},
+       {"event": "SEND-TEXT", "program": "HCQREAD", "text": "mABCDElqpbr26i26t", "length": 40, "options": ["ERASE"]},
+       {"event": "RETURN", "program": "HCQREAD", "level": 1, "transid": null, "commarea": null}
+     ],
+     "end": "normal"}
+  ],
+  "final": {"ts_queues": {"HCWORK": ["W"]}}
+}

@@ -1,0 +1,22 @@
+***********************************************************************
+* cics-crucible  hex-attributes / hx-extended-cursor   (Apache-2.0)
+* Mapset HXSET2, map HXM2: extended colour and highlighting (DSATTS).
+***********************************************************************
+HXSET2   DFHMSD TYPE=&SYSPARM,MODE=INOUT,LANG=COBOL,STORAGE=AUTO,      X
+               TIOAPFX=YES,CTRL=(FREEKB),MAPATTS=(COLOR,HILIGHT),      X
+               DSATTS=(COLOR,HILIGHT)
+HXM2     DFHMDI SIZE=(24,80),LINE=1,COLUMN=1
+         DFHMDF POS=(1,1),LENGTH=16,ATTRB=(ASKIP,BRT),COLOR=BLUE,      X
+               INITIAL='EXTENDED ATTRIBS'
+         DFHMDF POS=(3,1),LENGTH=8,ATTRB=(ASKIP,NORM),                 X
+               INITIAL='ACCOUNT:'
+ACCT     DFHMDF POS=(3,10),LENGTH=6,ATTRB=(UNPROT,NORM,IC),COLOR=GREEN,X
+               HILIGHT=UNDERLINE,JUSTIFY=(LEFT,BLANK)
+         DFHMDF POS=(3,17),LENGTH=1,ATTRB=(ASKIP,NORM)
+         DFHMDF POS=(4,1),LENGTH=7,ATTRB=(ASKIP,NORM),INITIAL='AMOUNT:'
+AMOUNT   DFHMDF POS=(4,10),LENGTH=7,ATTRB=(UNPROT,NUM,NORM),           X
+               COLOR=GREEN,JUSTIFY=(RIGHT,ZERO)
+         DFHMDF POS=(4,18),LENGTH=1,ATTRB=(ASKIP,NORM)
+MSG      DFHMDF POS=(6,1),LENGTH=30,ATTRB=(ASKIP,NORM),COLOR=YELLOW
+         DFHMSD TYPE=FINAL
+         END

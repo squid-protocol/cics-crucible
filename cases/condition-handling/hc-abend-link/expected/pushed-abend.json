@@ -1,0 +1,15 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "hc-abend-link",
+  "scenario": "pushed-abend",
+  "tasks": [
+    {"seq": 1, "transid": "HC02", "program": "HCMAIN", "termid": "T001", "at": "2026-03-02T10:00:00", "trigger": {"kind": "terminal", "step": 0}, "eibaid": "ENTER", "eibcalen": 0, "commarea": null,
+     "events": [
+       {"event": "READQ-TS", "program": "HCMAIN", "queue": "HCMODE", "item": 1, "resp": "NORMAL", "length": 1, "data": {"length": 1, "text": "P"}},
+       {"event": "READQ-TS", "program": "HCMAIN", "queue": "HCNONE", "item": 1, "resp": "QIDERR", "data": null},
+       {"event": "ABEND", "program": "HCMAIN", "abcode": "AEYH", "cause": "condition", "condition": "QIDERR", "outcome": "terminated",
+        "note": "PUSH HANDLE suspended both HANDLE CONDITION QIDERR and HANDLE ABEND LABEL; nothing is sent"}
+     ],
+     "end": "abend"}
+  ]
+}

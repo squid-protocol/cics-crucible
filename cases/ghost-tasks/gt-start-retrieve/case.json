@@ -1,0 +1,29 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-start-retrieve",
+  "trap": "ghost-tasks",
+  "title": "START of background tasks: INTERVAL vs TIME (the six-hour rule), FROM data and RETRIEVE, ENDDATA, LENGERR, PROTECT vs an abending starter",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {"cobol": ["src/GTSTART.cbl", "src/GTWORK.cbl"], "bms": [], "csd": ["csd/gt-start-retrieve.csd"],
+              "copy": [], "data": []},
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {"id": "interval-data", "path": "happy",
+     "summary": "START INTERVAL(0) FROM 20 bytes: one GT02 task retrieves them, then ENDDATA",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "GT01 A"}], "until": 60},
+    {"id": "no-data", "path": "trap",
+     "summary": "START with no FROM: the first RETRIEVE is already ENDDATA",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "GT01 N"}], "until": 60},
+    {"id": "time-six-hours", "path": "trap",
+     "summary": "at 10:00, TIME(103000) runs at 10:30, but TIME(093000) is in the past within six hours and runs at once, so the second START runs first",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "GT01 T"}], "until": 3600},
+    {"id": "retrieve-lengerr", "path": "trap",
+     "summary": "30 bytes of FROM data into a 20-byte RETRIEVE area: truncated, LENGERR, LENGTH set to 30",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "GT01 L"}], "until": 60},
+    {"id": "protect-abend", "path": "trap",
+     "summary": "the starter abends after two STARTs: the plain START still runs its task, the START PROTECT is discarded",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "GT01 X"}], "until": 60}
+  ]
+}

@@ -1,0 +1,277 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hx-attr-bytes",
+ "scenario": "clear-maponly",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HX01",
+   "program": "HXATTR",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "SEND-MAP",
+     "program": "HXATTR",
+     "map": "HXM1",
+     "mapset": "HXSET1",
+     "options": [
+      "ERASE"
+     ],
+     "cursor": "NAME",
+     "fields": {
+      "STAT": {
+       "attr": "60",
+       "attr_from": "program",
+       "meaning": {
+        "protected": true,
+        "numeric": false,
+        "display": "normal",
+        "mdt": false
+       },
+       "data": "PROTECTED",
+       "data_from": "program",
+       "note": "DFHBMPRO"
+      },
+      "BRITE": {
+       "attr": "E8",
+       "attr_from": "program",
+       "meaning": {
+        "protected": true,
+        "numeric": false,
+        "display": "bright",
+        "mdt": false
+       },
+       "data": "INITIAL-TEXT",
+       "data_from": "map",
+       "note": "X'E8' literal = DFHPROTI; BRITEO starts with a null, so the map's INITIAL is sent"
+      },
+      "NAME": {
+       "attr": "40",
+       "attr_from": "map",
+       "meaning": {
+        "protected": false,
+        "numeric": false,
+        "display": "normal",
+        "mdt": false
+       },
+       "data": null,
+       "data_from": "none"
+      },
+      "SECRET": {
+       "attr": "4D",
+       "attr_from": "program",
+       "meaning": {
+        "protected": false,
+        "numeric": false,
+        "display": "dark",
+        "mdt": true
+       },
+       "data": "PASSWORD",
+       "data_from": "program",
+       "note": "X'4D' literal = DFHUNNOD: nondisplay, MDT on"
+      },
+      "RAW": {
+       "attr": "3C",
+       "attr_from": "program",
+       "meaning": {
+        "protected": true,
+        "numeric": true,
+        "display": "dark",
+        "mdt": false
+       },
+       "data": "HIDDEN",
+       "data_from": "program",
+       "note": "bits 0-1 are 00 (not a graphic); bits 2-7 = 111100: autoskip, nondisplay"
+      },
+      "BLINKY": {
+       "attr": "F1",
+       "attr_from": "program",
+       "meaning": {
+        "protected": true,
+        "numeric": true,
+        "display": "normal",
+        "mdt": true
+       },
+       "data": "BLINK?",
+       "data_from": "program",
+       "note": "F1 is DFHBMASF (autoskip + MDT), not blink: blink is an extended highlight value"
+      },
+      "TWIDDLE": {
+       "attr": "41",
+       "attr_from": "program",
+       "meaning": {
+        "protected": false,
+        "numeric": false,
+        "display": "normal",
+        "mdt": true
+       },
+       "data": "TWIDDLED",
+       "data_from": "program",
+       "note": "X'40' + 1: the MDT bit set by arithmetic; not the graphic form X'C1'"
+      },
+      "LEFTOVR": {
+       "attr": "40",
+       "attr_from": "map",
+       "meaning": {
+        "protected": false,
+        "numeric": false,
+        "display": "normal",
+        "mdt": false
+       },
+       "data": "MAPDFLT8",
+       "data_from": "map",
+       "note": "X'80' (DFHBMEOF) is never taken as a program attribute; data all nulls -> INITIAL"
+      },
+      "NULATR": {
+       "attr": "F8",
+       "attr_from": "map",
+       "meaning": {
+        "protected": true,
+        "numeric": true,
+        "display": "bright",
+        "mdt": false
+       },
+       "data": "PROGDATA",
+       "data_from": "program"
+      },
+      "FSETF": {
+       "attr": "C1",
+       "attr_from": "map",
+       "meaning": {
+        "protected": false,
+        "numeric": false,
+        "display": "normal",
+        "mdt": true
+       },
+       "data": "KEEPME!!",
+       "data_from": "map",
+       "note": "ATTRB=(UNPROT,NORM,FSET)"
+      }
+     }
+    },
+    {
+     "event": "RETURN",
+     "program": "HXATTR",
+     "level": 1,
+     "transid": "HX01",
+     "commarea": {
+      "length": 1,
+      "text": "S"
+     }
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 2,
+   "transid": "HX01",
+   "program": "HXATTR",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:30",
+   "trigger": {
+    "kind": "terminal",
+    "step": 1
+   },
+   "eibaid": "CLEAR",
+   "eibcalen": 1,
+   "commarea": {
+    "length": 1,
+    "text": "S"
+   },
+   "events": [
+    {
+     "event": "SEND-MAP",
+     "program": "HXATTR",
+     "map": "HXM1",
+     "mapset": "HXSET1",
+     "options": [
+      "ERASE",
+      "MAPONLY"
+     ],
+     "cursor": "NAME",
+     "fields": {
+      "STAT": {
+       "attr": "F0",
+       "attr_from": "map",
+       "data": "MAP-DEFAULTS",
+       "data_from": "map"
+      },
+      "BRITE": {
+       "attr": "F0",
+       "attr_from": "map",
+       "data": "INITIAL-TEXT",
+       "data_from": "map"
+      },
+      "NAME": {
+       "attr": "40",
+       "attr_from": "map",
+       "data": null,
+       "data_from": "none"
+      },
+      "SECRET": {
+       "attr": "40",
+       "attr_from": "map",
+       "data": null,
+       "data_from": "none"
+      },
+      "RAW": {
+       "attr": "40",
+       "attr_from": "map",
+       "data": null,
+       "data_from": "none"
+      },
+      "BLINKY": {
+       "attr": "F0",
+       "attr_from": "map",
+       "data": "NOBLINK!",
+       "data_from": "map"
+      },
+      "TWIDDLE": {
+       "attr": "40",
+       "attr_from": "map",
+       "data": null,
+       "data_from": "none"
+      },
+      "LEFTOVR": {
+       "attr": "40",
+       "attr_from": "map",
+       "data": "MAPDFLT8",
+       "data_from": "map"
+      },
+      "NULATR": {
+       "attr": "F8",
+       "attr_from": "map",
+       "data": "ZEROATTR",
+       "data_from": "map"
+      },
+      "FSETF": {
+       "attr": "C1",
+       "attr_from": "map",
+       "data": "KEEPME!!",
+       "data_from": "map"
+      }
+     }
+    },
+    {
+     "event": "RETURN",
+     "program": "HXATTR",
+     "level": 1,
+     "transid": "HX01",
+     "commarea": {
+      "length": 1,
+      "text": "S"
+     }
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

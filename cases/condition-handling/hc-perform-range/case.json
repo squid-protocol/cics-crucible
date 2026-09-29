@@ -1,0 +1,28 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-perform-range",
+  "trap": "condition-handling",
+  "title": "HANDLE CONDITION labels inside a PERFORM THRU range, an ERROR catch-all outside it, RESP and IGNORE overriding HANDLE",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {"cobol": ["src/HCQREAD.cbl"], "bms": [], "csd": ["csd/hc-perform-range.csd"], "copy": [], "data": []},
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {"id": "three-items", "path": "happy",
+     "summary": "HCQ1 holds three 3-byte items: the loop reads them, ITEMERR on item 4 jumps to PAST-END inside the PERFORM range, which returns to MAIN-PARA",
+     "initial": {"ts_queues": {"HCQ1": ["AAA", "BBB", "CCC"]}},
+     "steps": [{"at": 0, "aid": "ENTER", "text": "HC01"}]},
+    {"id": "no-queue", "path": "trap",
+     "summary": "HCQ1 does not exist: QIDERR jumps to NO-QUEUE, which falls through PAST-END into READ-ITEMS-EXIT and returns from the PERFORM",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "HC01"}]},
+    {"id": "five-items", "path": "trap",
+     "summary": "HCQ1 holds five items: the loop ends normally and control falls through NO-QUEUE and PAST-END although no condition occurred",
+     "initial": {"ts_queues": {"HCQ1": ["A", "B", "C", "D", "E"]}},
+     "steps": [{"at": 0, "aid": "ENTER", "text": "HC01"}]},
+    {"id": "length-trap", "path": "trap",
+     "summary": "item 1 is 1 byte, so LENGTH is left at 1; item 2 is 5 bytes: LENGERR, no specific handler, so the ERROR label outside the PERFORM range takes it",
+     "initial": {"ts_queues": {"HCQ1": ["A", "BBBBB"]}},
+     "steps": [{"at": 0, "aid": "ENTER", "text": "HC01"}]}
+  ]
+}

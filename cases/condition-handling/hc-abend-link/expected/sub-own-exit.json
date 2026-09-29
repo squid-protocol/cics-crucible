@@ -1,0 +1,23 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "hc-abend-link",
+  "scenario": "sub-own-exit",
+  "tasks": [
+    {"seq": 1, "transid": "HC02", "program": "HCMAIN", "termid": "T001", "at": "2026-03-02T10:00:00", "trigger": {"kind": "terminal", "step": 0}, "eibaid": "ENTER", "eibcalen": 0, "commarea": null,
+     "events": [
+       {"event": "READQ-TS", "program": "HCMAIN", "queue": "HCMODE", "item": 1, "resp": "NORMAL", "length": 1, "data": {"length": 1, "text": "A"}},
+       {"event": "LINK", "program": "HCMAIN", "target": "HCSUB", "length": 20, "resp": "NORMAL",
+        "commarea": {"length": 20, "layout": "LINKCA", "fields": {"CA-MODE": "A", "CA-TRAIL": "", "CA-RESULT": "", "CA-COUNT": "0", "CA-SPARE": ""}}},
+       {"event": "ABEND", "program": "HCSUB", "abcode": "HCX1", "cause": "command",
+        "outcome": "exit", "exit": {"program": "HCSUB", "label": "SUB-ABEND"},
+        "note": "HCSUB's own exit, at the level where the abend occurred, is found first"},
+       {"event": "RETURN", "program": "HCSUB", "level": 2,
+        "caller_commarea": {"length": 20, "layout": "LINKCA", "fields": {"CA-MODE": "A", "CA-TRAIL": "sha", "CA-RESULT": "HCX1", "CA-COUNT": "1", "CA-SPARE": ""}},
+        "note": "RETURN from the exit ends HCSUB normally; HCMAIN resumes after the LINK"},
+       {"event": "READQ-TS", "program": "HCMAIN", "queue": "HCNONE", "item": 1, "resp": "QIDERR", "data": null},
+       {"event": "SEND-TEXT", "program": "HCMAIN", "text": "mrshaHCX1q", "length": 40, "options": ["ERASE"]},
+       {"event": "RETURN", "program": "HCMAIN", "level": 1, "transid": null, "commarea": null}
+     ],
+     "end": "normal"}
+  ]
+}

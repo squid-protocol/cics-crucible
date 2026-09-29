@@ -1,0 +1,21 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "hc-abend-link",
+  "scenario": "sub-unhandled",
+  "tasks": [
+    {"seq": 1, "transid": "HC02", "program": "HCMAIN", "termid": "T001", "at": "2026-03-02T10:00:00", "trigger": {"kind": "terminal", "step": 0}, "eibaid": "ENTER", "eibcalen": 0, "commarea": null,
+     "events": [
+       {"event": "READQ-TS", "program": "HCMAIN", "queue": "HCMODE", "item": 1, "resp": "NORMAL", "length": 1, "data": {"length": 1, "text": "Q"}},
+       {"event": "LINK", "program": "HCMAIN", "target": "HCSUB", "length": 20, "resp": "NORMAL",
+        "commarea": {"length": 20, "layout": "LINKCA", "fields": {"CA-MODE": "Q", "CA-TRAIL": "", "CA-RESULT": "", "CA-COUNT": "0", "CA-SPARE": ""}}},
+       {"event": "READQ-TS", "program": "HCSUB", "queue": "HCNONE", "item": 1, "resp": "QIDERR", "data": null},
+       {"event": "ABEND", "program": "HCSUB", "abcode": "AEYH", "cause": "condition", "condition": "QIDERR",
+        "outcome": "exit", "exit": {"program": "HCMAIN", "label": "MAIN-ABEND"},
+        "note": "no handler in HCSUB, no ERROR handler, no abend exit at level 2: the level-1 exit is used; HCSUB is gone"},
+       {"event": "SEND-TEXT", "program": "HCMAIN", "text": "mXAEYHcs", "length": 40, "options": ["ERASE"],
+        "note": "CA-TRAIL(1:1) = 's' was written by HCSUB into HCMAIN's own storage before the abend"},
+       {"event": "RETURN", "program": "HCMAIN", "level": 1, "transid": null, "commarea": null}
+     ],
+     "end": "normal"}
+  ]
+}

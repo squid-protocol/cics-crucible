@@ -1,0 +1,24 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "ca-xctl-versions",
+  "trap": "commarea-mismatch",
+  "title": "XCTL from a 10-byte (version 1) COMMAREA to a program expecting 80 bytes: upgrade by EIBCALEN, over-long LENGTH, LENGTH out of range",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {"cobol": ["src/CAXA.cbl", "src/CAXB.cbl"], "bms": [], "csd": ["csd/ca-xctl-versions.csd"],
+              "copy": ["copy"], "data": []},
+  "layouts": {"V1BLOCK": {"source": "src/CAXA.cbl", "record": "WS-BLOCK"},
+              "V2": {"source": "src/CAXB.cbl", "record": "WS-V2"}},
+  "maps": {},
+  "scenarios": [
+    {"id": "short-upgrade", "path": "happy",
+     "summary": "XCTL LENGTH(10): CAXB sees EIBCALEN 10, copies 10 bytes and defaults the rest; the 80-byte area then travels through two pseudo-conversational turns until PF3",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "CA02 S"}, {"at": 20, "aid": "ENTER"}, {"at": 40, "aid": "PF3"}]},
+    {"id": "long-overread", "path": "trap",
+     "summary": "XCTL LENGTH(80) naming the 10-byte V1 item: CICS copies 80 bytes starting there, so CAXB takes the caller's neighbouring storage as version-2 fields",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "CA02 L"}, {"at": 20, "aid": "PF3"}]},
+    {"id": "length-range", "path": "trap",
+     "summary": "XCTL LENGTH(32767): outside 0-32763, LENGERR RESP2 11, control stays in CAXA",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "CA02 X"}]}
+  ]
+}
