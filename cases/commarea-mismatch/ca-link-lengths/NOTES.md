@@ -48,8 +48,8 @@ blanks), then EYE `CAHD`, VERSION `1` and REQUEST `PING` are set.
   and, since 100 < 500, RC `04`. It does not touch CA-EXT. The caller's WS-AFTER is still
   `N` / `CALLER-OWNED`.
 * **`long-500`**: LINK COMMAREA(WS-CA100) LENGTH(500). CICS passes the COMMAREA address and
-  the length; "in local links, the same storage is passed by reference, so modifications are
-  visible to the caller" [LINK]. The callee's 500-byte DFHCOMMAREA therefore overlays the
+  the length: "the address of the area is passed to the program that is receiving control",
+  and the linking program can "receive results from that program" through it [COMMAREA]. The callee's 500-byte DFHCOMMAREA therefore overlays the
   caller's whole WS-BLOCK (WS-CA100 is its first 100 bytes, WS-AFTER the next 400, contiguous
   in one 01 group). CASUB sees EIBCALEN = 500, sets RC `00`, flag `Y` and data
   `CALLEE-WROTE-HERE`. The caller reports `AFTER=Y CALLEE-WROTE-HERE`.
@@ -72,6 +72,11 @@ blanks), then EYE `CAHD`, VERSION `1` and REQUEST `PING` are set.
 
 ## Avoided ambiguities
 
+* **Addressing mode.** CICS makes a COMMAREA addressable by the receiver's addressing mode
+  (for XCTL it creates it "in an area that conforms to the addressing mode of the receiving
+  program" [COMMAREA]); an AMODE(24) receiver could get a below-the-line copy. Both programs
+  here are AMODE(31), so `long-500` relies on true by-reference storage.
+
 * **Reading beyond EIBCALEN.** IBM says the callee must check EIBCALEN. What the bytes
   beyond it hold depends on the caller's storage layout. CASUB never reads or writes past
   EIBCALEN. In `long-500`, the extra 400 bytes are well defined only because the caller
@@ -86,7 +91,8 @@ blanks), then EYE `CAHD`, VERSION `1` and REQUEST `PING` are set.
 
 ## Citations
 
-* [LINK] CICS TS 6.x, EXEC CICS LINK (COMMAREA, LENGTH, EIBCALEN check, by-reference local link, PGMIDERR RESP2 values): https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-link
+* [COMMAREA] CICS TS 6.x, COMMAREA in LINK and XCTL commands (address passed, results returned through it, addressing mode): https://www.ibm.com/docs/en/cics-ts/6.x?topic=transaction-commarea-in-link-xctl-commands
+* [LINK] CICS TS 6.x, EXEC CICS LINK (COMMAREA, LENGTH, EIBCALEN check, PGMIDERR RESP2 values): https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-link
 * [RECEIVE] CICS TS 5.5, EXEC CICS RECEIVE (z/OS Communications Server default: INTO, LENGTH, LENGERR): https://www.ibm.com/docs/en/cics-ts/5.5.0?topic=summary-receive-zos-communications-server-default
 * [WRITEQ-TS] CICS TS 6.x, EXEC CICS WRITEQ TS: https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-writeq-ts
 * [RESP-CODES] CICS TS 6.x, Response codes of EXEC CICS commands (PGMIDERR = 27): https://www.ibm.com/docs/en/cics-ts/6.x?topic=codes-response-exec-cics-commands

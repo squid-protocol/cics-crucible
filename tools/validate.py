@@ -393,10 +393,11 @@ def attrb_byte(attrb: list[str], given: bool) -> int:
     v = 0
     if "ASKIP" in attrb:
         v |= 0x30
-    elif "PROT" in attrb:
-        v |= 0x20
-    elif "NUM" in attrb:
-        v |= 0x10
+    else:  # UNPROT or PROT, each optionally NUM (PROT + NUM is the autoskip combination)
+        if "PROT" in attrb:
+            v |= 0x20
+        if "NUM" in attrb:
+            v |= 0x10
     if "BRT" in attrb:
         v |= 0x08
     elif "DRK" in attrb:
@@ -490,6 +491,7 @@ class Case:
         self.transactions = {t: a.get("PROGRAM", "").upper() for t, a in self.csd.get("TRANSACTION", {}).items()}
         self.mapsets_csd = set(self.csd.get("MAPSET", {}))
         self.files_csd = set(self.csd.get("FILE", {}))
+        self._region()
         for t, p in self.transactions.items():
             if p not in self.programs:
                 self.err(f"CSD transaction {t} names program {p!r}, which has no DEFINE PROGRAM")
@@ -519,6 +521,27 @@ class Case:
         missing = self.programs - {Path(r).stem for r in c["sources"]["cobol"]}
         for p in sorted(missing):
             self.err(f"CSD program {p} has no source in src/")
+
+    def _region(self) -> None:
+        """SPEC section 2: a terminal defined in the CSD accepts ATI and TTI, and a case that
+        STARTs a transaction on a terminal defines the terminal so."""
+        types = self.csd.get("TYPETERM", {})
+        for name, a in types.items():
+            for opt in ("ATI", "TTI"):
+                if a.get(opt, "").upper() != "YES":
+                    self.err(f"CSD TYPETERM {name}: {opt}(YES) is required by the reference region (SPEC section 2)")
+        terms = self.csd.get("TERMINAL", {})
+        for name, a in terms.items():
+            if a.get("TYPETERM", "").upper() not in types:
+                self.err(f"CSD TERMINAL {name}: TYPETERM {a.get('TYPETERM')} is not defined")
+        starts_terminal = any(opts[0][0] == "START" and "TERMID" in dict(opts)
+                              for code in self._all_code() for opts in exec_cics(code))
+        if starts_terminal and self.case["terminal"] not in terms:
+            self.err(f"a program STARTs a terminal task but the CSD does not define TERMINAL({self.case['terminal']}) "
+                     "with ATI(YES) (SPEC section 2)")
+
+    def _all_code(self) -> list[list[str]]:
+        return [cobol_code(self.dir / rel) for rel in self.case["sources"]["cobol"] if (self.dir / rel).is_file()]
 
     def code_of(self, rel: str) -> list[str]:
         """A source's code with its COPY statements expanded from the case's copy directories
@@ -841,7 +864,27 @@ class Case:
             self.err("NOTES.md: cites no IBM document")
 
 
+def self_test() -> None:
+    """Checks of the validator's own tables against the 3270 attribute encoding (SPEC 6.3)."""
+    cases = {("ASKIP", "NORM"): 0xF0, ("ASKIP", "BRT"): 0xF8, ("ASKIP", "DRK", "FSET"): 0x7D,
+             ("UNPROT", "NORM"): 0x40, ("UNPROT", "NORM", "FSET"): 0xC1, ("UNPROT", "BRT"): 0xC8,
+             ("UNPROT", "DRK"): 0x4C, ("UNPROT", "NUM", "NORM"): 0x50, ("UNPROT", "NUM", "BRT", "FSET"): 0xD9,
+             ("PROT", "NORM"): 0x60, ("PROT", "BRT"): 0xE8, ("PROT", "DRK"): 0x6C, ("PROT", "NUM", "NORM"): 0xF0,
+             ("PROT", "NUM", "BRT"): 0xF8, ("UNPROT", "DET"): 0xC4, ("FSET",): 0xC1, ("NUM",): 0x50}
+    for attrb, want in cases.items():
+        got = attrb_byte(list(attrb), True)
+        assert got == want, f"ATTRB={attrb}: {got:02X}, want {want:02X}"
+    assert attrb_byte([], False) == 0xF0, "omitted ATTRB is ASKIP,NORM"
+    assert attr_meaning(0x3C) == {"protected": True, "numeric": True, "display": "dark", "mdt": False}
+    assert attr_meaning(0x41) == attr_meaning(0xC1)
+    assert pic_info("S9(7)V99")[1:4] == (True, 7, 2)
+    print("self-test: ok")
+
+
 def main(argv: list[str]) -> int:
+    if argv[:1] == ["--self-test"]:
+        self_test()
+        return 0
     targets = [Path(a).resolve() for a in argv] or sorted(p.parent for p in (ROOT / "cases").glob("*/*/case.json"))
     if not targets:
         print("no cases found")

@@ -68,7 +68,8 @@ TRANSID('PC11') COMMAREA LENGTH(10). OPT's attribute comes from the map: (UNPROT
   3. Task 4 (CLEAR): visits 4. CLEAR is tested before any RECEIVE, giving `CLEARED`.
   4. Task 5 (PF3): visits 5 (not shown). RECEIVE → NORMAL, then MENU-EXIT: SEND TEXT
      `MENU ENDED`, RETURN with no TRANSID.
-  5. Task 6: `PC12` typed on the now-free terminal. EIBCALEN = 0, so PCDETL sends `NO
+  5. Task 6: the operator clears the screen (no TRANSID is pending) and types `PC12`
+     (SPEC section 5). EIBCALEN = 0, so PCDETL sends `NO
      CONTEXT - START FROM PC11` and RETURNs.
 
 ## What a correct port must do

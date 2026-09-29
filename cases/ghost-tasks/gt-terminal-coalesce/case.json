@@ -18,9 +18,11 @@
      "steps": [{"at": 0, "aid": "ENTER", "text": "GT11 S"}], "until": 60},
     {"id": "cancel-in-time", "path": "happy",
      "summary": "START INTERVAL(30) REQID, then CANCEL at +10s: NORMAL, and GT12 never runs",
-     "steps": [{"at": 0, "aid": "ENTER", "text": "GT11 C"}, {"at": 10, "aid": "ENTER", "text": "GT11 K"}], "until": 120},
+     "steps": [{"at": 0, "aid": "ENTER", "text": "GT11 C"}, {"at": 10, "aid": "ENTER", "text": "GT11 K",
+                "note": "the operator first presses CLEAR (no TRANSID is pending, so it starts nothing) and types on the cleared screen"}], "until": 120},
     {"id": "cancel-too-late", "path": "trap",
      "summary": "the same START, CANCEL at +40s: the request already expired and ran at +30s, so CANCEL is NOTFND",
-     "steps": [{"at": 0, "aid": "ENTER", "text": "GT11 C"}, {"at": 40, "aid": "ENTER", "text": "GT11 K"}], "until": 120}
+     "steps": [{"at": 0, "aid": "ENTER", "text": "GT11 C"}, {"at": 40, "aid": "ENTER", "text": "GT11 K",
+                "note": "the operator first presses CLEAR (no TRANSID is pending, so it starts nothing) and types on the cleared screen"}], "until": 120}
   ]
 }

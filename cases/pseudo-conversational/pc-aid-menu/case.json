@@ -29,6 +29,7 @@
                {"at": 20, "aid": "PF9", "map": "PCMN", "fields": {"OPT": ""}},
                {"at": 30, "aid": "CLEAR"},
                {"at": 40, "aid": "PF3", "map": "PCMN", "fields": {"OPT": ""}},
-               {"at": 50, "aid": "ENTER", "text": "PC12"}]}
+               {"at": 50, "aid": "ENTER", "text": "PC12",
+                "note": "the operator first presses CLEAR (no TRANSID is pending, so it starts nothing) and types on the cleared screen"}]}
   ]
 }

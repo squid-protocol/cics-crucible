@@ -51,7 +51,8 @@ the 80-byte area to itself, until PF3.
   the named area. [XCTL] documents LENGERR RESP2 28 for "LENGTH ... greater than the length
   of the data area ..., and while that data was being copied, a destructive overlap
   occurred", so a LENGTH longer than the item is copied, and fails only on overlap. Here
-  there is no overlap: the copy goes to new storage because CAXA is released. WS-V1 is the
+  there is no overlap: CICS "might copy the specified COMMAREA into a new area of storage,
+  because the invoking program ... might no longer be available" [COMMAREA]. WS-V1 is the
   first 10 bytes of the contiguous 01 group WS-BLOCK, so the 80 bytes are WS-BLOCK:
   NB-TIER `GOLD`, NB-BALANCE +12345.67 (packed X'001234567C'), NB-NOTE. CAXB sees
   EIBCALEN = 80 and trusts every field: VERSION stays `1`, TIER `GOLD`, BALANCE 12345.67.
@@ -86,6 +87,7 @@ the 80-byte area to itself, until PF3.
 
 ## Citations
 
+* [COMMAREA] CICS TS 6.x, COMMAREA in LINK and XCTL commands (XCTL may copy; addressing mode): https://www.ibm.com/docs/en/cics-ts/6.x?topic=transaction-commarea-in-link-xctl-commands
 * [XCTL] CICS TS 6.x, EXEC CICS XCTL (COMMAREA contents passed; LENGERR RESP2 11/26/28; calling program released): https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-xctl
 * [RETURN] CICS TS 6.x, EXEC CICS RETURN (TRANSID, COMMAREA up to 32763, EIBCALEN of the next task): https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-return
 * [RESP] CICS TS 6.1, How to use the RESP and RESP2 options: https://www.ibm.com/docs/en/cics-ts/6.1?topic=code-how-use-resp-resp2-options

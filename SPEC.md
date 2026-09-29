@@ -32,7 +32,7 @@ part of the format:
 | Release | CICS TS for z/OS 6.x semantics (nothing used here is new in 6.x) |
 | Code page | EBCDIC CCSID 037 for every byte in every area. A hex value in a case (`X'C1'`, `"hex": "C1"`) is an EBCDIC byte. |
 | Program autoinstall | **off**. A LINK/XCTL to a program with no CSD definition raises PGMIDERR, RESP2 = 1. |
-| Terminal | one terminal, `T001`, a 24x80 3270 display that supports extended data stream, colour and extended highlighting (the CSD may define it; the default is this). |
+| Terminal | one terminal, `T001`, a 24x80 3270 display that supports extended data stream, colour and extended highlighting, and accepts automatic and terminal-initiated transactions (TYPETERM `ATI(YES) TTI(YES)`; the RDO default `ATI(NO)` would silently stop every `START TERMID` task). A case CSD may define it and must then say `ATI(YES) TTI(YES)`; a case that STARTs a terminal task must define it. The screen is cleared when a scenario begins. |
 | Security | none (no NOTAUTH). |
 | Temporary storage | every queue named in a case is main or auxiliary TS, local, non-recoverable. |
 | Files | a CSD `DEFINE FILE` plus the case's `data/` records; a file is opened on first use. |
@@ -150,7 +150,7 @@ tasks it starts.
 |---|---|
 | `at` | seconds after `clock` |
 | `aid` | `ENTER`, `CLEAR`, `PA1`-`PA3`, `PF1`-`PF24` (EIBAID gets the DFHAID value) |
-| `text` | unformatted input (typed on a cleared or unformatted screen), e.g. `"CA01 S"`; what a terminal `RECEIVE` returns |
+| `text` | unformatted input typed on a **cleared** screen, e.g. `"CA01 S"`; what a terminal `RECEIVE` returns. An unformatted read returns the buffer from position 0, so the text is exact only on a cleared screen: at a later step the operator presses CLEAR first (with no TRANSID pending, CLEAR starts nothing and is not a step of its own) |
 | `map` + `fields` | formatted input: the fields of the map on the screen that the terminal transmits (every field whose MDT is on — typed into, or sent with FSET/MDT and left alone). Value: the transmitted characters (the 3270 sends no nulls; trailing blanks are data). `""` is a field transmitted with no data — cleared with ERASE EOF, or an MDT-on field left empty — which BMS reports as length 0 with the flag byte X'80' |
 | `cursor` | optional: field name where the cursor was left (EIBCPOSN) |
 | `note` | optional commentary, never compared |
@@ -253,9 +253,9 @@ Under DATAONLY, a field for which BMS sends nothing is omitted. Each entry:
 | `attr` | the 3270 field attribute byte BMS writes for the field, two hex digits (EBCDIC), exactly as on the data stream; null when none is sent (DATAONLY with no program attribute) |
 | `attr_from` | `program` (the `<f>A` byte was present: not X'00', X'80', X'02', X'82'), `map` (the DFHMDF ATTRB, or ASKIP,NORM when omitted), or `none` |
 | `meaning` | optional, the byte decoded from its bits 2-7: `{"protected": bool, "numeric": bool, "display": "normal" or "bright" or "dark", "mdt": bool}` (protected + numeric is autoskip). Checked against `attr`. |
-| `data` | the field's data as BMS sends it: text (padded to the field length) or hex; null when no data is sent |
+| `data` | the field's data as BMS sends it: text (padded to the field length) or hex. null when neither program nor map supplies data: without DATAONLY BMS then writes nulls ("field is set to nulls"), under DATAONLY it writes no data; either way the field shows nothing |
 | `data_from` | `program` (first byte of `<f>O` not null), `map` (INITIAL), or `none` |
-| `color`, `hilight` | extended attributes as sent (hex, e.g. `F2` red, `F1` blink), null when BMS sends none (hardware default); only for maps with DSATTS |
+| `color`, `hilight` | extended attributes as sent (hex, e.g. `F2` red, `F1` blink); null means the hardware default, whether BMS omits the attribute or sends it as X'00' (a runner must treat both as null); only for maps with DSATTS |
 | `color_from`, `hilight_from` | `program`, `map` or `none` |
 
 Attribute byte bits (3270 Data Stream Programmer's Reference, GA23-0059, "Field attribute";
@@ -293,6 +293,12 @@ wrong.
    fields of the map, `meaning` agrees with `attr`, and `attr` with `attr_from: map` equals
    the byte the DFHMDF ATTRB produces.
 6. `NOTES.md` exists, has the section headings above, and cites at least one IBM document.
+7. The reference region (section 2): every CSD `TYPETERM` has `ATI(YES) TTI(YES)`, every
+   `TERMINAL` names a defined TYPETERM, and a case whose programs `START ... TERMID` defines
+   `TERMINAL(<case terminal>)`.
+
+`python3 tools/validate.py --self-test` checks the validator's own ATTRB → attribute-byte and
+bit-decoding tables against SPEC 6.3.
 
 `tools/syntax_check.py` (optional, needs `cobc` or Docker) compiles each program with the
 EXEC CICS blocks replaced by `CONTINUE` and the DFH copybooks from `tools/stubs/`.

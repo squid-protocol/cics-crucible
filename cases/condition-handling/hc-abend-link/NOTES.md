@@ -37,8 +37,10 @@ All scenarios: one task, `HC02` typed on a cleared screen, READQ TS HCMODE item 
 
 * **`sub-resp` (N)**: HCSUB writes `s`, adds 1 to CA-COUNT, and READQ HCNONE RESP → QIDERR
   (RESP means no handler is involved [HC]). It sets CA-RESULT `QIDR`, writes `n`, and
-  RETURNs to HCMAIN. The LINK COMMAREA is the caller's storage, and "modifications are
-  visible to the caller" [LINK]. HCMAIN appends `r`, `sn `, `QIDR`. Its READQ HCNONE (no
+  RETURNs to HCMAIN. The LINK COMMAREA is the caller's storage: "the address of the area is
+  passed to the program that is receiving control", and through it "the linking program can
+  both pass data to the program it is invoking and receive results from that program"
+  [COMMAREA]. HCMAIN appends `r`, `sn `, `QIDR`. Its READQ HCNONE (no
   RESP) raises QIDERR and goes to MAIN-QIDERR: "the original HANDLE CONDITION commands are
   restored on return to the linking program" [LINK]. Trail `mrsn QIDRq`.
 * **`sub-unhandled` (Q)**: in HCSUB, READQ HCNONE → QIDERR. "The HANDLE CONDITION options
@@ -53,8 +55,9 @@ All scenarios: one task, `HC02` typed on a cleared screen, READQ TS HCMODE item 
 * **`sub-own-exit` (A)**: HCSUB issues HANDLE ABEND LABEL(SUB-ABEND), writes `h`, and ABEND
   ABCODE('HCX1') [ABEND]. The search starts at HCSUB's own level, so SUB-ABEND gets control
   (the exit is deactivated on entry [ABEND-RECOVERY]). It does ASSIGN ABCODE → `HCX1` into
-  CA-RESULT, writes `a`, and RETURNs. This returns to HCMAIN as an ordinary end of the LINKed
-  program. HCMAIN appends `r`, `sha`, `HCX1`, then QIDERR → MAIN-QIDERR `q`. Trail
+  CA-RESULT, writes `a`, and RETURNs. In an abend exit, "use a RETURN command to indicate that
+  the task continues to run with control passed to the program on the next higher logical
+  level" [ABEND-ROUTINE]: HCMAIN resumes after the LINK. HCMAIN appends `r`, `sha`, `HCX1`, then QIDERR → MAIN-QIDERR `q`. Trail
   `mrshaHCX1q`.
 * **`push-pop` (O)**: PUSH HANDLE "suspend[s] the current effect of the IGNORE CONDITION,
   HANDLE ABEND, HANDLE AID, and HANDLE CONDITION commands" [PUSH], and POP HANDLE restores
@@ -80,6 +83,11 @@ Condition → abend code mapping: QIDERR → AEYH [AEIA].
 
 ## Avoided ambiguities
 
+* **By-reference storage depends on addressing mode.** For XCTL, CICS creates the COMMAREA
+  "in an area that conforms to the addressing mode of the receiving program" [COMMAREA]. All
+  programs here are AMODE(31), so HCSUB's write before its abend lands in HCMAIN's own
+  WS-CA. An AMODE(24) callee is not used.
+
 * Whether HANDLE ABEND is in force inside a LINKed program is not exercised. The HCSUB
   paths that abend either have their own exit (A) or show that the **caller's** exit is
   found by the upward search (Q). The upward search is documented.
@@ -95,6 +103,8 @@ Condition → abend code mapping: QIDERR → AEYH [AEIA].
 * [LINK] CICS TS 6.x, EXEC CICS LINK (COMMAREA, EIBCALEN, handlers restored on return): https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-link
 * [HANDLE-ABEND] CICS TS 6.x, EXEC CICS HANDLE ABEND: https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-handle-abend
 * [ABEND-RECOVERY] CICS TS 5.6, Abnormal termination recovery (upward search, deactivation on entry): https://www.ibm.com/docs/en/cics-ts/5.6.0?topic=applications-abnormal-termination-recovery
+* [ABEND-ROUTINE] CICS TS 5.6, Creating a program-level abend program or routine (RETURN passes control to the next higher logical level): https://www.ibm.com/docs/en/cics-ts/5.6.0?topic=recovery-creating-program-level-abend-program-routine
+* [COMMAREA] CICS TS 6.x, COMMAREA in LINK and XCTL commands (the address is passed; results come back through it; addressing mode): https://www.ibm.com/docs/en/cics-ts/6.x?topic=transaction-commarea-in-link-xctl-commands
 * [ABEND] CICS TS 6.x, EXEC CICS ABEND: https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-abend
 * [ASSIGN] CICS TS 6.x, EXEC CICS ASSIGN (ABCODE): https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-assign
 * [PUSH] CICS TS 6.x, EXEC CICS PUSH HANDLE: https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-push-handle

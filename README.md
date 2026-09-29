@@ -60,13 +60,25 @@ sentence states outright. They are the first places to look if a real CICS regio
 
 | Case / scenario | Point | Basis |
 |---|---|---|
-| ca-*, gt-* (all scenarios) | A terminal `RECEIVE INTO` in a task started by typing `TTTT x` on a cleared screen returns exactly `TTTT x` (transid included, no AID or cursor bytes). | Standard CICS behaviour for unformatted input; the RECEIVE reference describes LENGTH/LENGERR but not the content |
+| ca-*, gt-* (all scenarios) | A terminal `RECEIVE INTO` in a task started by typing `TTTT x` on a **cleared** screen returns exactly `TTTT x` (transid included, no AID or cursor bytes). Later `text` steps assume the operator pressed CLEAR first (SPEC 5). | "Reading from a 3270 terminal" (the read header goes to EIBAID/EIBCPOSN) and "Unformatted mode" (an unformatted read returns the buffer from position 0) |
 | hx-attr-bytes (all) | BMS writes a program attribute byte unchanged even when it is not an EBCDIC graphic (X'3C', X'41'). | "Building the output screen" takes any program value except X'00', X'80', X'02', X'82'; nothing says BMS normalises it |
 | hx-attr-bytes / echo-dataonly | The 3270 honours the MDT bit of X'41' and so transmits TWIDDLE on ENTER (this is a scenario *input*). | GA23-0059: bits 0-1 of an attribute are derived from bits 2-7 and carry no meaning |
-| hc-abend-link / sub-own-exit | RETURN from a LINKed program's HANDLE ABEND LABEL exit ends that program normally, and the linker resumes after the LINK. | "Abnormal termination recovery": the exit determines subsequent processing; RETURN is the documented way to end a program level |
 | hc-abend-link / sub-unhandled | When the level-1 exit is used for an abend at level 2, the level-2 program is discarded and level 1 resumes at its label. | "Abnormal termination recovery": upward search, first active exit gets control |
 | gt-start-retrieve / protect-abend | A START without PROTECT still runs when its issuer abends afterwards. | Implied by the PROTECT description (only PROTECTed requests are cancelled by an abend before syncpoint) |
 | ca-xctl-versions / long-overread | XCTL copies LENGTH bytes from the named area even when LENGTH exceeds the item. | Implied by XCTL LENGERR RESP2 28 ("LENGTH ... greater than the length of the data area ... while that data was being copied ...") |
+
+## Known gaps (future work)
+
+* **Validator cross-checks not yet implemented:**
+  * `color`/`hilight` with `*_from: "map"` are not checked against the DFHMDF → DFHMDI →
+    DFHMSD `COLOR=`/`HILIGHT=` chain.
+  * `data` with `data_from: "map"` is not checked against `INITIAL`.
+  * A `{"kind": "start"}` task trigger is not checked against the START it names
+    (transid/termid, `at` ≥ `expires`), including the other requests of a coalesced
+    terminal start.
+* **Coverage:** no case uses `FLENGTH` (the fullword LENGTH form) yet. `DATALENGTH` is
+  avoided on purpose (it matters only for DPL). File control (READ against a KSDS) is in the
+  format but not in a case yet.
 
 ## Layout
 
@@ -137,9 +149,10 @@ as an event. Driving this crucible needs:
      source, not only the symbolic copybook.
    * Input: L/F/I per transmitted field, JUSTIFY (NUM → RIGHT,ZERO), and MAPFAIL when
      nothing is transmitted.
-   * The stub `DFHBMSCA`/`DFHAID` hold *characters* whose ASCII bytes differ from the
-     EBCDIC values. Attribute bytes must be compared as EBCDIC bytes (SPEC 6.3), so an ASCII
-     runtime needs an explicit mapping.
+   * gitgalaxy's harness stand-ins (`tests/equivalence/cics/DFHBMSCA.cpy` and `DFHAID.cpy`)
+     hold *characters* (`VALUE '-'`), whose ASCII bytes differ from the EBCDIC values. This
+     repo's `tools/stubs/` use hex EBCDIC values. Attribute bytes must be compared as EBCDIC
+     bytes (SPEC 6.3), so an ASCII runtime needs an explicit mapping.
 7. **Comparison.** The comparison must be exact rather than the current trailing-blank and
    null-tolerant text comparison. The logs give text padded to known lengths and hex where
    bytes matter. The runner may report a looser view as well, but the oracle is exact.

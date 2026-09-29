@@ -71,6 +71,15 @@ task.
 
 ## Avoided ambiguities
 
+* **The terminal must accept ATI.** A terminal gets START-initiated tasks only if its
+  TYPETERM says `ATI(YES)`; with the RDO default `ATI(NO)` every START here still returns
+  NORMAL but GT12 never runs (and `cancel-too-late` would get NORMAL, not NOTFND). The case
+  CSD therefore defines `TYPETERM ... ATI(YES) TTI(YES)` and `TERMINAL(T001)` (SPEC section 2;
+  [ATI]).
+* **Typed input after output.** An unformatted read returns the screen buffer from position 0
+  [UNFORMATTED], so `GT11 K` is exactly what RECEIVE returns only because the operator clears
+  the screen before typing it (SPEC section 5; the steps say so).
+
 * **ATI vs a pending RETURN TRANSID.** RETURN's IMMEDIATE option exists because an ATI
   request queued for the terminal can otherwise run before the next input's transaction
   [RETURN]. What that does to the pending TRANSID and COMMAREA is not exercised: GT11
@@ -87,4 +96,6 @@ task.
 * [RETRIEVE] CICS TS 6.x, EXEC CICS RETRIEVE (all expired START data for the same transaction and terminal, expiry order, ENDDATA, WAIT): https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-retrieve
 * [CANCEL] CICS TS 6.x, EXEC CICS CANCEL (REQID, NOTFND): https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-cancel
 * [RETURN] CICS TS 6.x, EXEC CICS RETURN (IMMEDIATE vs ATI requests queued for the terminal): https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-return
+* [ATI] CICS TS 5.6, Automatic transaction initiation (ATI); TYPETERM attribute `ATI`: https://www.ibm.com/docs/en/cics-ts/5.6.0?topic=control-automatic-transaction-initiation-ati
+* [UNFORMATTED] CICS TS 6.x, Unformatted mode: https://www.ibm.com/docs/en/cics-ts/6.x?topic=terminals-unformatted-mode
 * [RESP-CODES] CICS TS 6.x, Response codes of EXEC CICS commands (NOTFND = 13): https://www.ibm.com/docs/en/cics-ts/6.x?topic=codes-response-exec-cics-commands
