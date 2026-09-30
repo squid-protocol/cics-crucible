@@ -24,6 +24,9 @@
      "steps": [{"at": 0, "aid": "ENTER", "text": "GT01 L"}], "until": 60},
     {"id": "protect-abend", "path": "trap",
      "summary": "the starter abends after two STARTs: the plain START still runs its task, the START PROTECT is discarded",
-     "steps": [{"at": 0, "aid": "ENTER", "text": "GT01 X"}], "until": 60}
+     "steps": [{"at": 0, "aid": "ENTER", "text": "GT01 X"}], "until": 60},
+    {"id": "unknown-mode", "path": "trap",
+     "summary": "mode Z matches no WHEN (and there is no WHEN OTHER): no START is issued and no GT02 task runs, but the screen still says STARTS ISSUED",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "GT01 Z"}], "until": 60}
   ]
 }

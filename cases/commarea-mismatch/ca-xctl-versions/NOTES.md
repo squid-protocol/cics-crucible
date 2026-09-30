@@ -63,6 +63,16 @@ the 80-byte area to itself, until PF3.
   `XCTL FAILED RESP=22 RESP2=11` (DFHRESP(LENGERR) = 22 [RESP-CODES]) and RETURNs.
   WS-BIGLEN is `PIC S9(4) COMP-5`: a halfword, as CICS requires for LENGTH, that can hold
   32767 (a `COMP` S9(4) item cannot, under TRUNC(STD)).
+* **`direct-entry`**: `CA03` typed on a cleared screen starts CAXB directly (SPEC section 4:
+  no TRANSID is pending, so the typed transaction id runs, with no COMMAREA). EIBCALEN
+  "contains the length of the communication area that has been passed ... If no
+  communication area is passed, this field contains binary zeros" [EIB]. EIBAID is ENTER, so
+  the PF3 test is false. CAXB INITIALIZEs WS-V2 (VERSION and CUSTID blank, VISITS 0, BALANCE
+  0), sets TIER `STANDARD` and NOTE `UPGRADED FROM V1`, and, since EIBCALEN = 0, never
+  touches DFHCOMMAREA (which has no addressability). VISITS becomes 1. It sends
+  `V=  C=      N=0001 T=STANDARD   B=+0000000.00 L=0000 UPGRADED FROM V1` (the note claims an
+  upgrade that did not happen) and RETURNs TRANSID('CA03') with the 80-byte defaults. Task 2
+  (PF3, EIBCALEN 80, EIBTRNID CA03) sends `SESSION ENDED` and RETURNs.
 
 ## What a correct port must do
 
@@ -84,6 +94,8 @@ the 80-byte area to itself, until PF3.
   (for a program passing on its own DFHCOMMAREA) cannot be observed here: CAXA's storage is
   never touched after the XCTL.
 * LENGERR RESP2 28 (destructive overlap) is not provoked.
+* `direct-entry` never references DFHCOMMAREA when EIBCALEN = 0, so what an unaddressed
+  LINKAGE item would contain does not matter.
 
 ## Citations
 
@@ -93,4 +105,5 @@ the 80-byte area to itself, until PF3.
 * [RESP] CICS TS 6.1, How to use the RESP and RESP2 options: https://www.ibm.com/docs/en/cics-ts/6.1?topic=code-how-use-resp-resp2-options
 * [RESP-CODES] CICS TS 6.x, Response codes of EXEC CICS commands (LENGERR = 22): https://www.ibm.com/docs/en/cics-ts/6.x?topic=codes-response-exec-cics-commands
 * [RECEIVE] CICS TS 5.5, EXEC CICS RECEIVE (z/OS Communications Server default): https://www.ibm.com/docs/en/cics-ts/5.5.0?topic=summary-receive-zos-communications-server-default
-* Enterprise COBOL for z/OS Language Reference (SC27-8713): group items are contiguous; COMP-3 (packed decimal) representation.
+* [EIB] CICS TS 6.x, EIB fields (EIBCALEN is zero when no COMMAREA is passed): https://www.ibm.com/docs/en/cics-ts/6.x?topic=reference-eib-fields
+* Enterprise COBOL for z/OS Language Reference (SC27-8713): group items are contiguous; COMP-3 (packed decimal) representation; INITIALIZE (alphanumeric to spaces, numeric to zero).

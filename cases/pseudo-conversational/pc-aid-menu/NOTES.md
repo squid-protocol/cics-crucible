@@ -71,6 +71,13 @@ TRANSID('PC11') COMMAREA LENGTH(10). OPT's attribute comes from the map: (UNPROT
   5. Task 6: the operator clears the screen (no TRANSID is pending) and types `PC12`
      (SPEC section 5). EIBCALEN = 0, so PCDETL sends `NO
      CONTEXT - START FROM PC11` and RETURNs.
+* **`invalid-option`**
+  1. Task 1: `PC11` typed → visits 1, WELCOME.
+  2. Task 2 (ENTER, OPT `9`): visits 2, not CLEAR. HANDLE AID is set; RECEIVE MAP → NORMAL
+     (OPT is transmitted). ENTER has no label, so control continues after the RECEIVE
+     [HANDLE-AID]. EIBAID is ENTER. OPTI = `9` matches neither WHEN, so WHEN OTHER sets
+     `INVALID OPTION` and SHOW-MENU redisplays the menu (visits `0002`) and RETURNs
+     TRANSID('PC11') with visits 2.
 
 ## What a correct port must do
 

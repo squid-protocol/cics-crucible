@@ -37,21 +37,21 @@ only with a documented reason recorded in the case's `NOTES.md` (see
 
 ## Status
 
-Format `cics-crucible/1` ([SPEC.md](SPEC.md)). 10 cases and 37 scenarios. No release tag
+Format `cics-crucible/1` ([SPEC.md](SPEC.md)). 10 cases and 44 scenarios. No release tag
 yet (see [RELEASING.md](RELEASING.md)).
 
 | Trap | Case | Scenarios | What it pins down |
 |---|---|---|---|
 | condition-handling | [`hc-perform-range`](cases/condition-handling/hc-perform-range) | 4 | handler labels inside a PERFORM THRU range fall through and return; ERROR catch-all outside it; RESP, IGNORE, HANDLE-after-IGNORE; LENGTH in/out → LENGERR |
 | condition-handling | [`hc-abend-link`](cases/condition-handling/hc-abend-link) | 5 | handlers not inherited by a LINKed program and restored on return; the caller's abend exit catches the callee's AEYH; a callee's own exit recovering; PUSH/POP HANDLE suspends HANDLE ABEND too |
-| hex-attributes | [`hx-attr-bytes`](cases/hex-attributes/hx-attr-bytes) | 3 | 3270 attribute bytes by name, literal, non-graphic X'3C', X'40'+1, X'80' input flag; null-first-byte data; MDT set by the program changes the next input; DATAONLY omissions; MAPONLY |
+| hex-attributes | [`hx-attr-bytes`](cases/hex-attributes/hx-attr-bytes) | 4 | 3270 attribute bytes by name, literal, non-graphic X'3C', X'40'+1, X'80' input flag; null-first-byte data; MDT set by the program changes the next input; DATAONLY omissions; MAPONLY; a PA key sends no MDT fields (MAPFAIL) |
 | hex-attributes | [`hx-extended-cursor`](cases/hex-attributes/hx-extended-cursor) | 3 | colour/highlight bytes vs the attribute byte (X'F1' = blink / blue / autoskip+MDT); map → field extended-attribute defaults; -1 length + CURSOR; NUM JUSTIFY=(RIGHT,ZERO) |
 | commarea-mismatch | [`ca-link-lengths`](cases/commarea-mismatch/ca-link-lengths) | 4 | LINK LENGTH 100 vs a 500-byte DFHCOMMAREA; LENGTH 500 over a 100-byte item (the callee writes the caller's neighbouring storage); no COMMAREA; PGMIDERR RESP2 1 |
-| commarea-mismatch | [`ca-xctl-versions`](cases/commarea-mismatch/ca-xctl-versions) | 3 | XCTL of a 10-byte V1 area to an 80-byte V2 reader that upgrades by EIBCALEN; LENGTH 80 over a 10-byte item carries the caller's neighbouring fields; LENGERR RESP2 11 |
-| ghost-tasks | [`gt-start-retrieve`](cases/ghost-tasks/gt-start-retrieve) | 5 | background STARTs: INTERVAL(0), no data (ENDDATA first), TIME in the past within six hours runs first, RETRIEVE LENGERR, PROTECT vs an abending starter |
+| commarea-mismatch | [`ca-xctl-versions`](cases/commarea-mismatch/ca-xctl-versions) | 4 | XCTL of a 10-byte V1 area to an 80-byte V2 reader that upgrades by EIBCALEN; LENGTH 80 over a 10-byte item carries the caller's neighbouring fields; LENGERR RESP2 11; the reader entered directly with EIBCALEN 0 |
+| ghost-tasks | [`gt-start-retrieve`](cases/ghost-tasks/gt-start-retrieve) | 6 | background STARTs: INTERVAL(0), no data (ENDDATA first), TIME in the past within six hours runs first, RETRIEVE LENGERR, PROTECT vs an abending starter; an unknown mode starts nothing |
 | ghost-tasks | [`gt-terminal-coalesce`](cases/ghost-tasks/gt-terminal-coalesce) | 4 | three terminal STARTs → one task retrieving all three; staggered expiry → two tasks; CANCEL REQID in time (NORMAL) and too late (NOTFND) |
-| pseudo-conversational | [`pc-wizard`](cases/pseudo-conversational/pc-wizard) | 3 | a 3-screen wizard over PC01/PC02/PC03 with state in the COMMAREA; MAPFAIL, CLEAR, PF3 in the other program, PF7 back via XCTL under the same transid |
-| pseudo-conversational | [`pc-aid-menu`](cases/pseudo-conversational/pc-aid-menu) | 3 | HANDLE AID labels with fall-through, unhandled PF keys, CLEAR before RECEIVE, XCTL vs RETURN TRANSID to a detail screen, EIBCALEN = 0 after a RETURN without COMMAREA |
+| pseudo-conversational | [`pc-wizard`](cases/pseudo-conversational/pc-wizard) | 6 | a 3-screen wizard over PC01/PC02/PC03 with state in the COMMAREA; MAPFAIL, CLEAR on each screen, PF3 in either program, an inactive PF key, PF7 back via XCTL under the same transid, a program-written amount not retransmitted |
+| pseudo-conversational | [`pc-aid-menu`](cases/pseudo-conversational/pc-aid-menu) | 4 | HANDLE AID labels with fall-through, unhandled PF keys, CLEAR before RECEIVE, XCTL vs RETURN TRANSID to a detail screen, EIBCALEN = 0 after a RETURN without COMMAREA, an invalid option |
 
 ### Lower-confidence expected behaviour
 
@@ -65,6 +65,7 @@ sentence states outright. They are the first places to look if a real CICS regio
 | hx-attr-bytes / echo-dataonly | The 3270 honours the MDT bit of X'41' and so transmits TWIDDLE on ENTER (this is a scenario *input*). | GA23-0059: bits 0-1 of an attribute are derived from bits 2-7 and carry no meaning |
 | hc-abend-link / sub-unhandled | When the level-1 exit is used for an abend at level 2, the level-2 program is discarded and level 1 resumes at its label. | "Abnormal termination recovery": upward search, first active exit gets control |
 | gt-start-retrieve / protect-abend | A START without PROTECT still runs when its issuer abends afterwards. | Implied by the PROTECT description (only PROTECTed requests are cancelled by an abend before syncpoint) |
+| hx-attr-bytes / pa-key-mapfail | After MAPFAIL on a PA key the INTO area is unchanged (the program's LOW-VALUES stay, so DATAONLY sends only STAT). | RECEIVE MAP: on MAPFAIL "the receiving data area contains the unmapped input data stream" and "the input map is not set to nulls"; a PA key's unmapped data has length zero |
 | ca-xctl-versions / long-overread | XCTL copies LENGTH bytes from the named area even when LENGTH exceeds the item. | Implied by XCTL LENGERR RESP2 28 ("LENGTH ... greater than the length of the data area ... while that data was being copied ...") |
 
 ## Known gaps (future work)

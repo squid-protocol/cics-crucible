@@ -1,0 +1,110 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "pc-wizard",
+ "scenario": "cancel-first-screen",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "PC01",
+   "program": "PCWIZ",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "SEND-MAP",
+     "program": "PCWIZ",
+     "map": "PCM1",
+     "mapset": "PCSET",
+     "options": [
+      "ERASE"
+     ],
+     "cursor": "NAME",
+     "fields": {
+      "NAME": {
+       "attr": "40",
+       "attr_from": "map",
+       "data": null,
+       "data_from": "none"
+      },
+      "MSG1": {
+       "attr": "F0",
+       "attr_from": "map",
+       "data": "TYPE YOUR NAME",
+       "data_from": "program"
+      }
+     }
+    },
+    {
+     "event": "RETURN",
+     "program": "PCWIZ",
+     "level": 1,
+     "transid": "PC02",
+     "commarea": {
+      "length": 30,
+      "layout": "STATE",
+      "fields": {
+       "PC-STEP": "1",
+       "PC-NAME": "",
+       "PC-AMOUNT": "0",
+       "PC-ERRORS": "0",
+       "PC-BACK": "",
+       "PC-SPARE": ""
+      }
+     }
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 2,
+   "transid": "PC02",
+   "program": "PCWIZ",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:10",
+   "trigger": {
+    "kind": "terminal",
+    "step": 1
+   },
+   "eibaid": "PF3",
+   "eibcalen": 30,
+   "commarea": {
+    "length": 30,
+    "layout": "STATE",
+    "fields": {
+     "PC-STEP": "1",
+     "PC-NAME": "",
+     "PC-AMOUNT": "0",
+     "PC-ERRORS": "0",
+     "PC-BACK": "",
+     "PC-SPARE": ""
+    }
+   },
+   "events": [
+    {
+     "event": "SEND-TEXT",
+     "program": "PCWIZ",
+     "text": "WIZARD CANCELLED",
+     "length": 16,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "PCWIZ",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

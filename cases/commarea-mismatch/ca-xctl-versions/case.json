@@ -19,6 +19,9 @@
      "steps": [{"at": 0, "aid": "ENTER", "text": "CA02 L"}, {"at": 20, "aid": "PF3"}]},
     {"id": "length-range", "path": "trap",
      "summary": "XCTL LENGTH(32767): outside 0-32763, LENGERR RESP2 11, control stays in CAXA",
-     "steps": [{"at": 0, "aid": "ENTER", "text": "CA02 X"}]}
+     "steps": [{"at": 0, "aid": "ENTER", "text": "CA02 X"}]},
+    {"id": "direct-entry", "path": "trap",
+     "summary": "CA03 typed on a cleared screen: CAXB starts with EIBCALEN 0, defaults every V2 field (and still labels them UPGRADED FROM V1), then PF3 ends",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "CA03"}, {"at": 20, "aid": "PF3"}]}
   ]
 }

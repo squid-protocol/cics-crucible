@@ -30,6 +30,10 @@
                {"at": 30, "aid": "CLEAR"},
                {"at": 40, "aid": "PF3", "map": "PCMN", "fields": {"OPT": ""}},
                {"at": 50, "aid": "ENTER", "text": "PC12",
-                "note": "the operator first presses CLEAR (no TRANSID is pending, so it starts nothing) and types on the cleared screen"}]}
+                "note": "the operator first presses CLEAR (no TRANSID is pending, so it starts nothing) and types on the cleared screen"}]},
+    {"id": "invalid-option", "path": "trap",
+     "summary": "ENTER with option 9: RECEIVE MAP succeeds, no HANDLE AID label applies, and the EVALUATE's WHEN OTHER redisplays the menu with INVALID OPTION",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "PC11"},
+               {"at": 10, "aid": "ENTER", "map": "PCMN", "fields": {"OPT": "9"}}]}
   ]
 }
