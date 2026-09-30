@@ -68,6 +68,12 @@ non-terminal request is dispatched once it has expired and its issuing task has 
   abends before the sync point is taken, the request to start the new task is canceled"
   [START]. So event 2 never runs. Event 1 carries no such condition and is not undone by the
   abend: its GT02 task runs and logs `R=00 L=0020 D=UNPROTECTED START`.
+* **`unknown-mode`**: `GT01 Z`. RECEIVE returns the 6 bytes. `Z` matches no WHEN and the
+  EVALUATE has no WHEN OTHER, so no START is issued: an EVALUATE with no matching WHEN and no
+  WHEN OTHER passes control to the end of the statement (Enterprise COBOL LR, EVALUATE).
+  GTSTART still sends `STARTS ISSUED` and RETURNs. No interval-control request exists, so
+  no GT02 task runs before `until`, and GTLOG is never written. A port that maps the modes
+  to a lookup that throws on a missing key, or schedules a default task, diverges.
 
 ## What a correct port must do
 
@@ -95,3 +101,4 @@ non-terminal request is dispatched once it has expired and its issuing task has 
 * [RESP-CODES] CICS TS 6.x, Response codes of EXEC CICS commands (ENDDATA = 29, LENGERR = 22): https://www.ibm.com/docs/en/cics-ts/6.x?topic=codes-response-exec-cics-commands
 * [WRITEQ-TS] CICS TS 6.x, EXEC CICS WRITEQ TS: https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-writeq-ts
 * [ABEND] CICS TS 6.x, EXEC CICS ABEND: https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-abend
+* Enterprise COBOL for z/OS Language Reference (SC27-8713): EVALUATE (no WHEN selected and no WHEN OTHER: execution continues after END-EVALUATE).

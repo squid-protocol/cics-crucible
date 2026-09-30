@@ -22,6 +22,9 @@
                 "note": "SECRET (X'4D'), BLINKY (X'F1'), TWIDDLE (X'41') and FSETF (map FSET) have the MDT bit on and are transmitted although untouched; RAW (X'3C') has it off; LEFTOVR was cleared with ERASE EOF"}]},
     {"id": "clear-maponly", "path": "happy",
      "summary": "CLEAR on the second task: the map is resent with MAPONLY, every attribute and data value from the map",
-     "steps": [{"at": 0, "aid": "ENTER", "text": "HX01"}, {"at": 30, "aid": "CLEAR"}]}
+     "steps": [{"at": 0, "aid": "ENTER", "text": "HX01"}, {"at": 30, "aid": "CLEAR"}]},
+    {"id": "pa-key-mapfail", "path": "trap",
+     "summary": "PA1 on the second task: it is not CLEAR, so the program issues RECEIVE MAP; a PA key transmits no data, so MAPFAIL (not a transmission of the MDT-on fields), and DATAONLY sends only STAT",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "HX01"}, {"at": 30, "aid": "PA1"}]}
   ]
 }

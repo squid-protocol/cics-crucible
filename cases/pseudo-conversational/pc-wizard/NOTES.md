@@ -83,6 +83,50 @@ Common facts:
   3. Task 5: the operator erases the field and types `100000` → `0100000` → 1000.00 → PCM3
      with `  1,000.00`.
   4. Task 6: ENTER posts `ALAN             1,000.00 E=00`.
+* **`clear-and-bad-amount`**
+  1. Tasks 1-2 as in `back-and-fix`: name `ALAN`, PCM2 sent, RETURN TRANSID('PC03').
+  2. Task 3: CLEAR on the amount screen. The pending TRANSID PC03 starts **PCCONF** with
+     EIBAID = CLEAR (SPEC section 4; EIBAID "contains the attention identifier (AID)
+     associated with the last terminal control or basic mapping support (BMS) input
+     operation" [EIB]). The CLEAR arm comes before `WHEN PC-STEP = 2`, so there is no
+     RECEIVE. PC-STEP is 2, so it performs SEND-STEP2. PC-AMOUNT is 0, so AMTO stays null
+     and AMT is sent with no data. MSG2 = `SCREEN RESTORED`. RETURN TRANSID('PC03') with the
+     state unchanged.
+  3. Task 4: ENTER with nothing typed. AMT is UNPROT,NUM with no FSET and the program wrote
+     no attribute, so no field has its MDT on and nothing is transmitted. RECEIVE MAP →
+     MAPFAIL: the condition "also arises if a program issues a RECEIVE MAP command to which
+     the terminal operator responds by ... pressing ENTER or a function key without entering
+     data" [RECEIVE-MAP]. RESP is given, so no AEI9. PC-ERRORS = 1, PCM2 is redisplayed with
+     `AMOUNT MUST BE DIGITS` (SEND-STEP2 RETURNs, so TAKE-AMOUNT's following MOVEs never
+     run). SEND-STEP2 clears PCM2O first, so nothing depends on what RECEIVE left in PCM2I.
+  4. Task 5: `250` → `0000250` (JUSTIFY=(RIGHT,ZERO) [DFHMDF]) → 2.50. PCM3 with
+     `      2.50` (edited by `ZZZ,ZZ9.99`: the comma in the suppressed zone becomes a blank).
+     WS-MSG is spaces, so MSG3 takes its INITIAL. Step 3, errors 1.
+  5. Task 6: CLEAR on the confirm screen. `IF PC-STEP = 3` is true: SEND-STEP3 with WS-MSG =
+     `SCREEN RESTORED`, which is not spaces, so MSG3O carries it and the program's data
+     replaces the INITIAL ("the first character of the data" is not null [BUILD-SCREEN]).
+  6. Task 7: PF5. Not PF3, not CLEAR, step is not 2, not PF7, not ENTER: WHEN OTHER sends PCM3
+     with `USE ENTER, PF7 OR PF3`. No RECEIVE is issued (PCM3 has no input field anyway).
+  7. Task 8: ENTER posts `ALAN                 2.50 E=01`: the error from task 4 travelled in
+     the COMMAREA through four more tasks.
+* **`back-clear-keeps-amount`**
+  1. Tasks 1-4 as in `back-and-fix` (amount 999, PF7 back to PCWIZ, which sends PCM2 with
+     AMT `0000999` and RETURNs TRANSID('PC03')).
+  2. Task 5: CLEAR. PC03 → PCCONF (not PCWIZ, which sent the screen). Step 2, so SEND-STEP2;
+     PC-AMOUNT = 9.99 > 0, so 999 goes to AMTO as `0000999` (PIC 9(7) moved to X(7)).
+     MSG2 = `SCREEN RESTORED`.
+  3. Task 6: ENTER without retyping the amount. AMT was written by the program with the
+     map's attribute X'50' (MDT off), and the operator did not touch it, so the terminal
+     transmits no field [3270-ATTR: the MDT is set when the operator modifies the field] and
+     RECEIVE MAP → MAPFAIL [RECEIVE-MAP]. Errors = 1, PCM2 is redisplayed with the amount
+     still `0000999` and `AMOUNT MUST BE DIGITS`. A port that treats the displayed value as
+     input accepts 9.99 here.
+  4. Task 7: PF3 → PCCONF sends `WIZARD CANCELLED` and RETURNs without TRANSID. Nothing is
+     posted.
+* **`cancel-first-screen`**: task 1 as in `happy-post`. Task 2: PF3 on the name screen starts
+  PC02 → PCWIZ with EIBCALEN = 30 [RETURN], so the first-entry IF is skipped. The EVALUATE's
+  first arm (PF3) performs CANCEL-WIZARD: SEND TEXT `WIZARD CANCELLED` and RETURN without
+  TRANSID, before any RECEIVE MAP.
 
 ## What a correct port must do
 
@@ -100,6 +144,8 @@ Common facts:
 * CLEAR also erases the physical screen. Here the program immediately redraws with ERASE,
   so the case does not depend on what the terminal shows after CLEAR.
 * RETURN IMMEDIATE, and ATI requests competing with the pending TRANSID, are not used.
+* A typed amount that is not all digits (for example `12.5`, which a NUM field accepts) is
+  not used: the bad-amount path is driven by MAPFAIL, which IBM states outright.
 
 ## Citations
 
@@ -110,3 +156,6 @@ Common facts:
 * [DFHMDF] CICS TS 6.x, DFHMDF macro (JUSTIFY, NUM, IC, INITIAL): https://www.ibm.com/docs/en/cics-ts/6.x?topic=macros-dfhmdf
 * [AEIA] CICS TS 6.x, abend codes AEIA group (MAPFAIL = AEI9): https://www.ibm.com/docs/en/cics-ts/6.x?topic=codes-aeia
 * [WRITEQ-TS] CICS TS 6.x, EXEC CICS WRITEQ TS: https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-writeq-ts
+* [EIB] CICS TS 6.x, EIB fields (EIBAID, EIBCALEN): https://www.ibm.com/docs/en/cics-ts/6.x?topic=reference-eib-fields
+* [3270-ATTR] CICS TS 5.4, 3270 field attributes (the MDT, set when the operator changes a field): https://www.ibm.com/docs/en/cics-ts/5.4.0?topic=terminals-3270-field-attributes
+* Enterprise COBOL for z/OS Language Reference (SC27-8713): EVALUATE (arms tested in order), editing with Z and insertion characters.

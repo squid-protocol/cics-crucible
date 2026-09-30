@@ -88,6 +88,17 @@ EIBAID first and never issues RECEIVE MAP, so there is no MAPFAIL. SEND MAP MAPO
 takes everything from the map. The ATTRB bytes are as listed above, and the data is INITIAL
 where one exists (nulls otherwise). The cursor is at NAME (IC). RETURN TRANSID('HX01')
 continues the conversation.
+**`pa-key-mapfail`** (task 2, PA1, EIBCALEN 1): PA1 is not CLEAR, so ECHO-SCREEN runs.
+A PA key transmits no field data (SPEC section 5), whatever MDT bits are on: unlike ENTER in
+`echo-dataonly`, SECRET, BLINKY, TWIDDLE and FSETF are **not** sent. RECEIVE MAP → MAPFAIL:
+it "occurs if the data to be mapped has a length of zero", and "also arises if a program
+issues a RECEIVE MAP command to which the terminal operator responds by pressing a CLEAR or
+PA key" [RECEIVE-MAP]. RESP is given, so no AEI9 [AEIA]. On MAPFAIL "the receiving data area
+contains the unmapped input data stream" and "the input map is not set to nulls"
+[RECEIVE-MAP]; the unmapped data here has length zero, so HXM1I keeps the LOW-VALUES the
+program moved to it. The program sets STAT to DFHBMPRF (X'61') and `NO INPUT`. SEND MAP
+DATAONLY sends STAT only: every other field has a null first data byte and a X'00' attribute
+[BUILD-SCREEN]. The task RETURNs with no TRANSID.
 
 ## What a correct port must do
 
@@ -110,6 +121,9 @@ continues the conversation.
   Listed as a lower-confidence point in the README.
 * **Flag byte of an erased field.** X'80' is inferred from DFHBMEOF ("Field erased"). The
   case does not depend on it: X'80' and X'00' are both "not present" to BMS on output.
+* **PA keys as print keys.** A region can make a PA key the print key (SIT `PRINT=PA1`, ...);
+  then it would start no task. The reference region uses the default (`PRINT=NO`), so
+  `pa-key-mapfail`'s PA1 starts the pending HX01 (SPEC section 4).
 * **INITIAL shorter than the field**, and whether BMS pads it, is avoided: every INITIAL is
   exactly the field length.
 
@@ -123,3 +137,4 @@ continues the conversation.
 * [RECEIVE-MAP] CICS TS 6.x, EXEC CICS RECEIVE MAP: https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-receive-map
 * [SEND-MAP] CICS TS 6.x, EXEC CICS SEND MAP (ERASE, MAPONLY, DATAONLY): https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-send-map
 * [RETURN] CICS TS 6.x, EXEC CICS RETURN (TRANSID, COMMAREA, EIBCALEN of the next task): https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-return
+* [AEIA] CICS TS 6.x, abend codes AEIA group (MAPFAIL = AEI9 when unhandled): https://www.ibm.com/docs/en/cics-ts/6.x?topic=codes-aeia
