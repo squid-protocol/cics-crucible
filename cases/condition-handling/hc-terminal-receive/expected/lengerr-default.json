@@ -1,0 +1,61 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-terminal-receive",
+ "scenario": "lengerr-default",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC03",
+   "program": "HCTERM",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "SEND-CONTROL",
+     "program": "HCTERM",
+     "options": [
+      "ERASE",
+      "FREEKB"
+     ]
+    },
+    {
+     "event": "RECEIVE",
+     "program": "HCTERM",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC03 A"
+     },
+     "note": "MAXLENGTH(6) NOTRUNCATE: the first 6 bytes, LENGTH set to the length returned; the rest is retained"
+    },
+    {
+     "event": "RECEIVE",
+     "program": "HCTERM",
+     "resp": "LENGERR",
+     "length": 8,
+     "data": {
+      "length": 4,
+      "text": "OVER"
+     }
+    },
+    {
+     "event": "ABEND",
+     "program": "HCTERM",
+     "abcode": "AEIV",
+     "cause": "condition",
+     "condition": "LENGERR",
+     "outcome": "terminated"
+    }
+   ],
+   "end": "abend"
+  }
+ ]
+}
