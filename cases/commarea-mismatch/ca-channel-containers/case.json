@@ -1,0 +1,52 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "ca-channel-containers",
+  "trap": "commarea-mismatch",
+  "title": "A channel in place of a COMMAREA: CHAR and BIT containers, APPEND, LINK / XCTL CHANNEL, the current channel, CONTAINERERR, CHANNELERR, LENGERR, INVREQ",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/CACHAN.cbl",
+      "src/CACHSUB.cbl",
+      "src/CACHXB.cbl",
+      "src/CACHERR.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/ca-channel-containers.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "round-trip",
+      "path": "happy",
+      "summary": "CACHAN builds channel CAREQUEST (a CHAR container and an APPEND to it, a BIT container), LINKs CACHSUB with it -- which reads, truncates, misses, deletes and replies through its current channel -- reads the reply back, then XCTLs to CACHXB with the channel",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA05"
+        }
+      ]
+    },
+    {
+      "id": "unhandled-containererr",
+      "path": "trap",
+      "summary": "GET CONTAINER of a container the channel does not have, with neither RESP nor HANDLE CONDITION: the task abends AEZJ",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA06"
+        }
+      ]
+    }
+  ]
+}

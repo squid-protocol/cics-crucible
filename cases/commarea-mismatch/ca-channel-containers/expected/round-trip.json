@@ -1,0 +1,343 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-channel-containers",
+ "scenario": "round-trip",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA05",
+   "program": "CACHAN",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHAN",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "ASG000000000000"
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "no current channel: ASSIGN CHANNEL returns blanks [ASSIGN]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHAN",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GET001600400000"
+     },
+     "resp": "NORMAL",
+     "item": 2,
+     "note": "no CHANNEL option and no current channel: INVREQ RESP2 4; FLENGTH not logged [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHAN",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "PUT100000000000"
+     },
+     "resp": "NORMAL",
+     "item": 3,
+     "note": "CHANNEL(CAREQUEST) does not exist: it is created [PUT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHAN",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "PUT200000000000"
+     },
+     "resp": "NORMAL",
+     "item": 4,
+     "note": "APPEND: REQUEST now holds ABCDEFGHIJKLM [PUT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHAN",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "PUT300000000000"
+     },
+     "resp": "NORMAL",
+     "item": 5,
+     "note": "a new container named BIT: the fullword's four bytes [PUT]"
+    },
+    {
+     "event": "LINK",
+     "program": "CACHAN",
+     "target": "CACHSUB",
+     "length": 0,
+     "resp": "NORMAL",
+     "commarea": null,
+     "note": "LINK CHANNEL: no COMMAREA, EIBCALEN 0; CAREQUEST is CACHSUB's current channel [LINK] [SCOPE]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHSUB",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "ASG100000000000CAREQUEST"
+     },
+     "resp": "NORMAL",
+     "item": 6,
+     "note": "the current channel's name [ASSIGN]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHSUB",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GET300000000013ABCDEFGHIJKLM"
+     },
+     "resp": "NORMAL",
+     "item": 7,
+     "note": "no CHANNEL: the current channel; FLENGTH set to 13 [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHSUB",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GET402201100013ABCD"
+     },
+     "resp": "NORMAL",
+     "item": 8,
+     "note": "a 4-byte area: truncated to fit, LENGERR RESP2 11; FLENGTH returns the container's 13 [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHSUB",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GET500000000004"
+     },
+     "resp": "NORMAL",
+     "item": 9,
+     "note": "NODATA: only the length [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHSUB",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GET600000000258"
+     },
+     "resp": "NORMAL",
+     "item": 10,
+     "note": "the BIT container's fullword, not converted [PUT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHSUB",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GET711001000000"
+     },
+     "resp": "NORMAL",
+     "item": 11,
+     "note": "CONTAINERERR RESP2 10 [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHSUB",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GET812200200000"
+     },
+     "resp": "NORMAL",
+     "item": 12,
+     "note": "CAOTHER was never created: CHANNELERR RESP2 2 [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHSUB",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "DEL100000000000"
+     },
+     "resp": "NORMAL",
+     "item": 13,
+     "note": "COUNT deleted from CAREQUEST [DELETE]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHSUB",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "PUT500000000000"
+     },
+     "resp": "NORMAL",
+     "item": 14,
+     "note": "no CHANNEL: the current channel, CAREQUEST [PUT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHSUB",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "HND111001000000"
+     },
+     "resp": "NORMAL",
+     "item": 15,
+     "note": "the second DELETE of COUNT raised CONTAINERERR RESP2 10; HANDLE CONDITION took it [DELETE] [HANDLE]"
+    },
+    {
+     "event": "RETURN",
+     "program": "CACHSUB",
+     "level": 2,
+     "caller_commarea": null
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHAN",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "LNK100000000000"
+     },
+     "resp": "NORMAL",
+     "item": 16
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHAN",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GET100000000011DONE-BY-SUB"
+     },
+     "resp": "NORMAL",
+     "item": 17,
+     "note": "what CACHSUB put is in the caller's channel [SCOPE]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHAN",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GET211001000000"
+     },
+     "resp": "NORMAL",
+     "item": 18,
+     "note": "CACHSUB deleted COUNT from the same channel"
+    },
+    {
+     "event": "XCTL",
+     "program": "CACHAN",
+     "target": "CACHXB",
+     "length": 0,
+     "resp": "NORMAL",
+     "commarea": null,
+     "note": "XCTL CHANNEL: CAREQUEST is CACHXB's current channel [XCTL] [SCOPE]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHXB",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "ASG200000000000CAREQUEST"
+     },
+     "resp": "NORMAL",
+     "item": 19
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHXB",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GET900000000011DONE-BY-SUB"
+     },
+     "resp": "NORMAL",
+     "item": 20
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHXB",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "PUT600000000000"
+     },
+     "resp": "NORMAL",
+     "item": 21,
+     "note": "CANEWCHAN does not exist: it is created [PUT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHXB",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GETA00000000010"
+     },
+     "resp": "NORMAL",
+     "item": 22
+    },
+    {
+     "event": "RETURN",
+     "program": "CACHXB",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "CALOG": [
+    "ASG000000000000",
+    "GET001600400000",
+    "PUT100000000000",
+    "PUT200000000000",
+    "PUT300000000000",
+    "ASG100000000000CAREQUEST",
+    "GET300000000013ABCDEFGHIJKLM",
+    "GET402201100013ABCD",
+    "GET500000000004",
+    "GET600000000258",
+    "GET711001000000",
+    "GET812200200000",
+    "DEL100000000000",
+    "PUT500000000000",
+    "HND111001000000",
+    "LNK100000000000",
+    "GET100000000011DONE-BY-SUB",
+    "GET211001000000",
+    "ASG200000000000CAREQUEST",
+    "GET900000000011DONE-BY-SUB",
+    "PUT600000000000",
+    "GETA00000000010"
+   ]
+  }
+ }
+}

@@ -1,0 +1,51 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-channel-containers",
+ "scenario": "unhandled-containererr",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA06",
+   "program": "CACHERR",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACHERR",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "PUTE00000000000"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "ABEND",
+     "program": "CACHERR",
+     "abcode": "AEZJ",
+     "cause": "condition",
+     "condition": "CONTAINERERR",
+     "outcome": "terminated",
+     "note": "no RESP, no HANDLE CONDITION, no abend exit: the default action, abend AEZJ [AEZJ]"
+    }
+   ],
+   "end": "abend"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "CALOG": [
+    "PUTE00000000000"
+   ]
+  }
+ }
+}

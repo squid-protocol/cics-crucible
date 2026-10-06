@@ -37,7 +37,7 @@ only with a documented reason recorded in the case's `NOTES.md` (see
 
 ## Status
 
-Format `cics-crucible/1` ([SPEC.md](SPEC.md)). 15 cases and 74 scenarios. No release tag
+Format `cics-crucible/1` ([SPEC.md](SPEC.md)). 16 cases and 76 scenarios. No release tag
 yet (see [RELEASING.md](RELEASING.md)).
 
 | Trap | Case | Scenarios | What it pins down |
@@ -53,6 +53,7 @@ yet (see [RELEASING.md](RELEASING.md)).
 | hex-attributes | [`hx-extended-cursor`](cases/hex-attributes/hx-extended-cursor) | 3 | colour/highlight bytes vs the attribute byte (X'F1' = blink / blue / autoskip+MDT); map → field extended-attribute defaults; -1 length + CURSOR; NUM JUSTIFY=(RIGHT,ZERO) |
 | commarea-mismatch | [`ca-link-lengths`](cases/commarea-mismatch/ca-link-lengths) | 4 | LINK LENGTH 100 vs a 500-byte DFHCOMMAREA; LENGTH 500 over a 100-byte item (the callee writes the caller's neighbouring storage); no COMMAREA; PGMIDERR RESP2 1 |
 | commarea-mismatch | [`ca-xctl-versions`](cases/commarea-mismatch/ca-xctl-versions) | 4 | XCTL of a 10-byte V1 area to an 80-byte V2 reader that upgrades by EIBCALEN; LENGTH 80 over a 10-byte item carries the caller's neighbouring fields; LENGERR RESP2 11; the reader entered directly with EIBCALEN 0 |
+| commarea-mismatch | [`ca-channel-containers`](cases/commarea-mismatch/ca-channel-containers) | 2 | A channel in place of a COMMAREA: CHAR and BIT containers, APPEND, LINK / XCTL CHANNEL and the callee's current channel, FLENGTH in / out and NODATA, CONTAINERERR / CHANNELERR / LENGERR / INVREQ by RESP and HANDLE CONDITION, AEZJ by default |
 | ghost-tasks | [`gt-start-retrieve`](cases/ghost-tasks/gt-start-retrieve) | 6 | background STARTs: INTERVAL(0), no data (ENDDATA first), TIME in the past within six hours runs first, RETRIEVE LENGERR, PROTECT vs an abending starter; an unknown mode starts nothing |
 | ghost-tasks | [`gt-terminal-coalesce`](cases/ghost-tasks/gt-terminal-coalesce) | 4 | three terminal STARTs → one task retrieving all three; staggered expiry → two tasks; CANCEL REQID in time (NORMAL) and too late (NOTFND) |
 | pseudo-conversational | [`pc-wizard`](cases/pseudo-conversational/pc-wizard) | 6 | a 3-screen wizard over PC01/PC02/PC03 with state in the COMMAREA; MAPFAIL, CLEAR on each screen, PF3 in either program, an inactive PF key, PF7 back via XCTL under the same transid, a program-written amount not retransmitted |
@@ -73,6 +74,7 @@ sentence states outright. They are the first places to look if a real CICS regio
 | hx-attr-bytes / pa-key-mapfail | After MAPFAIL on a PA key the INTO area is unchanged (the program's LOW-VALUES stay, so DATAONLY sends only STAT). | RECEIVE MAP: on MAPFAIL "the receiving data area contains the unmapped input data stream" and "the input map is not set to nulls"; a PA key's unmapped data has length zero |
 | hc-terminal-eoc (all) | A 3270 display logical unit's (LUTYPE2) input message of a few bytes is a single-RU chain, so the RECEIVE returning it raises EOC; the reference region's 3270 logical unit raises none. | RECEIVE (LUTYPE2/LUTYPE3) lists EOC ("an RU ... received with end-of-chain-indicator set"), RECEIVE (3270 logical) does not; that an inbound 3270 message is one chain is SNA's, not a CICS sentence |
 | ca-xctl-versions / long-overread | XCTL copies LENGTH bytes from the named area even when LENGTH exceeds the item. | Implied by XCTL LENGERR RESP2 28 ("LENGTH ... greater than the length of the data area ... while that data was being copied ...") |
+| ca-channel-containers / round-trip | After a GET CONTAINER that raises LENGERR, FLENGTH holds the container's full length (13), as after a NORMAL GET. | GET CONTAINER (CHANNEL): "As an output field, FLENGTH returns the length of the data in the container", stated for the option, not per condition |
 
 ## Known gaps (future work)
 
