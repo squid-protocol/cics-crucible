@@ -5,12 +5,14 @@
 `GTOPTS` (transaction `GT21`) starts background tasks with `EXEC CICS START`, using the options
 that [gt-start-retrieve](../gt-start-retrieve) does not: the data options `RTRANSID`, `RTERMID`
 and `QUEUE`, `AFTER` / `AT` with `HOURS` / `MINUTES` / `SECONDS`, a `TIME` past 23 hours, and a
-`REQID` used twice. Two started transactions read what they were given:
+`REQID` used twice; and it attaches a child task with `RUN TRANSID`. Two started transactions read
+what they were given:
 
 * `GT22` (`GTREAD`) issues one `RETRIEVE INTO LENGTH RTRANSID RTERMID QUEUE` and logs the response
   and the values to TS queue `GTLOG`.
 * `GT23` (`GTRTRN`) issues `RETRIEVE RTRANSID` with no `INTO` until the response is not NORMAL,
   and logs each response to `GTLOG`.
+* `GT24` (`GTCHLD`), the RUN TRANSID child, logs `CHILD RAN` to `GTLOG`.
 
 GTOPTS logs the RESP / RESP2 of the STARTs whose outcome is the point (modes V and I) to its own
 queue `GTSLOG`. The mode letter typed after the transaction id picks the START(s):
@@ -23,6 +25,7 @@ queue `GTSLOG`. The mode letter typed after the transaction id picks the START(s
 | A | GT23 `AFTER MINUTES(1)`, `AFTER HOURS(0) MINUTES(0) SECONDS(30)`, `AT HOURS(10) MINUTES(45)`, `TIME(250000)`, at 10:00:00 | AFTER is an interval, AT a time of day; 25 hours is 01:00 tomorrow |
 | V | GT23 `INTERVAL(70)`, `AFTER HOURS(1) MINUTES(60)`, `AFTER SECONDS(360000)`, `AFTER HOURS(100)` | INVREQ with RESP2 6, 5, 6, 4; nothing starts |
 | I | GT23 `INTERVAL(30) REQID('GTR00001') FROM ... RTRANSID('REQ1')`, then the same REQID with FROM again | the second START is IOERR; only the first runs |
+| U | `RUN TRANSID('GT24') CHILD(WS-CHILD)`, then `RUN TRANSID('GTZZ')` (not defined) | the child task runs; the second RUN is TRANSIDERR RESP2 1 |
 
 ## Why a naive translation breaks
 
@@ -39,6 +42,8 @@ queue `GTSLOG`. The mode letter typed after the transaction id picks the START(s
 * A port that keys pending requests by REQID in a map silently replaces the first request when
   the same REQID is used again with FROM; CICS raises IOERR and keeps the first.
 * INVREQ's RESP2 says which value was out of range; a port that only sets RESP loses it.
+* A port that runs a RUN TRANSID child inline, as a method call, makes the parent wait for it
+  and lets a failing child fail the parent; a port that drops the child unless FETCHed loses it.
 
 ## Expected behaviour
 
@@ -97,6 +102,14 @@ its START(s), sends `STARTS ISSUED` and RETURNs.
   WS-RESP2 keeps its VALUE 0. GTSLOG: `S=00/00`, `S=17/00`. At 10:00:30 GT23 RETRIEVEs `REQ1`,
   then ENDDATA.
 
+* **`run-transid`** (U): `RUN TRANSID` "starts a task on the local system ... The started task
+  (child task) runs asynchronously with the starting task (parent task)"; CICS places "the child
+  token that represents the child task" in the 16-character CHILD area [RUN]. RESP NORMAL; GTSLOG
+  `S=00/00`. `RUN TRANSID('GTZZ')`: GTZZ is not defined, TRANSIDERR (28) with RESP2 1 [RUN];
+  GTSLOG `S=28/01`. The GT24 child runs with no terminal and EIBCALEN 0 and logs `CHILD RAN` to
+  GTLOG. It is recorded after GT21 (SPEC 4: a RUN child is dispatched like a request that expires
+  when the RUN is issued); nothing observable depends on that order (below).
+
 ## What a correct port must do
 
 * Keep each START's data record as FROM data plus the RTRANSID / RTERMID / QUEUE values, each
@@ -106,6 +119,7 @@ its START(s), sends `STARTS ISSUED` and RETURNs.
 * Turn AFTER / AT into an expiry with their own range rules, and INVREQ's RESP2 per value; read
   TIME / AT hours above 23 as a later day.
 * Raise IOERR for a START with FROM whose REQID names a request that still holds data.
+* Attach a RUN TRANSID child without waiting for it, and raise TRANSIDERR for an undefined one.
 
 ## Avoided ambiguities
 
@@ -124,6 +138,9 @@ its START(s), sends `STARTS ISSUED` and RETURNs.
   FROM option is also used" leaves these open; mode I reuses its own REQID, with FROM both times.
 * **TIME(250000)'s task** expires after `until`, so whether anything else happens overnight is
   not observed.
+* **The RUN child against its parent.** The child runs concurrently with GT21 in real CICS: GT21
+  writes only GTSLOG and the child only GTLOG, and GT21 never FETCHes it. The child token's bytes
+  are not documented beyond its length; GTOPTS never reads WS-CHILD.
 * No START here names TERMID, so no terminal coalescing (gt-terminal-coalesce covers it).
 
 ## Citations
@@ -132,4 +149,5 @@ its START(s), sends `STARTS ISSUED` and RETURNs.
 * [RETRIEVE] CICS TS 6.x, EXEC CICS RETRIEVE (INTO, LENGTH, RTRANSID, RTERMID, QUEUE; ENDDATA, ENVDEFERR; "Tasks without terminals access only a single data record"): https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-retrieve
 * [EXPIRATION] CICS TS 6.x, Expiration times (hours greater than 23; the six-hour rule): https://www.ibm.com/docs/en/cics-ts/6.x?topic=control-expiration-times
 * [RESP-CODES] CICS TS 6.x, Response codes of EXEC CICS commands (INVREQ = 16, IOERR = 17, ENDDATA = 29, ENVDEFERR = 56): https://www.ibm.com/docs/en/cics-ts/6.x?topic=codes-response-exec-cics-commands
+* [RUN] CICS TS 6.x, EXEC CICS RUN TRANSID (the child task, CHILD; TRANSIDERR RESP2 1): https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-run-transid
 * [WRITEQ-TS] CICS TS 6.x, EXEC CICS WRITEQ TS: https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-writeq-ts

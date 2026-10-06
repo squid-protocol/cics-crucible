@@ -2,14 +2,15 @@
   "format": "cics-crucible/case/1",
   "id": "gt-start-options",
   "trap": "ghost-tasks",
-  "title": "START options beyond INTERVAL / TIME: the data options RTRANSID / RTERMID / QUEUE and RETRIEVE's ENVDEFERR, RETRIEVE with no INTO, AFTER / AT, INVREQ's RESP2, a REQID reused with FROM (IOERR)",
+  "title": "START options beyond INTERVAL / TIME: the data options RTRANSID / RTERMID / QUEUE and RETRIEVE's ENVDEFERR, RETRIEVE with no INTO, AFTER / AT, INVREQ's RESP2, a REQID reused with FROM (IOERR); RUN TRANSID's child task",
   "clock": "2026-03-02T10:00:00",
   "terminal": "T001",
   "sources": {
     "cobol": [
       "src/GTOPTS.cbl",
       "src/GTREAD.cbl",
-      "src/GTRTRN.cbl"
+      "src/GTRTRN.cbl",
+      "src/GTCHLD.cbl"
     ],
     "bms": [],
     "csd": [
@@ -82,6 +83,19 @@
           "at": 0,
           "aid": "ENTER",
           "text": "GT21 V"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "run-transid",
+      "path": "happy",
+      "summary": "RUN TRANSID('GT24') CHILD attaches a child task that runs (no terminal); RUN of an undefined transaction is TRANSIDERR RESP2 1",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT21 U"
         }
       ],
       "until": 60

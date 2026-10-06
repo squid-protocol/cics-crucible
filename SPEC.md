@@ -105,6 +105,10 @@ tasks it starts.
     expiry order.
   A request's data is its `FROM` data and its `RTRANSID` / `RTERMID` / `QUEUE` values; a request
   with none of them has none, and a task started by it gets ENDDATA on its first RETRIEVE.
+* **RUN TRANSID children.** `RUN TRANSID` attaches a child task that "runs asynchronously
+  with the starting task": it is dispatched like a non-terminal request that expires when the
+  RUN is issued (once the issuing task has ended). A case never makes its order against the
+  parent observable (no FETCH; no shared resource).
 * **Dispatch order.** The scheduler never pre-empts a task. When a task ends, it dispatches,
   in order: expired START requests (earliest expiry first, ties by issue order), then the
   next operator step once its time has come. Virtual time jumps to the next expiry or step.
@@ -185,7 +189,8 @@ MAPFAIL).
 
 * `tasks` are in dispatch order (section 4). `trigger` is `{"kind": "terminal", "step": i}`
   (index into `steps`) or `{"kind": "start", "task": seq, "event": j}` (the START event, index
-  into that task's events; a coalesced terminal start names the first request).
+  into that task's events; a coalesced terminal start names the first request), or
+  `{"kind": "run", "task": seq, "event": j}` (a RUN TRANSID child: the RUN event).
 * `eibaid` is the key name (null for a non-terminal task; a started terminal task has
   `null` too). `eibcalen` and `commarea` describe the COMMAREA the task's first program
   receives.
@@ -236,6 +241,7 @@ asked for RESP; `resp2` is given only where IBM documents the value.
 | `START` | `transid`, `termid`, `interval` (`hhmmss`) or `time` (`hhmmss`), `from` (area or null), `reqid` (only if the program named one), `rtransid` / `rtermid` / `queue` (each only if the program named it), `protect`, `resp`, `expires` (virtual time, null if not NORMAL) | `AFTER` is recorded as the `interval` and `AT` as the `time` its HOURS / MINUTES / SECONDS amount to; out of range (INVREQ) it amounts to none: null |
 | `RETRIEVE` | `resp`, `length` (the LENGTH value after the command; only when the command sets it: NORMAL, LENGERR, with INTO), `data` (the bytes written into INTO, or null), `rtransid` / `rtermid` / `queue` (each only if the command named it and is NORMAL or LENGERR) | |
 | `CANCEL` | `reqid`, `resp` | interval-control CANCEL |
+| `RUN` | `transid`, `resp`, `resp2` (not NORMAL) | RUN TRANSID; its CHILD token is not observable. The child task's `trigger` is `{"kind": "run", "task", "event"}` |
 | `READQ-TS` | `queue`, `item` (number, or `"NEXT"`), `resp`, `length` (after; only on NORMAL / LENGERR), `data` (the bytes written into INTO, or null) | |
 | `WRITEQ-TS` | `queue`, `data`, `resp`, `item` (number assigned) | |
 | `READ` | `file`, `ridfld`, `resp` | file control |

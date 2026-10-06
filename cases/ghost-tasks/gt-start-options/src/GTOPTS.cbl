@@ -13,6 +13,8 @@
       *      TIME(250000), 01:00 tomorrow                             *
       *   V  four STARTs out of range: INVREQ with RESP2 6, 5, 6, 4   *
       *   I  the same REQID twice with FROM: the second is IOERR      *
+      *   U  RUN TRANSID('GT24') CHILD: a child task; then RUN of an  *
+      *      undefined transaction (TRANSIDERR, RESP2 1)              *
       *---------------------------------------------------------------*
        DATA DIVISION.
        WORKING-STORAGE SECTION.
@@ -28,6 +30,7 @@
            05  SLOG-RESP         PIC 99    VALUE 0.
            05  FILLER            PIC X     VALUE '/'.
            05  SLOG-RESP2        PIC 99    VALUE 0.
+       01  WS-CHILD              PIC X(16) VALUE SPACES.
        01  WS-TEXT               PIC X(20) VALUE 'STARTS ISSUED'.
        PROCEDURE DIVISION.
        MAIN-PARA.
@@ -89,6 +92,15 @@
                    EXEC CICS START TRANSID('GT23') INTERVAL(30)
                              REQID('GTR00001') FROM(WS-MSG2) LENGTH(20)
                              RTRANSID('REQ2') RESP(WS-RESP)
+                   END-EXEC
+                   PERFORM LOG-START
+               WHEN 'U'
+                   EXEC CICS RUN TRANSID('GT24') CHILD(WS-CHILD)
+                             RESP(WS-RESP) RESP2(WS-RESP2)
+                   END-EXEC
+                   PERFORM LOG-START
+                   EXEC CICS RUN TRANSID('GTZZ') CHILD(WS-CHILD)
+                             RESP(WS-RESP) RESP2(WS-RESP2)
                    END-EXEC
                    PERFORM LOG-START
            END-EVALUATE

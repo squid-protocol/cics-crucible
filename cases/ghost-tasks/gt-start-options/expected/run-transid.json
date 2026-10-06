@@ -1,0 +1,134 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "gt-start-options",
+ "scenario": "run-transid",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "GT21",
+   "program": "GTOPTS",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "GTOPTS",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "GT21 U"
+     }
+    },
+    {
+     "event": "RUN",
+     "program": "GTOPTS",
+     "transid": "GT24",
+     "resp": "NORMAL",
+     "note": "the child token in WS-CHILD is never read"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTOPTS",
+     "queue": "GTSLOG",
+     "data": {
+      "length": 7,
+      "text": "S=00/00"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "RUN",
+     "program": "GTOPTS",
+     "transid": "GTZZ",
+     "resp": "TRANSIDERR",
+     "resp2": 1,
+     "note": "Transaction undefined"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTOPTS",
+     "queue": "GTSLOG",
+     "data": {
+      "length": 7,
+      "text": "S=28/01"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "GTOPTS",
+     "text": "STARTS ISSUED",
+     "length": 20,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "GTOPTS",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 2,
+   "transid": "GT24",
+   "program": "GTCHLD",
+   "termid": null,
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "run",
+    "task": 1,
+    "event": 1
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTCHLD",
+     "queue": "GTLOG",
+     "data": {
+      "length": 9,
+      "text": "CHILD RAN"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "RETURN",
+     "program": "GTCHLD",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "GTSLOG": [
+    "S=00/00",
+    "S=28/01"
+   ],
+   "GTLOG": [
+    "CHILD RAN"
+   ]
+  }
+ }
+}
