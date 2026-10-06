@@ -1,23 +1,18 @@
 # Releasing / tagging this repo
 
-**No tag has been cut yet.** This file exists so that cutting the first one, and every one
-after it, is a deliberate, coordinated decision. It must never happen by accident, and it
-must never silently change what gitgalaxy's CI tests against.
+Tags are cut deliberately and coordinated with gitgalaxy: a tag must never happen by accident, and
+it must never silently change what gitgalaxy's CI tests against. See "Where things stand" for what exists.
 
-## How the pin will work
+## How the pin works
 
-This mirrors [language-crucible's `RELEASING.md`](https://github.com/squid-protocol/language-crucible/blob/main/RELEASING.md).
-gitgalaxy will clone this repo **at a release tag**, never at `main`, in two places that
-move together:
-
-- a GitHub Actions repository variable on `squid-protocol/gitgalaxy` (planned name
-  `CICS_CRUCIBLE_REF`), read by the CI job that runs the `cics_crucible` equivalence runner;
-- a `PINNED_TAG` constant in gitgalaxy's runner (like `tests/_crucible_pin.py` for
-  language-crucible), for local runs and human-facing messages.
-
-Both, the runner, its baseline ratchet ledger and the CI job are **phase 2** of
-[gitgalaxy#3989](https://github.com/squid-protocol/gitgalaxy/issues/3989). Until phase 2
-lands, a tag here changes nothing downstream.
+This mirrors [language-crucible's `RELEASING.md`](https://github.com/squid-protocol/language-crucible/blob/main/RELEASING.md),
+except that there is no GitHub Actions repository variable. gitgalaxy clones this repo **at a
+release tag**, never at `main`, and the ref lives in one place: the `PINNED_REF` constant in
+`tests/_cics_crucible_pin.py` in gitgalaxy. Its CI workflows read it straight out of that file
+(so it also works on pull requests from forks), and local runs and human-facing messages use
+the same constant. Moving the pin is its own gitgalaxy PR that re-baselines the
+`cics_crucible` runner (phase 2 of
+[gitgalaxy#3989](https://github.com/squid-protocol/gitgalaxy/issues/3989)).
 
 ## The checklist, in order
 
@@ -37,7 +32,7 @@ lands, a tag here changes nothing downstream.
    ```
    Release notes list the cases added or changed per trap, format changes (with the SPEC
    version), and any log corrections, each with its `NOTES.md` justification.
-4. **Back in gitgalaxy**, bump the pin variable and `PINNED_TAG` together, grep for the old
+4. **Back in gitgalaxy**, bump `PINNED_REF` in `tests/_cics_crucible_pin.py` and re-baseline, grep for the old
    tag, push, and confirm CI passes before merging.
 
 Steps 2 and 4 happen in a different repository. Treat them as one coordinated cross-repo
@@ -47,4 +42,9 @@ change (with a "Cross-repo" PR note), not something to do unilaterally from this
 
 | Tag | Date | Contents |
 |---|---|---|
-| — | — | Phase 1 (format `cics-crucible/1`, 10 cases, 37 scenarios) is on `main`, untagged. The first tag waits for gitgalaxy's phase-2 runner. |
+| `v0.1.0` | 2026-09-29 | First release: format `cics-crucible/1`, 10 cases, 37 scenarios over 5 traps (condition handling, hex attributes, COMMAREA mismatch, ghost tasks, pseudo-conversational). Pinned by gitgalaxy#3989. |
+| `v0.2.0` | 2026-09-30 | Format unchanged. 10 cases, 44 scenarios: seven scenarios close the COBOL coverage gaps gitgalaxy's tracer found (gitgalaxy#4023). No log corrected. |
+| `v0.3.0` | 2026-10-06 | Format unchanged (additive SPEC additions: LUTYPE2 terminal, `SEND-CONTROL` options). 15 cases, 74 scenarios. Adds `hc-terminal-receive`, `hc-terminal-eoc`, `hc-handle-aid`, `hc-ignore-error` and `hc-eoc-error` (all condition-handling) for gitgalaxy#4413, #4414 and #4502. No log corrected. gitgalaxy pins it since PR #4553. |
+
+The latest tag is `v0.3.0`; `main` may carry unreleased commits beyond it. Full notes for each tag are on its
+[GitHub release](https://github.com/squid-protocol/cics-crucible/releases).
