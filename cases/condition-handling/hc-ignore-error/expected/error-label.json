@@ -1,0 +1,52 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-ignore-error",
+ "scenario": "error-label",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "IE02",
+   "program": "HCIGN",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCIGN",
+     "resp": "LENGERR",
+     "length": 8,
+     "data": {
+      "length": 4,
+      "text": "IE02"
+     },
+     "note": "LENGTH(4) is the most the program accepts: 4 bytes moved, LENGERR, LENGTH set to the original length, 8 [RECEIVE]"
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCIGN",
+     "text": "e22",
+     "length": 40,
+     "options": [
+      "ERASE"
+     ],
+     "note": "\"if the default action for such a condition terminates the task abnormally, and the condition ERROR has been specified, the action for ERROR is taken\" [HC]; LENGERR's default is an abend (AEIV) [RECEIVE]"
+    },
+    {
+     "event": "RETURN",
+     "program": "HCIGN",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

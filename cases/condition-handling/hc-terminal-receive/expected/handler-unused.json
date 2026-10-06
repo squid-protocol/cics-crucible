@@ -1,0 +1,67 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-terminal-receive",
+ "scenario": "handler-unused",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC03",
+   "program": "HCTERM",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "SEND-CONTROL",
+     "program": "HCTERM",
+     "options": [
+      "ERASE",
+      "FREEKB"
+     ]
+    },
+    {
+     "event": "RECEIVE",
+     "program": "HCTERM",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC03 H"
+     },
+     "note": "MAXLENGTH(6) NOTRUNCATE: the first 6 bytes, LENGTH set to the length returned; the rest is retained"
+    },
+    {
+     "event": "RECEIVE",
+     "program": "HCTERM",
+     "resp": "NORMAL",
+     "length": 2,
+     "data": {
+      "length": 2,
+      "text": "OK"
+     }
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCTERM",
+     "text": "00/06 n",
+     "length": 40,
+     "options": []
+    },
+    {
+     "event": "RETURN",
+     "program": "HCTERM",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

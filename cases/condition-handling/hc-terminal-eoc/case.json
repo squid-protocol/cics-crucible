@@ -1,0 +1,59 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-terminal-eoc",
+  "trap": "condition-handling",
+  "title": "EOC on an LUTYPE2 terminal's RECEIVE: by RESP, by HANDLE CONDITION, and ignored by default",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCEOC.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-terminal-eoc.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "eoc-resp",
+      "path": "happy",
+      "summary": "RESP(WS-RESP): the RECEIVE returns EOC (6), no transfer",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC04 X"
+        }
+      ]
+    },
+    {
+      "id": "eoc-handled",
+      "path": "trap",
+      "summary": "HANDLE CONDITION EOC(GOT-EOC): control goes to the label after the data and LENGTH are set",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC05 Y"
+        }
+      ]
+    },
+    {
+      "id": "eoc-default",
+      "path": "trap",
+      "summary": "neither RESP nor a handler: EOC's default action is to ignore it; the program goes on, EIBRESP 6",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC06 Z"
+        }
+      ]
+    }
+  ]
+}

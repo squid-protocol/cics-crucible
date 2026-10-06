@@ -530,6 +530,9 @@ class Case:
             for opt in ("ATI", "TTI"):
                 if a.get(opt, "").upper() != "YES":
                     self.err(f"CSD TYPETERM {name}: {opt}(YES) is required by the reference region (SPEC section 2)")
+            if a.get("DEVICE", "3270").upper() not in ("3270", "LUTYPE2"):
+                self.err(f"CSD TYPETERM {name}: DEVICE({a['DEVICE']}) -- the reference region's terminal is DEVICE(3270) "
+                         "or DEVICE(LUTYPE2) (SPEC section 2)")
         terms = self.csd.get("TERMINAL", {})
         for name, a in terms.items():
             if a.get("TYPETERM", "").upper() not in types:
@@ -810,6 +813,11 @@ class Case:
                 self.err(f"{w}: map {ev['map']} is in mapset {info['mapset']}")
         if k == "SEND-MAP":
             self._send_map(w, ev, self.bms[ev["map"]])
+        if k == "SEND-CONTROL":
+            if ev["options"] != sorted(ev["options"]):
+                self.err(f"{w}: options must be sorted")
+            if ("cursor" in ev) != ("CURSOR" in ev["options"]):
+                self.err(f"{w}: 'cursor' goes with the CURSOR option")
 
     def _send_map(self, w: str, ev: dict[str, Any], info: dict[str, Any]) -> None:
         named = {f["name"]: f for f in info["fields"]}

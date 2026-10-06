@@ -1,0 +1,51 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-handle-aid",
+ "scenario": "resp-no-aid",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HA03",
+   "program": "HCAID",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "PF7",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCAID",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HA03 E"
+     }
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCAID",
+     "text": "r0006 HA03 E",
+     "length": 40,
+     "options": [
+      "ERASE"
+     ],
+     "note": "\"the use of RESP implies NOHANDLE ... NOHANDLE overrides both the HANDLE AID and the HANDLE CONDITION command, with the result that PF key responses are ignored\" [RESP]. WS-RESP = 0"
+    },
+    {
+     "event": "RETURN",
+     "program": "HCAID",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

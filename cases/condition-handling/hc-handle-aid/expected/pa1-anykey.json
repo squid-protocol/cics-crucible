@@ -1,0 +1,84 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-handle-aid",
+ "scenario": "pa1-anykey",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HA06",
+   "program": "HCAID",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "SEND-TEXT",
+     "program": "HCAID",
+     "text": "w",
+     "length": 40,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCAID",
+     "level": 1,
+     "transid": "HA07",
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 2,
+   "transid": "HA07",
+   "program": "HCAID",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:10",
+   "trigger": {
+    "kind": "terminal",
+    "step": 1
+   },
+   "eibaid": "PA1",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCAID",
+     "resp": "NORMAL",
+     "length": 0,
+     "data": {
+      "length": 0,
+      "text": ""
+     },
+     "note": "started by PA1: the first RECEIVE copies the input buffer, of length zero [AID]; PA1 is a PA key, so ANYKEY's label"
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCAID",
+     "text": "a00",
+     "length": 40,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCAID",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

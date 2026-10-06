@@ -32,7 +32,7 @@ part of the format:
 | Release | CICS TS for z/OS 6.x semantics (nothing used here is new in 6.x) |
 | Code page | EBCDIC CCSID 037 for every byte in every area. A hex value in a case (`X'C1'`, `"hex": "C1"`) is an EBCDIC byte. |
 | Program autoinstall | **off**. A LINK/XCTL to a program with no CSD definition raises PGMIDERR, RESP2 = 1. |
-| Terminal | one terminal, `T001`, a 24x80 3270 display that supports extended data stream, colour and extended highlighting, and accepts automatic and terminal-initiated transactions (TYPETERM `ATI(YES) TTI(YES)`; the RDO default `ATI(NO)` would silently stop every `START TERMID` task). A case CSD may define it and must then say `ATI(YES) TTI(YES)`; a case that STARTs a terminal task must define it. The screen is cleared when a scenario begins. |
+| Terminal | one terminal, `T001`, a 24x80 3270 display that supports extended data stream, colour and extended highlighting, and accepts automatic and terminal-initiated transactions (TYPETERM `ATI(YES) TTI(YES)`; the RDO default `ATI(NO)` would silently stop every `START TERMID` task). A case CSD may define it and must then say `ATI(YES) TTI(YES)`; a case that STARTs a terminal task must define it. The screen is cleared when a scenario begins. Its session is a 3270 logical unit (TYPETERM `DEVICE(3270)`): a terminal `RECEIVE` raises no EOC (IBM, EXEC CICS RECEIVE (3270 logical), whose conditions are INVREQ, LENGERR and TERMERR). A case CSD may define it `DEVICE(LUTYPE2)` instead, a 3270 display logical unit: an input message is then one chain, and the `RECEIVE` that returns its last byte raises EOC (EXEC CICS RECEIVE (LUTYPE2/LUTYPE3): EOC "occurs when a request/response unit (RU) is received with end-of-chain-indicator set"; default action: ignore it). |
 | Security | none (no NOTAUTH). |
 | Temporary storage | every queue named in a case is main or auxiliary TS, local, non-recoverable. |
 | Files | a CSD `DEFINE FILE` plus the case's `data/` records; a file is opened on first use. |
@@ -224,7 +224,7 @@ asked for RESP; `resp2` is given only where IBM documents the value.
 |---|---|---|
 | `SEND-MAP` | `map`, `mapset`, `options` (sorted subset of `ERASE ERASEAUP MAPONLY DATAONLY FREEKB ALARM FRSET CURSOR`), `cursor` (optional: field name, or `{"offset": n}`), `fields` | see 6.3 |
 | `SEND-TEXT` | `text` (text or hex), `length`, `options` | the FROM data as the program passed it, not the formatted screen |
-| `SEND-CONTROL` | `options` | |
+| `SEND-CONTROL` | `options` (sorted subset of `ERASE ERASEAUP FREEKB ALARM FRSET CURSOR`), `cursor` (with CURSOR: `{"offset": n}`) | device controls only |
 | `RECEIVE-MAP` | `map`, `mapset`, `resp` | received values are observable through what the program does next |
 | `RECEIVE` | `resp`, `length` (after), `data` | terminal input, unformatted |
 | `LINK` | `target`, `length` (the LENGTH given = EIBCALEN the target sees; 0 without COMMAREA), `commarea` (the `length` bytes at the named area when the command is issued, or null without COMMAREA), `resp`, `resp2` | on NORMAL the target's events follow |

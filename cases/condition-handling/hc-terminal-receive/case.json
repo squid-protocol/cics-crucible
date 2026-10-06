@@ -1,0 +1,107 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-terminal-receive",
+  "trap": "condition-handling",
+  "title": "Unformatted terminal RECEIVE: LENGTH in/out, LENGERR by RESP, by HANDLE CONDITION and by default, MAXLENGTH NOTRUNCATE pieces, SET; SEND CONTROL",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCTERM.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-terminal-receive.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "lengerr-resp",
+      "path": "trap",
+      "summary": "RECEIVE INTO LENGTH(4) of an 8-byte rest with RESP: LENGERR, INTO gets the first 4 bytes, LENGTH the original 8",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC03 RLONGDATA"
+        }
+      ]
+    },
+    {
+      "id": "lengerr-handled",
+      "path": "trap",
+      "summary": "RECEIVE INTO with no LENGTH (INTO's 4 bytes) of a 7-byte rest under HANDLE CONDITION LENGERR: control goes to the label",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC03 HTOOLONG"
+        }
+      ]
+    },
+    {
+      "id": "handler-unused",
+      "path": "happy",
+      "summary": "the same RECEIVE with a 2-byte rest: NORMAL, the LENGERR label is not taken",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC03 HOK"
+        }
+      ]
+    },
+    {
+      "id": "lengerr-default",
+      "path": "trap",
+      "summary": "LENGERR with neither RESP nor a handler: CICS's default action abends the task (AEIV)",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC03 AOVERFLOW"
+        }
+      ]
+    },
+    {
+      "id": "in-pieces",
+      "path": "happy",
+      "summary": "MAXLENGTH(4) NOTRUNCATE in a loop: the rest comes back 4, 4 and 2 bytes, each NORMAL, nothing discarded",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC03 NABCDEFGHIJ"
+        }
+      ]
+    },
+    {
+      "id": "set-address",
+      "path": "happy",
+      "summary": "RECEIVE SET(ADDRESS OF LS-INPUT) MAXLENGTH(20): the LINKAGE record addresses the 7 bytes received",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC03 SVIA-SET"
+        }
+      ]
+    },
+    {
+      "id": "device-controls",
+      "path": "happy",
+      "summary": "nothing left after the first RECEIVE; a second SEND CONTROL with CURSOR(85) ALARM FRSET ERASEAUP",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC03 C"
+        }
+      ]
+    }
+  ]
+}

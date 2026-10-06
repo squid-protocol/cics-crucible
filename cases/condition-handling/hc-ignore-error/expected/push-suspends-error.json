@@ -1,0 +1,44 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-ignore-error",
+ "scenario": "push-suspends-error",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "IE09",
+   "program": "HCIGN",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCIGN",
+     "resp": "LENGERR",
+     "length": 8,
+     "data": {
+      "length": 4,
+      "text": "IE09"
+     },
+     "note": "LENGTH(4) is the most the program accepts: 4 bytes moved, LENGERR, LENGTH set to the original length, 8 [RECEIVE]"
+    },
+    {
+     "event": "ABEND",
+     "program": "HCIGN",
+     "abcode": "AEIV",
+     "cause": "condition",
+     "condition": "LENGERR",
+     "outcome": "terminated",
+     "note": "PUSH HANDLE suspends the HANDLE CONDITION commands, ERROR's included [PUSH]: the default action"
+    }
+   ],
+   "end": "abend"
+  }
+ ]
+}

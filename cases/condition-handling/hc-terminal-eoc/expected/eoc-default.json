@@ -1,0 +1,50 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-terminal-eoc",
+ "scenario": "eoc-default",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC06",
+   "program": "HCEOC",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCEOC",
+     "resp": "EOC",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC06 Z"
+     }
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCEOC",
+     "text": "i06/06 HC06 Z",
+     "length": 40,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCEOC",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}
