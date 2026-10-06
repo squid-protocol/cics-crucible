@@ -1,0 +1,156 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "gt-start-options",
+ "scenario": "invreq-resp2",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "GT21",
+   "program": "GTOPTS",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "GTOPTS",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "GT21 V"
+     }
+    },
+    {
+     "event": "START",
+     "program": "GTOPTS",
+     "transid": "GT23",
+     "termid": null,
+     "interval": "000070",
+     "from": null,
+     "protect": false,
+     "resp": "INVREQ",
+     "resp2": 6,
+     "expires": null,
+     "note": "INTERVAL's ss value out of range"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTOPTS",
+     "queue": "GTSLOG",
+     "data": {
+      "length": 7,
+      "text": "S=16/06"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "START",
+     "program": "GTOPTS",
+     "transid": "GT23",
+     "termid": null,
+     "interval": null,
+     "from": null,
+     "protect": false,
+     "resp": "INVREQ",
+     "resp2": 5,
+     "expires": null,
+     "note": "AFTER HOURS(1) MINUTES(60): with HOURS, MINUTES is 0 - 59; out of range it amounts to no interval"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTOPTS",
+     "queue": "GTSLOG",
+     "data": {
+      "length": 7,
+      "text": "S=16/05"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "START",
+     "program": "GTOPTS",
+     "transid": "GT23",
+     "termid": null,
+     "interval": null,
+     "from": null,
+     "protect": false,
+     "resp": "INVREQ",
+     "resp2": 6,
+     "expires": null,
+     "note": "AFTER SECONDS(360000): alone, SECONDS is 0 - 359999"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTOPTS",
+     "queue": "GTSLOG",
+     "data": {
+      "length": 7,
+      "text": "S=16/06"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "START",
+     "program": "GTOPTS",
+     "transid": "GT23",
+     "termid": null,
+     "interval": null,
+     "from": null,
+     "protect": false,
+     "resp": "INVREQ",
+     "resp2": 4,
+     "expires": null,
+     "note": "AFTER HOURS(100): HOURS is 0 - 99"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTOPTS",
+     "queue": "GTSLOG",
+     "data": {
+      "length": 7,
+      "text": "S=16/04"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "GTOPTS",
+     "text": "STARTS ISSUED",
+     "length": 20,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "GTOPTS",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "GTSLOG": [
+    "S=16/06",
+    "S=16/05",
+    "S=16/06",
+    "S=16/04"
+   ]
+  }
+ }
+}

@@ -750,8 +750,9 @@ class Case:
                     self.err(f"{w}: started by a later task")
                 else:
                     evs = log["tasks"][trig["task"] - 1]["events"]
-                    if trig["event"] >= len(evs) or evs[trig["event"]]["event"] != "START":
-                        self.err(f"{w}: trigger does not name a START event")
+                    want = "RUN" if trig["kind"] == "run" else "START"
+                    if trig["event"] >= len(evs) or evs[trig["event"]]["event"] != want:
+                        self.err(f"{w}: trigger does not name a {want} event")
             if task["commarea"] is None and task["eibcalen"] != 0:
                 self.err(f"{w}: eibcalen {task['eibcalen']} with no commarea")
             if task["commarea"] is not None and task["commarea"]["length"] != task["eibcalen"]:

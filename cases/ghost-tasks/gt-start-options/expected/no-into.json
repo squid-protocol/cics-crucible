@@ -1,0 +1,131 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "gt-start-options",
+ "scenario": "no-into",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "GT21",
+   "program": "GTOPTS",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "GTOPTS",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "GT21 N"
+     }
+    },
+    {
+     "event": "START",
+     "program": "GTOPTS",
+     "transid": "GT23",
+     "termid": null,
+     "interval": "000000",
+     "from": null,
+     "rtransid": "GT21",
+     "protect": false,
+     "resp": "NORMAL",
+     "expires": "2026-03-02T10:00:00"
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "GTOPTS",
+     "text": "STARTS ISSUED",
+     "length": 20,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "GTOPTS",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 2,
+   "transid": "GT23",
+   "program": "GTRTRN",
+   "termid": null,
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "start",
+    "task": 1,
+    "event": 1
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RETRIEVE",
+     "program": "GTRTRN",
+     "resp": "NORMAL",
+     "data": null,
+     "rtransid": "GT21",
+     "note": "no INTO: no LENGTH set, no data moved; RTRANSID as the START gave it"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTRTRN",
+     "queue": "GTLOG",
+     "data": {
+      "length": 11,
+      "text": "R=00 T=GT21"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "RETRIEVE",
+     "program": "GTRTRN",
+     "resp": "ENDDATA",
+     "data": null
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTRTRN",
+     "queue": "GTLOG",
+     "data": {
+      "length": 11,
+      "text": "R=29 T="
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "RETURN",
+     "program": "GTRTRN",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "GTLOG": [
+    "R=00 T=GT21",
+    "R=29 T="
+   ]
+  }
+ }
+}

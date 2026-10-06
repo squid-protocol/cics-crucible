@@ -37,7 +37,7 @@ only with a documented reason recorded in the case's `NOTES.md` (see
 
 ## Status
 
-Format `cics-crucible/1` ([SPEC.md](SPEC.md)). 16 cases and 76 scenarios. No release tag
+Format `cics-crucible/1` ([SPEC.md](SPEC.md)). 17 cases and 83 scenarios. No release tag
 yet (see [RELEASING.md](RELEASING.md)).
 
 | Trap | Case | Scenarios | What it pins down |
@@ -56,6 +56,7 @@ yet (see [RELEASING.md](RELEASING.md)).
 | commarea-mismatch | [`ca-channel-containers`](cases/commarea-mismatch/ca-channel-containers) | 2 | A channel in place of a COMMAREA: CHAR and BIT containers, APPEND, LINK / XCTL CHANNEL and the callee's current channel, FLENGTH in / out and NODATA, CONTAINERERR / CHANNELERR / LENGERR / INVREQ by RESP and HANDLE CONDITION, AEZJ by default |
 | ghost-tasks | [`gt-start-retrieve`](cases/ghost-tasks/gt-start-retrieve) | 6 | background STARTs: INTERVAL(0), no data (ENDDATA first), TIME in the past within six hours runs first, RETRIEVE LENGERR, PROTECT vs an abending starter; an unknown mode starts nothing |
 | ghost-tasks | [`gt-terminal-coalesce`](cases/ghost-tasks/gt-terminal-coalesce) | 4 | three terminal STARTs → one task retrieving all three; staggered expiry → two tasks; CANCEL REQID in time (NORMAL) and too late (NOTFND) |
+| ghost-tasks | [`gt-start-options`](cases/ghost-tasks/gt-start-options) | 7 | START data options RTRANSID / RTERMID / QUEUE and RETRIEVE's ENVDEFERR, RETRIEVE with no INTO, AFTER / AT and a TIME past 23 hours, INVREQ's RESP2 4 / 5 / 6, a REQID reused with FROM (IOERR); RUN TRANSID's child and TRANSIDERR |
 | pseudo-conversational | [`pc-wizard`](cases/pseudo-conversational/pc-wizard) | 6 | a 3-screen wizard over PC01/PC02/PC03 with state in the COMMAREA; MAPFAIL, CLEAR on each screen, PF3 in either program, an inactive PF key, PF7 back via XCTL under the same transid, a program-written amount not retransmitted |
 | pseudo-conversational | [`pc-aid-menu`](cases/pseudo-conversational/pc-aid-menu) | 4 | HANDLE AID labels with fall-through, unhandled PF keys, CLEAR before RECEIVE, XCTL vs RETURN TRANSID to a detail screen, EIBCALEN = 0 after a RETURN without COMMAREA, an invalid option |
 
