@@ -231,7 +231,7 @@ asked for RESP; `resp2` is given only where IBM documents the value.
 | `event` | Further keys | Notes |
 |---|---|---|
 | `SEND-MAP` | `map`, `mapset`, `options` (sorted subset of `ERASE ERASEAUP MAPONLY DATAONLY FREEKB ALARM FRSET CURSOR`), `cursor` (optional: field name, or `{"offset": n}`), `fields` | see 6.3 |
-| `SEND-TEXT` | `text` (text or hex), `length`, `options` | the FROM data as the program passed it, not the formatted screen |
+| `SEND-TEXT` | `text` (text or hex), `length`, `options` (sorted subset of `ERASE FREEKB ALARM CURSOR WAIT LAST`, as the program wrote them) | the FROM data as the program passed it, not the formatted screen. `TERMINAL` is never an option of the event: it is the default output disposition, the task's principal facility, so `SEND TEXT ... TERMINAL` and `SEND TEXT` are the same command |
 | `SEND-CONTROL` | `options` (sorted subset of `ERASE ERASEAUP FREEKB ALARM FRSET CURSOR`), `cursor` (with CURSOR: `{"offset": n}`) | device controls only |
 | `RECEIVE-MAP` | `map`, `mapset`, `resp` | received values are observable through what the program does next |
 | `RECEIVE` | `resp`, `length` (after), `data` | terminal input, unformatted |

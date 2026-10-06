@@ -1,0 +1,37 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-send-text-terminal",
+  "trap": "ghost-tasks",
+  "title": "SEND TEXT ... TERMINAL: the default output disposition, the task's principal facility -- the typing terminal for a terminal task, the START TERMID terminal for a started one; nothing for a task with none",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/GTSTXT.cbl",
+      "src/GTSTXS.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/gt-send-text-terminal.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "terminal-and-started",
+      "path": "happy",
+      "summary": "SEND TEXT with and without TERMINAL record the same event; a task started at T001 sends to T001; a task with no terminal (ASSIGN FACILITY INVREQ) sends nothing",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT41"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "gt-send-text-terminal",
+ "scenario": "terminal-and-started",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "GT41",
+   "program": "GTSTXT",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "GTSTXT",
+     "resp": "NORMAL",
+     "length": 4,
+     "data": {
+      "length": 4,
+      "text": "GT41"
+     }
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "GTSTXT",
+     "text": "GT41 SENT WITH TERMINAL",
+     "length": 30,
+     "options": [
+      "ERASE",
+      "FREEKB",
+      "WAIT"
+     ]
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTSTXT",
+     "queue": "GTLOG",
+     "data": {
+      "length": 9,
+      "text": "GT41 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "GTSTXT",
+     "text": "GT41 SENT WITHOUT TERMINAL",
+     "length": 30,
+     "options": [
+      "ERASE",
+      "FREEKB",
+      "WAIT"
+     ]
+    },
+    {
+     "event": "START",
+     "program": "GTSTXT",
+     "transid": "GT42",
+     "termid": "T001",
+     "interval": "000010",
+     "from": null,
+     "protect": false,
+     "resp": "NORMAL",
+     "expires": "2026-03-02T10:00:10"
+    },
+    {
+     "event": "START",
+     "program": "GTSTXT",
+     "transid": "GT42",
+     "termid": null,
+     "interval": "000000",
+     "from": null,
+     "protect": false,
+     "resp": "NORMAL",
+     "expires": "2026-03-02T10:00:00"
+    },
+    {
+     "event": "RETURN",
+     "program": "GTSTXT",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 2,
+   "transid": "GT42",
+   "program": "GTSTXS",
+   "termid": null,
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "start",
+    "task": 1,
+    "event": 5
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTSTXS",
+     "queue": "GTLOG",
+     "data": {
+      "length": 16,
+      "text": "GT42 NO TERMINAL"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "RETURN",
+     "program": "GTSTXS",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 3,
+   "transid": "GT42",
+   "program": "GTSTXS",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:10",
+   "trigger": {
+    "kind": "start",
+    "task": 1,
+    "event": 4
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "SEND-TEXT",
+     "program": "GTSTXS",
+     "text": "GT42 SENT TO T001",
+     "length": 30,
+     "options": [
+      "ERASE",
+      "FREEKB",
+      "WAIT"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "GTSTXS",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "GTLOG": [
+    "GT41 R=00",
+    "GT42 NO TERMINAL"
+   ]
+  }
+ }
+}
