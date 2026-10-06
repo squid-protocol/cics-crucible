@@ -1,0 +1,69 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-assign-startcode",
+  "trap": "ghost-tasks",
+  "title": "ASSIGN STARTCODE / USERID / FACILITY / SCRNHT / SCRNWD: how a task was started (terminal input, START with or without FROM), the default user, and the terminal facts a task with no terminal does not have",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/GTASGN.cbl",
+      "src/GTASNT.cbl",
+      "src/GTASAB.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/gt-assign-startcode.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "terminal-and-started",
+      "path": "happy",
+      "summary": "a terminal task's STARTCODE TD, USERID, FACILITY, SCRNHT / SCRNWD; started tasks' S / SD, and INVREQ RESP2 5 for FACILITY with no terminal",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT31 T"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "pseudo-conversational",
+      "path": "happy",
+      "summary": "a task the RETURN TRANSID's next input starts is STARTCODE TD too",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT31 P"
+        },
+        {
+          "at": 30,
+          "aid": "ENTER",
+          "note": "GT31's RETURN TRANSID runs GT31 again"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "no-terminal-abend",
+      "path": "trap",
+      "summary": "ASSIGN FACILITY in a task with no terminal, with no RESP: INVREQ's default action, abend AEIP",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT31 X"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
