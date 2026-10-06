@@ -46,6 +46,7 @@ change (with a "Cross-repo" PR note), not something to do unilaterally from this
 | `v0.2.0` | 2026-09-30 | Format unchanged. 10 cases, 44 scenarios: seven scenarios close the COBOL coverage gaps gitgalaxy's tracer found (gitgalaxy#4023). No log corrected. |
 | `v0.3.0` | 2026-10-06 | Format unchanged (additive SPEC additions: LUTYPE2 terminal, `SEND-CONTROL` options). 15 cases, 74 scenarios. Adds `hc-terminal-receive`, `hc-terminal-eoc`, `hc-handle-aid`, `hc-ignore-error` and `hc-eoc-error` (all condition-handling) for gitgalaxy#4413, #4414 and #4502. No log corrected. gitgalaxy pinned it from PR #4553. |
 | `v0.4.0` | 2026-10-06 | Format unchanged. 16 cases, 76 scenarios. Adds `ca-channel-containers` (commarea-mismatch: PUT / GET / DELETE CONTAINER, LINK / XCTL CHANNEL, the current channel, CONTAINERERR / CHANNELERR / LENGERR / INVREQ) for gitgalaxy#4270. No log corrected. |
+| `v0.5.0` | 2026-10-06 | Format unchanged (additive SPEC: START / RETRIEVE data options, AFTER / AT, `RUN` event and trigger, default user `CICSUSER`). 18 cases, 86 scenarios. Adds `gt-start-options` and `gt-assign-startcode` (ghost-tasks) for gitgalaxy#4270. No log corrected. |
 
-The latest tag is `v0.4.0`; `main` may carry unreleased commits beyond it. Full notes for each tag are on its
+The latest tag is `v0.5.0`; `main` may carry unreleased commits beyond it. Full notes for each tag are on its
 [GitHub release](https://github.com/squid-protocol/cics-crucible/releases).
