@@ -1,0 +1,103 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-start-options",
+  "trap": "ghost-tasks",
+  "title": "START options beyond INTERVAL / TIME: the data options RTRANSID / RTERMID / QUEUE and RETRIEVE's ENVDEFERR, RETRIEVE with no INTO, AFTER / AT, INVREQ's RESP2, a REQID reused with FROM (IOERR)",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/GTOPTS.cbl",
+      "src/GTREAD.cbl",
+      "src/GTRTRN.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/gt-start-options.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "data-options",
+      "path": "happy",
+      "summary": "START FROM with RTRANSID, RTERMID and QUEUE: GT22's one RETRIEVE gets the data and all three values",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT21 D"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "envdeferr",
+      "path": "trap",
+      "summary": "START with FROM only: GT22's RETRIEVE also names RTRANSID / RTERMID / QUEUE, so ENVDEFERR",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT21 E"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "no-into",
+      "path": "trap",
+      "summary": "START with RTRANSID and no FROM: still a data record; GT23 RETRIEVEs it with no INTO, then ENDDATA",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT21 N"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "after-at",
+      "path": "trap",
+      "summary": "AFTER MINUTES(1), AFTER 0 h 0 m 30 s, AT 10:45 and TIME(250000) at 10:00: tasks at 10:00:30, 10:01, 10:45; the last is tomorrow's",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT21 A"
+        }
+      ],
+      "until": 3600
+    },
+    {
+      "id": "invreq-resp2",
+      "path": "trap",
+      "summary": "INTERVAL(70), AFTER HOURS(1) MINUTES(60), AFTER SECONDS(360000), AFTER HOURS(100): INVREQ with RESP2 6, 5, 6, 4; nothing starts",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT21 V"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "reqid-ioerr",
+      "path": "trap",
+      "summary": "the same REQID twice, both with FROM: the second START is IOERR; only the first runs",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT21 I"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}

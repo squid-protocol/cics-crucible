@@ -1,0 +1,297 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "gt-start-options",
+ "scenario": "after-at",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "GT21",
+   "program": "GTOPTS",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "GTOPTS",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "GT21 A"
+     }
+    },
+    {
+     "event": "START",
+     "program": "GTOPTS",
+     "transid": "GT23",
+     "termid": null,
+     "interval": "000100",
+     "from": null,
+     "rtransid": "AFT1",
+     "protect": false,
+     "resp": "NORMAL",
+     "expires": "2026-03-02T10:01:00",
+     "note": "AFTER MINUTES(1): the interval it amounts to"
+    },
+    {
+     "event": "START",
+     "program": "GTOPTS",
+     "transid": "GT23",
+     "termid": null,
+     "interval": "000030",
+     "from": null,
+     "rtransid": "AFT2",
+     "protect": false,
+     "resp": "NORMAL",
+     "expires": "2026-03-02T10:00:30",
+     "note": "AFTER HOURS(0) MINUTES(0) SECONDS(30)"
+    },
+    {
+     "event": "START",
+     "program": "GTOPTS",
+     "transid": "GT23",
+     "termid": null,
+     "time": "104500",
+     "from": null,
+     "rtransid": "AT01",
+     "protect": false,
+     "resp": "NORMAL",
+     "expires": "2026-03-02T10:45:00",
+     "note": "AT HOURS(10) MINUTES(45): the time it amounts to"
+    },
+    {
+     "event": "START",
+     "program": "GTOPTS",
+     "transid": "GT23",
+     "termid": null,
+     "time": "250000",
+     "from": null,
+     "rtransid": "TOMO",
+     "protect": false,
+     "resp": "NORMAL",
+     "expires": "2026-03-03T01:00:00",
+     "note": "an hours component greater than 23 is a time on a following day"
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "GTOPTS",
+     "text": "STARTS ISSUED",
+     "length": 20,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "GTOPTS",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 2,
+   "transid": "GT23",
+   "program": "GTRTRN",
+   "termid": null,
+   "at": "2026-03-02T10:00:30",
+   "trigger": {
+    "kind": "start",
+    "task": 1,
+    "event": 2
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RETRIEVE",
+     "program": "GTRTRN",
+     "resp": "NORMAL",
+     "data": null,
+     "rtransid": "AFT2",
+     "note": "no INTO: no LENGTH set, no data moved; RTRANSID as the START gave it"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTRTRN",
+     "queue": "GTLOG",
+     "data": {
+      "length": 11,
+      "text": "R=00 T=AFT2"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "RETRIEVE",
+     "program": "GTRTRN",
+     "resp": "ENDDATA",
+     "data": null
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTRTRN",
+     "queue": "GTLOG",
+     "data": {
+      "length": 11,
+      "text": "R=29 T="
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "RETURN",
+     "program": "GTRTRN",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 3,
+   "transid": "GT23",
+   "program": "GTRTRN",
+   "termid": null,
+   "at": "2026-03-02T10:01:00",
+   "trigger": {
+    "kind": "start",
+    "task": 1,
+    "event": 1
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RETRIEVE",
+     "program": "GTRTRN",
+     "resp": "NORMAL",
+     "data": null,
+     "rtransid": "AFT1",
+     "note": "no INTO: no LENGTH set, no data moved; RTRANSID as the START gave it"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTRTRN",
+     "queue": "GTLOG",
+     "data": {
+      "length": 11,
+      "text": "R=00 T=AFT1"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "RETRIEVE",
+     "program": "GTRTRN",
+     "resp": "ENDDATA",
+     "data": null
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTRTRN",
+     "queue": "GTLOG",
+     "data": {
+      "length": 11,
+      "text": "R=29 T="
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "RETURN",
+     "program": "GTRTRN",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 4,
+   "transid": "GT23",
+   "program": "GTRTRN",
+   "termid": null,
+   "at": "2026-03-02T10:45:00",
+   "trigger": {
+    "kind": "start",
+    "task": 1,
+    "event": 3
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RETRIEVE",
+     "program": "GTRTRN",
+     "resp": "NORMAL",
+     "data": null,
+     "rtransid": "AT01",
+     "note": "no INTO: no LENGTH set, no data moved; RTRANSID as the START gave it"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTRTRN",
+     "queue": "GTLOG",
+     "data": {
+      "length": 11,
+      "text": "R=00 T=AT01"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "RETRIEVE",
+     "program": "GTRTRN",
+     "resp": "ENDDATA",
+     "data": null
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTRTRN",
+     "queue": "GTLOG",
+     "data": {
+      "length": 11,
+      "text": "R=29 T="
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "RETURN",
+     "program": "GTRTRN",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "GTLOG": [
+    "R=00 T=AFT2",
+    "R=29 T=",
+    "R=00 T=AFT1",
+    "R=29 T=",
+    "R=00 T=AT01",
+    "R=29 T="
+   ]
+  }
+ }
+}
