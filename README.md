@@ -29,7 +29,7 @@ only with a documented reason recorded in the case's `NOTES.md` (see
 
 | Trap | What it attacks |
 |---|---|
-| `condition-handling` | HANDLE CONDITION / HANDLE ABEND as GO TO (with COBOL fall-through and PERFORM-range semantics), IGNORE CONDITION, RESP overriding handlers, handler scope across LINK levels, abend-exit search, PUSH/POP HANDLE, the conditions of terminal RECEIVE (LENGERR, EOC) |
+| `condition-handling` | HANDLE CONDITION / HANDLE ABEND as GO TO (with COBOL fall-through and PERFORM-range semantics), IGNORE CONDITION, RESP overriding handlers, handler scope across LINK levels, abend-exit search, PUSH/POP HANDLE, HANDLE CONDITION ERROR, HANDLE AID (a key's label, ANYKEY, RESP, CLEAR / PA keys with no data), the conditions of terminal RECEIVE (LENGERR, EOC) |
 | `hex-attributes` | raw 3270 attribute bytes in BMS symbolic maps: DFHBMSCA names vs hex literals, the bit meanings, non-graphic bytes, bit arithmetic, the bytes BMS ignores, extended colour/highlight bytes, symbolic cursor positioning, input justification |
 | `commarea-mismatch` | LINK/XCTL COMMAREA lengths shorter or longer than the receiver declares, EIBCALEN, by-reference LINK storage, version upgrades by length, LENGERR and PGMIDERR |
 | `ghost-tasks` | START (INTERVAL, TIME and the six-hour rule, TERMID, REQID, PROTECT) with FROM data, RETRIEVE (ENDDATA, LENGERR), one task for several terminal STARTs, CANCEL |
@@ -37,7 +37,7 @@ only with a documented reason recorded in the case's `NOTES.md` (see
 
 ## Status
 
-Format `cics-crucible/1` ([SPEC.md](SPEC.md)). 12 cases and 54 scenarios. No release tag
+Format `cics-crucible/1` ([SPEC.md](SPEC.md)). 15 cases and 74 scenarios. No release tag
 yet (see [RELEASING.md](RELEASING.md)).
 
 | Trap | Case | Scenarios | What it pins down |
@@ -45,6 +45,9 @@ yet (see [RELEASING.md](RELEASING.md)).
 | condition-handling | [`hc-perform-range`](cases/condition-handling/hc-perform-range) | 4 | handler labels inside a PERFORM THRU range fall through and return; ERROR catch-all outside it; RESP, IGNORE, HANDLE-after-IGNORE; LENGTH in/out → LENGERR |
 | condition-handling | [`hc-terminal-receive`](cases/condition-handling/hc-terminal-receive) | 7 | unformatted terminal RECEIVE: LENGTH in/out, LENGERR by RESP, by HANDLE CONDITION and by default (AEIV); MAXLENGTH NOTRUNCATE keeps the rest for the next RECEIVE; SET(ADDRESS OF); SEND CONTROL with CURSOR |
 | condition-handling | [`hc-terminal-eoc`](cases/condition-handling/hc-terminal-eoc) | 3 | an LUTYPE2 terminal's RECEIVE raises EOC: by RESP, by HANDLE CONDITION, and ignored by default |
+| condition-handling | [`hc-handle-aid`](cases/condition-handling/hc-handle-aid) | 9 | HANDLE AID after a terminal RECEIVE: a key's own label, ANYKEY (not ENTER), a key deactivated by a HANDLE AID without a label, RESP ignoring the AID, PUSH / POP HANDLE, CLEAR and PA1 starting a task whose first RECEIVE returns no data |
+| condition-handling | [`hc-ignore-error`](cases/condition-handling/hc-ignore-error) | 9 | one LENGERR under IGNORE CONDITION, HANDLE CONDITION ERROR, a condition's own label or IGNORE before ERROR, IGNORE overriding HANDLE, PUSH HANDLE suspending IGNORE and ERROR (AEIV), POP HANDLE restoring; POP HANDLE with nothing pushed (INVREQ to ERROR) |
+| condition-handling | [`hc-eoc-error`](cases/condition-handling/hc-eoc-error) | 2 | HANDLE CONDITION ERROR does not take EOC, whose default action is to ignore it; EOC's own label does |
 | condition-handling | [`hc-abend-link`](cases/condition-handling/hc-abend-link) | 5 | handlers not inherited by a LINKed program and restored on return; the caller's abend exit catches the callee's AEYH; a callee's own exit recovering; PUSH/POP HANDLE suspends HANDLE ABEND too |
 | hex-attributes | [`hx-attr-bytes`](cases/hex-attributes/hx-attr-bytes) | 4 | 3270 attribute bytes by name, literal, non-graphic X'3C', X'40'+1, X'80' input flag; null-first-byte data; MDT set by the program changes the next input; DATAONLY omissions; MAPONLY; a PA key sends no MDT fields (MAPFAIL) |
 | hex-attributes | [`hx-extended-cursor`](cases/hex-attributes/hx-extended-cursor) | 3 | colour/highlight bytes vs the attribute byte (X'F1' = blink / blue / autoskip+MDT); map → field extended-attribute defaults; -1 length + CURSOR; NUM JUSTIFY=(RIGHT,ZERO) |

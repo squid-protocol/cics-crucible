@@ -1,0 +1,139 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-handle-aid",
+  "trap": "condition-handling",
+  "title": "HANDLE AID on a terminal RECEIVE: a key's own label, ANYKEY (not ENTER), a deactivated key, RESP, PUSH / POP HANDLE, and CLEAR / PA1 with no data",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCAID.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-handle-aid.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "anykey-not-enter",
+      "path": "trap",
+      "summary": "HANDLE AID PF7 / ANYKEY, ENTER pressed: ANYKEY is not ENTER, so no label; control goes on after the RECEIVE",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HA01 A"
+        }
+      ]
+    },
+    {
+      "id": "own-label",
+      "path": "happy",
+      "summary": "PF7 pressed: PF7's own label, after the RECEIVE moved the data and set LENGTH",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "PF7",
+          "text": "HA01 B"
+        }
+      ]
+    },
+    {
+      "id": "anykey-pf",
+      "path": "happy",
+      "summary": "PF9 pressed: no label of its own, so ANYKEY's",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "PF9",
+          "text": "HA01 C"
+        }
+      ]
+    },
+    {
+      "id": "deactivated",
+      "path": "trap",
+      "summary": "HANDLE AID PF7 without a label deactivates the PF7 label set before it: no transfer",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "PF7",
+          "text": "HA02 D"
+        }
+      ]
+    },
+    {
+      "id": "resp-no-aid",
+      "path": "trap",
+      "summary": "RESP on the RECEIVE: no action for the AID, the PF7 label is not taken",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "PF7",
+          "text": "HA03 E"
+        }
+      ]
+    },
+    {
+      "id": "push-suspends",
+      "path": "trap",
+      "summary": "PUSH HANDLE after HANDLE AID PF7: the label is suspended, no transfer",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "PF7",
+          "text": "HA04 F"
+        }
+      ]
+    },
+    {
+      "id": "pop-restores",
+      "path": "happy",
+      "summary": "PUSH HANDLE then POP HANDLE: the PF7 label is in effect again",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "PF7",
+          "text": "HA05 G"
+        }
+      ]
+    },
+    {
+      "id": "clear-no-data",
+      "path": "trap",
+      "summary": "HA06 RETURNs TRANSID HA07; CLEAR starts it: its first RECEIVE returns no data, NORMAL, and CLEAR's own label is taken",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HA06"
+        },
+        {
+          "at": 10,
+          "aid": "CLEAR"
+        }
+      ]
+    },
+    {
+      "id": "pa1-anykey",
+      "path": "trap",
+      "summary": "HA06 RETURNs TRANSID HA07; PA1 starts it: no data, and ANYKEY's label (PA1 has none of its own)",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HA06"
+        },
+        {
+          "at": 10,
+          "aid": "PA1"
+        }
+      ]
+    }
+  ]
+}

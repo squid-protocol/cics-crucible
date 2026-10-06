@@ -1,0 +1,41 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-ignore-error",
+ "scenario": "pop-nothing-pushed",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "IE07",
+   "program": "HCIGN",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "SEND-TEXT",
+     "program": "HCIGN",
+     "text": "e16",
+     "length": 40,
+     "options": [
+      "ERASE"
+     ],
+     "note": "POP HANDLE INVREQ: \"Occurs if no matching PUSH HANDLE command has been executed at the current link level\" [POP]; default action an abend, so the action for ERROR [HC]. INVREQ = 16"
+    },
+    {
+     "event": "RETURN",
+     "program": "HCIGN",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

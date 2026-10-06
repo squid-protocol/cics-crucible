@@ -1,0 +1,51 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-handle-aid",
+ "scenario": "deactivated",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HA02",
+   "program": "HCAID",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "PF7",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCAID",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HA02 D"
+     }
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCAID",
+     "text": "n06 HA02 D",
+     "length": 40,
+     "options": [
+      "ERASE"
+     ],
+     "note": "\"To ignore an AID, issue a HANDLE AID command that specifies the associated option without a label. This deactivates the effect of that option in any previously-issued HANDLE AID command\" [AID]"
+    },
+    {
+     "event": "RETURN",
+     "program": "HCAID",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

@@ -1,0 +1,51 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-handle-aid",
+ "scenario": "own-label",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HA01",
+   "program": "HCAID",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "PF7",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCAID",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HA01 B"
+     }
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCAID",
+     "text": "p06 HA01 B",
+     "length": 40,
+     "options": [
+      "ERASE"
+     ],
+     "note": "\"Control is passed after the input command is completed; that is, after any data received in addition to the AID has been passed to the application program\" [AID]"
+    },
+    {
+     "event": "RETURN",
+     "program": "HCAID",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}
