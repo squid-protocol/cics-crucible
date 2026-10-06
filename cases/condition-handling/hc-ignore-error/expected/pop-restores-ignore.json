@@ -1,0 +1,52 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-ignore-error",
+ "scenario": "pop-restores-ignore",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "IE06",
+   "program": "HCIGN",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCIGN",
+     "resp": "LENGERR",
+     "length": 8,
+     "data": {
+      "length": 4,
+      "text": "IE06"
+     },
+     "note": "LENGTH(4) is the most the program accepts: 4 bytes moved, LENGERR, LENGTH set to the original length, 8 [RECEIVE]"
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCIGN",
+     "text": "i22 08 IE06",
+     "length": 40,
+     "options": [
+      "ERASE"
+     ],
+     "note": "POP HANDLE restores \"the effect of IGNORE CONDITION ... to the state they were in before a PUSH HANDLE command\" [POP]"
+    },
+    {
+     "event": "RETURN",
+     "program": "HCIGN",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

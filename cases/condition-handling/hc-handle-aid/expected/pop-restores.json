@@ -1,0 +1,51 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-handle-aid",
+ "scenario": "pop-restores",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HA05",
+   "program": "HCAID",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "PF7",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCAID",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HA05 G"
+     }
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCAID",
+     "text": "p06 HA05 G",
+     "length": 40,
+     "options": [
+      "ERASE"
+     ],
+     "note": "POP HANDLE restores \"the effect of IGNORE CONDITION, HANDLE ABEND, HANDLE AID, and HANDLE CONDITION commands to the state they were in before a PUSH HANDLE command\" [POP]"
+    },
+    {
+     "event": "RETURN",
+     "program": "HCAID",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}
