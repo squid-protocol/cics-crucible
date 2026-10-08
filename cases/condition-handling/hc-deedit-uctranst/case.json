@@ -1,0 +1,64 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-deedit-uctranst",
+  "trap": "condition-handling",
+  "title": "EXEC CICS BIF DEEDIT (digits right-aligned, the negative zone, a rightmost zoned byte, LENGERR) and INQUIRE / SET TERMINAL UCTRANST with DFHVALUE CVDAs (INVREQ RESP2 43, TERMIDERR RESP2 1 / 23)",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCDEED.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-deedit-uctranst.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "deedit",
+      "path": "happy",
+      "summary": "BIF DEEDIT on IBM's two examples, a trailing minus, a 1-byte field and a zoned rightmost byte; LENGTH 0 raises LENGERR (RESP)",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC41 D"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "uctranst",
+      "path": "happy",
+      "summary": "INQUIRE TERMINAL UCTRANST returns the TYPETERM's UCTRAN as a CVDA; SET TERMINAL UCTRANST(DFHVALUE(..)) changes it; a bad CVDA is INVREQ RESP2 43; an undefined terminal is TERMIDERR",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC41 U"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "lengerr-abend",
+      "path": "trap",
+      "summary": "BIF DEEDIT with LENGTH 0 and no RESP: LENGERR's default action, abend AEIV",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC41 L"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
