@@ -1,0 +1,275 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "gt-urimap-browse",
+ "scenario": "browse-twice",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "GT61",
+   "program": "GTUBROW",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTUBROW",
+     "queue": "GTUBLOG",
+     "data": {
+      "length": 20,
+      "text": "START 1/2=00/21:0001"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "START",
+     "program": "GTUBROW",
+     "transid": "GT62",
+     "termid": null,
+     "from": {
+      "length": 4,
+      "text": "GT62"
+     },
+     "protect": false,
+     "resp": "NORMAL",
+     "expires": "2026-03-02T10:00:00",
+     "interval": "000000"
+    },
+    {
+     "event": "WRITE-OPERATOR",
+     "program": "GTUBROW",
+     "data": {
+      "length": 24,
+      "text": "GTUBROW browse finished"
+     },
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTUBROW",
+     "queue": "GTUBLOG",
+     "data": {
+      "length": 35,
+      "text": "DEFS=04 ZC=02 PATH=02 BOTH=01 ST=00"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTUBROW",
+     "queue": "GTUBLOG",
+     "data": {
+      "length": 27,
+      "text": "END=83:0002 CLOSE=00 WTO=00"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "RETURN",
+     "program": "GTUBROW",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 2,
+   "transid": "GT62",
+   "program": "GTUNEXT",
+   "termid": null,
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "start",
+    "task": 1,
+    "event": 1
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RETRIEVE",
+     "program": "GTUNEXT",
+     "resp": "NORMAL",
+     "data": {
+      "length": 4,
+      "text": "GT62"
+     },
+     "length": 4
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTUNEXT",
+     "queue": "GTUGO",
+     "data": {
+      "length": 4,
+      "text": "GT62"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "RETURN",
+     "program": "GTUNEXT",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 3,
+   "transid": "GT61",
+   "program": "GTUBROW",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:10",
+   "trigger": {
+    "kind": "terminal",
+    "step": 1
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTUBROW",
+     "queue": "GTUBLOG",
+     "data": {
+      "length": 20,
+      "text": "START 1/2=00/21:0001"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "START",
+     "program": "GTUBROW",
+     "transid": "GT62",
+     "termid": null,
+     "from": {
+      "length": 4,
+      "text": "GT62"
+     },
+     "protect": false,
+     "resp": "NORMAL",
+     "expires": "2026-03-02T10:00:10",
+     "interval": "000000"
+    },
+    {
+     "event": "WRITE-OPERATOR",
+     "program": "GTUBROW",
+     "data": {
+      "length": 24,
+      "text": "GTUBROW browse finished"
+     },
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTUBROW",
+     "queue": "GTUBLOG",
+     "data": {
+      "length": 35,
+      "text": "DEFS=04 ZC=02 PATH=02 BOTH=01 ST=00"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTUBROW",
+     "queue": "GTUBLOG",
+     "data": {
+      "length": 27,
+      "text": "END=83:0002 CLOSE=00 WTO=00"
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "RETURN",
+     "program": "GTUBROW",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 4,
+   "transid": "GT62",
+   "program": "GTUNEXT",
+   "termid": null,
+   "at": "2026-03-02T10:00:10",
+   "trigger": {
+    "kind": "start",
+    "task": 3,
+    "event": 1
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RETRIEVE",
+     "program": "GTUNEXT",
+     "resp": "NORMAL",
+     "data": {
+      "length": 4,
+      "text": "GT62"
+     },
+     "length": 4
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTUNEXT",
+     "queue": "GTUGO",
+     "data": {
+      "length": 4,
+      "text": "GT62"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "RETURN",
+     "program": "GTUNEXT",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "GTUBLOG": [
+    "START 1/2=00/21:0001",
+    "DEFS=04 ZC=02 PATH=02 BOTH=01 ST=00",
+    "END=83:0002 CLOSE=00 WTO=00",
+    "START 1/2=00/21:0001",
+    "DEFS=04 ZC=02 PATH=02 BOTH=01 ST=00",
+    "END=83:0002 CLOSE=00 WTO=00"
+   ],
+   "GTUGO": [
+    "GT62",
+    "GT62"
+   ]
+  }
+ }
+}
