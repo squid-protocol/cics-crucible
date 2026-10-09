@@ -830,7 +830,7 @@ class Case:
             self._area(f"{w} from", ev["from"])
         if k in ("RETRIEVE", "READQ-TS", "RECEIVE"):
             self._area(f"{w} data", ev["data"])
-        if k == "WRITEQ-TS":
+        if k in ("WRITEQ-TS", "WRITE-OPERATOR"):
             self._area(f"{w} data", ev["data"])
         if k == "READ" and ev["file"] not in self.files_csd:
             self.err(f"{w}: file {ev['file']} not in the CSD")

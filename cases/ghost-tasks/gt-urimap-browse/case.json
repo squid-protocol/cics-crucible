@@ -1,0 +1,55 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-urimap-browse",
+  "trap": "ghost-tasks",
+  "title": "INQUIRE URIMAP START / NEXT / END: a browse of the installed definitions, ILLOGIC for a START inside a browse, END past the last, a console message",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/GTUBROW.cbl",
+      "src/GTUNEXT.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/gt-urimap-browse.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "browse",
+      "path": "happy",
+      "summary": "GT61 browses the four installed URIMAPs, starts GT62 for the one whose name and path both qualify, and logs",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT61"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "browse-twice",
+      "path": "trap",
+      "summary": "GT61 twice: the END of the first browse closes it, so the second run's first START is NORMAL again, not ILLOGIC",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT61"
+        },
+        {
+          "at": 10,
+          "aid": "ENTER",
+          "text": "GT61"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}

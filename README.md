@@ -37,7 +37,7 @@ only with a documented reason recorded in the case's `NOTES.md` (see
 
 ## Status
 
-Format `cics-crucible/1` ([SPEC.md](SPEC.md)). 17 cases and 83 scenarios. No release tag
+Format `cics-crucible/1` ([SPEC.md](SPEC.md)). 18 cases and 85 scenarios. No release tag
 yet (see [RELEASING.md](RELEASING.md)).
 
 | Trap | Case | Scenarios | What it pins down |
@@ -61,6 +61,7 @@ yet (see [RELEASING.md](RELEASING.md)).
 | ghost-tasks | [`gt-start-options`](cases/ghost-tasks/gt-start-options) | 7 | START data options RTRANSID / RTERMID / QUEUE and RETRIEVE's ENVDEFERR, RETRIEVE with no INTO, AFTER / AT and a TIME past 23 hours, INVREQ's RESP2 4 / 5 / 6, a REQID reused with FROM (IOERR); RUN TRANSID's child and TRANSIDERR |
 | ghost-tasks | [`gt-assign-startcode`](cases/ghost-tasks/gt-assign-startcode) | 3 | ASSIGN STARTCODE `TD` / `SD` / `S` for terminal input, a pseudo-conversational RETURN TRANSID and STARTs with and without FROM; USERID the default user; FACILITY / SCRNHT / SCRNWD on a terminal task, INVREQ RESP2 5 without one, AEIP when unhandled |
 | ghost-tasks | [`gt-send-text-terminal`](cases/ghost-tasks/gt-send-text-terminal) | 1 | SEND TEXT ... TERMINAL WAIT FREEKB ERASE: TERMINAL, the default disposition, records the same event as SEND TEXT without it; a START TERMID task sends to the terminal the START named; a task with no terminal sends nothing |
+| ghost-tasks | [`gt-urimap-browse`](cases/ghost-tasks/gt-urimap-browse) | 2 | `INQUIRE URIMAP START / NEXT / END`: a browse of the four installed URIMAPs (name, PATH, TRANSACTION) counted without relying on the order, ILLOGIC RESP2 1 for a START inside a browse, END RESP2 2 past the last, one START for the definition whose name and path qualify, `WRITE OPERATOR` (a new `WRITE-OPERATOR` event); the second run shows END closed the browse |
 | pseudo-conversational | [`pc-wizard`](cases/pseudo-conversational/pc-wizard) | 6 | a 3-screen wizard over PC01/PC02/PC03 with state in the COMMAREA; MAPFAIL, CLEAR on each screen, PF3 in either program, an inactive PF key, PF7 back via XCTL under the same transid, a program-written amount not retransmitted |
 | pseudo-conversational | [`pc-return-immediate`](cases/pseudo-conversational/pc-return-immediate) | 4 | `RETURN TRANSID COMMAREA IMMEDIATE` attaches the next task at once, with the COMMAREA, leaving the next operator step for what it RETURNs; INVREQ RESP2 2 below the highest logical level and RESP2 1 with no terminal; `LINK ... SYNCONRETURN` is ignored on a local link |
 | pseudo-conversational | [`pc-aid-menu`](cases/pseudo-conversational/pc-aid-menu) | 4 | HANDLE AID labels with fall-through, unhandled PF keys, CLEAR before RECEIVE, XCTL vs RETURN TRANSID to a detail screen, EIBCALEN = 0 after a RETURN without COMMAREA, an invalid option |
@@ -87,6 +88,7 @@ sentence states outright. They are the first places to look if a real CICS regio
 | hc-resp-options / formattime | After a FORMATTIME that raised INVREQ the case reads neither output area, and the logged ABSTIME is a packed-decimal -1. | FORMATTIME: INVREQ RESP2 1 "The ABSTIME value is less than zero or not in packed-decimal format"; the page does not say what the output areas hold afterwards |
 | hc-resp-options / asis | Without ASIS the same input would be upper-cased on this UCTRAN(YES) terminal; the case only reads the ASIS result. | RECEIVE MAP: ASIS "specifies that lowercase characters in the 3270 input data stream are not translated to uppercase"; the page does not tie the default translation to the TYPETERM's UCTRAN |
 | pc-return-immediate / immediate | The task a RETURN IMMEDIATE attaches runs at the same virtual time as the task that RETURNed, on the same terminal, with `eibaid` null, ahead of everything else, and does not use up an operator step. | RETURN IMMEDIATE: "attached as the next transaction regardless of any other transactions enqueued by ATI for this terminal. The next transaction starts immediately and appears to the operator as having been started by terminal data"; the page says nothing of EIBAID or of virtual time, so SPEC 4 states both and the case reads neither |
+| gt-urimap-browse (all) | The URIMAP definitions the CSD defines are the ones installed in the region, and a browse returns each of them once; the case uses no order. | "You can also browse through all the URIMAP definitions installed in the region, using the browse options (START, NEXT, and END)"; IBM states no browse order |
 
 ## Known gaps (future work)
 

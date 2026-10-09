@@ -253,6 +253,7 @@ asked for RESP; `resp2` is given only where IBM documents the value.
 | `RUN` | `transid`, `resp`, `resp2` (not NORMAL) | RUN TRANSID; its CHILD token is not observable. The child task's `trigger` is `{"kind": "run", "task", "event"}` |
 | `READQ-TS` | `queue`, `item` (number, or `"NEXT"`), `resp`, `length` (after; only on NORMAL / LENGERR), `data` (the bytes written into INTO, or null) | |
 | `WRITEQ-TS` | `queue`, `data`, `resp`, `item` (number assigned) | |
+| `WRITE-OPERATOR` | `data` (the TEXT area sent to the console), `resp` | `EXEC CICS WRITE OPERATOR TEXT(area)`; a plain message only (a text that starts `DFHnnnn` / `DFHaannnn`, which IBM reformats, or is over 113 characters, which it splits into lines, is not used). Additive (SPEC rule 5): a new event type |
 | `READ` | `file`, `ridfld`, `resp` | file control |
 | `ABEND` | `abcode`, `cause` (`command` for EXEC CICS ABEND, `condition` for an unhandled condition), `condition` (when cause is `condition`), `outcome` (`terminated` or `exit`), `exit` (`{"program", "label"}` when outcome is `exit`) | an abend handled by a HANDLE ABEND LABEL exit continues at that label in that program; the lower levels are gone |
 
