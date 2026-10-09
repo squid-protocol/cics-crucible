@@ -1,0 +1,72 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "pc-return-immediate",
+ "scenario": "synconreturn",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "PC51",
+   "program": "PCIMMA",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "PCIMMA",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "PC51 L"
+     }
+    },
+    {
+     "event": "LINK",
+     "program": "PCIMMA",
+     "target": "PCIMML",
+     "length": 8,
+     "commarea": {
+      "length": 8,
+      "text": "1LINK-A1"
+     },
+     "resp": "NORMAL"
+    },
+    {
+     "event": "RETURN",
+     "program": "PCIMML",
+     "level": 2,
+     "caller_commarea": {
+      "length": 8,
+      "text": "1LINKED!"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "PCIMMA",
+     "queue": "PCLOG",
+     "data": {
+      "length": 15,
+      "text": "A2 LINKED! R=00"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "RETURN",
+     "program": "PCIMMA",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

@@ -766,9 +766,17 @@ class Case:
                     self.err(f"{w}: started by a later task")
                 else:
                     evs = log["tasks"][trig["task"] - 1]["events"]
-                    want = "RUN" if trig["kind"] == "run" else "START"
+                    want = {"run": "RUN", "immediate": "RETURN"}.get(trig["kind"], "START")
                     if trig["event"] >= len(evs) or evs[trig["event"]]["event"] != want:
                         self.err(f"{w}: trigger does not name a {want} event")
+                    elif trig["kind"] == "immediate":
+                        named = evs[trig["event"]]
+                        if not (named["level"] == 1 and named.get("immediate") and "resp" not in named):
+                            self.err(f"{w}: trigger does not name a level-1 RETURN IMMEDIATE that succeeded")
+                        if trig["task"] != ti:
+                            self.err(f"{w}: an immediate task follows the task that RETURNed it")
+                        if task["eibaid"] is not None:
+                            self.err(f"{w}: an immediate task has no eibaid (IBM does not state one)")
             if task["commarea"] is None and task["eibcalen"] != 0:
                 self.err(f"{w}: eibcalen {task['eibcalen']} with no commarea")
             if task["commarea"] is not None and task["commarea"]["length"] != task["eibcalen"]:
@@ -793,7 +801,16 @@ class Case:
             if ev["commarea"] is not None and ev["commarea"]["length"] != ev["length"]:
                 self.err(f"{w}: commarea length is not the LINK/XCTL length")
         if k == "RETURN":
-            if ev["level"] == 1:
+            if "immediate" in ev and "resp" not in ev and ev["level"] != 1:
+                self.err(f"{w}: a RETURN IMMEDIATE that succeeded is at level 1")
+            if ("resp" in ev) != ("resp2" in ev) or ("resp" in ev and "immediate" not in ev):
+                self.err(f"{w}: resp / resp2 only together, on a RETURN IMMEDIATE that failed")
+            if "resp" in ev:  # a RETURN IMMEDIATE that failed went on in the program: it has no area of its own
+                if ev["resp"] == "NORMAL" or "commarea" in ev or "caller_commarea" in ev:
+                    self.err(f"{w}: a failed RETURN IMMEDIATE carries no commarea, and is not NORMAL")
+                if ev.get("transid") not in self.transactions:
+                    self.err(f"{w}: transid {ev.get('transid')} not in the CSD")
+            elif ev["level"] == 1:
                 if ev.get("transid") is not None and ev["transid"] not in self.transactions:
                     self.err(f"{w}: transid {ev['transid']} not in the CSD")
                 if "caller_commarea" in ev:

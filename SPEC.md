@@ -90,7 +90,15 @@ tasks it starts.
   free (no task attached) at that time.
 * **Which transaction runs.** If the previous terminal task ended with `RETURN TRANSID(x)`,
   the step starts transaction `x` with the COMMAREA of that RETURN (EIBCALEN = its LENGTH),
-  whatever key was pressed — CLEAR and PA keys included. Otherwise the step must be
+  whatever key was pressed — CLEAR and PA keys included. A task that ended with `RETURN TRANSID(x) ... IMMEDIATE`
+  (IBM, EXEC CICS RETURN: IMMEDIATE "ensures that the transaction specified in the TRANSID option is attached as the next
+  transaction regardless of any other transactions enqueued by ATI for this terminal. The next transaction starts
+  immediately and appears to the operator as having been started by terminal data") starts `x` at once, at the same
+  virtual time, with the COMMAREA of that RETURN, ahead of every expired START request and without using an operator step:
+  the terminal's next step then goes on as it would after any task. That task's `trigger` is `{"kind": "immediate",
+  "task", "event"}` (the RETURN, in the task that precedes it) and its `eibaid` is null: IBM does not say which key it
+  holds, so a case never makes it observable (no EIBAID test, no HANDLE AID, no terminal RECEIVE: the terminal input it
+  "appears" to have is not stated either). Otherwise the step must be
   unformatted `text` whose first blank-delimited word is the transaction id, and the task
   starts with EIBCALEN = 0.
 * **Started tasks.** `START` creates an interval-control request that *expires* at
@@ -190,7 +198,8 @@ MAPFAIL).
 * `tasks` are in dispatch order (section 4). `trigger` is `{"kind": "terminal", "step": i}`
   (index into `steps`) or `{"kind": "start", "task": seq, "event": j}` (the START event, index
   into that task's events; a coalesced terminal start names the first request), or
-  `{"kind": "run", "task": seq, "event": j}` (a RUN TRANSID child: the RUN event).
+  `{"kind": "run", "task": seq, "event": j}` (a RUN TRANSID child: the RUN event), or
+  `{"kind": "immediate", "task": seq, "event": j}` (the task a RETURN IMMEDIATE attached: that RETURN event).
 * `eibaid` is the key name (null for a non-terminal task; a started terminal task has
   `null` too). `eibcalen` and `commarea` describe the COMMAREA the task's first program
   receives.
@@ -237,7 +246,7 @@ asked for RESP; `resp2` is given only where IBM documents the value.
 | `RECEIVE` | `resp`, `length` (after), `data` | terminal input, unformatted |
 | `LINK` | `target`, `length` (the LENGTH given = EIBCALEN the target sees; 0 without COMMAREA), `commarea` (the `length` bytes at the named area when the command is issued, or null without COMMAREA), `resp`, `resp2` | on NORMAL the target's events follow |
 | `XCTL` | `target`, `length`, `commarea` (as for LINK), `resp`, `resp2` | on NORMAL the target's events follow, same level; on failure control stays in the issuing program |
-| `RETURN` | `level` (1 = to CICS), `transid` (level 1: next transid or null), `commarea` (level 1: the area passed to the next task, or null), `caller_commarea` (level > 1: the LINK COMMAREA as the linking program now sees it, or null) | at level 1 it ends the task |
+| `RETURN` | `level` (1 = to CICS), `transid` (level 1: next transid or null), `commarea` (level 1: the area passed to the next task, or null), `caller_commarea` (level > 1: the LINK COMMAREA as the linking program now sees it, or null), `immediate` (`true` only if the program gave IMMEDIATE), `resp` / `resp2` (only on a RETURN IMMEDIATE that failed) | at level 1 it ends the task, except a RETURN IMMEDIATE that failed: INVREQ RESP2 1 ("A RETURN command with the TRANSID option is issued in a program that is not associated with a terminal"), INVREQ RESP2 2 (CHANNEL, COMMAREA or IMMEDIATE "issued by a program that is not at the highest logical level") or LENGERR RESP2 11 (the COMMAREA length is less than 0 or greater than 32763) return to the program; that event has `level` (the issuing program's), `immediate`, `transid`, `resp`, `resp2` and no area. Additive (SPEC rule 5): the new keys are optional and the `immediate` trigger kind is new |
 | `START` | `transid`, `termid`, `interval` (`hhmmss`) or `time` (`hhmmss`), `from` (area or null), `reqid` (only if the program named one), `rtransid` / `rtermid` / `queue` (each only if the program named it), `protect`, `resp`, `expires` (virtual time, null if not NORMAL) | `AFTER` is recorded as the `interval` and `AT` as the `time` its HOURS / MINUTES / SECONDS amount to; out of range (INVREQ) it amounts to none: null |
 | `RETRIEVE` | `resp`, `length` (the LENGTH value after the command; only when the command sets it: NORMAL, LENGERR, with INTO), `data` (the bytes written into INTO, or null), `rtransid` / `rtermid` / `queue` (each only if the command named it and is NORMAL or LENGERR) | |
 | `CANCEL` | `reqid`, `resp` | interval-control CANCEL |
