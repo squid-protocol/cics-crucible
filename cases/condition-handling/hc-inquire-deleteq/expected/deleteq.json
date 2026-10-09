@@ -1,0 +1,184 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-inquire-deleteq",
+ "scenario": "deleteq",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC61",
+   "program": "HCINQD",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCINQD",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC61 D"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCINQD",
+     "queue": "HCQ",
+     "data": {
+      "length": 3,
+      "text": "ONE"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCINQD",
+     "queue": "HCQ",
+     "data": {
+      "length": 3,
+      "text": "TWO"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "READQ-TS",
+     "program": "HCINQD",
+     "queue": "HCQ",
+     "item": "NEXT",
+     "resp": "NORMAL",
+     "data": {
+      "length": 3,
+      "text": "ONE"
+     },
+     "length": 3
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCINQD",
+     "queue": "HCLOG",
+     "data": {
+      "length": 8,
+      "text": "D1  R=00"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "READQ-TS",
+     "program": "HCINQD",
+     "queue": "HCQ",
+     "item": 1,
+     "resp": "QIDERR",
+     "data": null
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCINQD",
+     "queue": "HCLOG",
+     "data": {
+      "length": 8,
+      "text": "D2  R=44"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCINQD",
+     "queue": "HCLOG",
+     "data": {
+      "length": 8,
+      "text": "D3  R=44"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCINQD",
+     "queue": "HCQ",
+     "data": {
+      "length": 5,
+      "text": "THREE"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "READQ-TS",
+     "program": "HCINQD",
+     "queue": "HCQ",
+     "item": "NEXT",
+     "resp": "NORMAL",
+     "data": {
+      "length": 5,
+      "text": "THREE"
+     },
+     "length": 5
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCINQD",
+     "queue": "HCLOG",
+     "data": {
+      "length": 8,
+      "text": "D4  R=00"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCINQD",
+     "queue": "HCLOG",
+     "data": {
+      "length": 8,
+      "text": "D5  R=16"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCINQD",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCINQD",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCQ": [
+    "THREE"
+   ],
+   "HCLOG": [
+    "D1  R=00",
+    "D2  R=44",
+    "D3  R=44",
+    "D4  R=00",
+    "D5  R=16"
+   ]
+  }
+ }
+}

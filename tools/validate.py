@@ -452,6 +452,7 @@ class Case:
         self._layouts()
         self._maps()
         self._programs()
+        self._origin()
         self._scenarios()
         ids = [s["id"] for s in case["scenarios"]]
         if len(set(ids)) != len(ids):
@@ -558,6 +559,21 @@ class Case:
                     if st.get("text") and st["text"] != st["text"].upper():
                         self.err(f"scenario {sc['id']}: step text {st['text']!r} is not upper case, but the terminal's "
                                  "TYPETERM says UCTRAN (SPEC section 2)")
+
+    def _origin(self) -> None:
+        """SPEC section 2 (Origin data): a program that INQUIRE ASSOCIATIONs says so with `origin` in case.json, asks for
+        its own task (EIBTASKN) and for at least one origin option; and a case that states `origin` uses it."""
+        cmds = [dict(opts) for code in self._all_code() for opts in exec_cics(code)
+                if opts[0][0] == "INQUIRE" and "ASSOCIATION" in dict(opts)]  # fmt: skip
+        if cmds and "origin" not in self.case:
+            self.err("a program uses INQUIRE ASSOCIATION but case.json states no `origin` (SPEC section 2)")
+        if "origin" in self.case and not cmds:
+            self.err("case.json states `origin` but no program uses INQUIRE ASSOCIATION")
+        for c in cmds:
+            if (c["ASSOCIATION"] or "").upper() != "EIBTASKN":
+                self.err(f"INQUIRE ASSOCIATION({c['ASSOCIATION']}): only EIBTASKN, the task's own number (SPEC section 2)")
+            if not any(o in c for o in ("ODAPPLID", "ODUSERID", "ODFACILNAME", "ODNETWORKID", "ODFACILTYPE")):
+                self.err("INQUIRE ASSOCIATION without an origin option (IBM's INVREQ RESP2 2 is not used by a case)")
 
     def _all_code(self) -> list[list[str]]:
         return [cobol_code(self.dir / rel) for rel in self.case["sources"]["cobol"] if (self.dir / rel).is_file()]

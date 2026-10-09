@@ -7,6 +7,18 @@
   "additionalProperties": false,
   "properties": {
     "format": {"const": "cics-crucible/case/1"},
+    "origin": {
+      "type": "object",
+      "required": ["applid", "userid", "facilname", "networkid", "faciltype"],
+      "additionalProperties": false,
+      "properties": {
+        "applid": {"$ref": "#/$defs/name8"},
+        "userid": {"$ref": "#/$defs/name8"},
+        "facilname": {"$ref": "#/$defs/name8"},
+        "networkid": {"$ref": "#/$defs/name8"},
+        "faciltype": {"enum": ["APPC", "ASRUNTRAN", "BRIDGE", "EVENT", "IIOP", "IPECI", "IPIC", "JVMSERVER", "LU61", "MRO", "NODEJSAPP", "NONE", "RRSUR", "RZINSTOR", "SCHEDULER", "SOCKET", "START", "STARTTERM", "TERMINAL", "TRANDATA", "WEB", "XMRUNTRAN"]}
+      }
+    },
     "id": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"},
     "trap": {"enum": ["condition-handling", "hex-attributes", "commarea-mismatch", "ghost-tasks", "pseudo-conversational"]},
     "title": {"type": "string", "minLength": 1},

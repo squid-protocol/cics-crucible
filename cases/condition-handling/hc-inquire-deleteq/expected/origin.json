@@ -1,0 +1,80 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-inquire-deleteq",
+ "scenario": "origin",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC61",
+   "program": "HCINQD",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCINQD",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC61 I"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCINQD",
+     "queue": "HCLOG",
+     "data": {
+      "length": 55,
+      "text": "I1 CRUAPPL1 CICSUSER T001     CRUNET01 T=000000213 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCINQD",
+     "queue": "HCLOG",
+     "data": {
+      "length": 55,
+      "text": "I2                            CRUNET01 T=000000213 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCINQD",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCINQD",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "I1 CRUAPPL1 CICSUSER T001     CRUNET01 T=000000213 R=00",
+    "I2                            CRUNET01 T=000000213 R=00"
+   ]
+  }
+ }
+}

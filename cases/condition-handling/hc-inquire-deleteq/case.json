@@ -1,0 +1,86 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-inquire-deleteq",
+  "trap": "condition-handling",
+  "title": "INQUIRE ASSOCIATION(EIBTASKN) origin data (ODAPPLID, ODUSERID, ODFACILNAME, ODNETWORKID, ODFACILTYPE as a CVDA), DELETEQ TS (the whole queue and its NEXT position, QIDERR, INVREQ for a name of binary zeros), RECEIVE MAP ... TERMINAL",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "origin": {
+    "applid": "CRUAPPL1",
+    "userid": "CICSUSER",
+    "facilname": "T001",
+    "networkid": "CRUNET01",
+    "faciltype": "TERMINAL"
+  },
+  "sources": {
+    "cobol": [
+      "src/HCINQD.cbl"
+    ],
+    "bms": [
+      "bms/HCSET2.bms"
+    ],
+    "csd": [
+      "csd/hc-inquire-deleteq.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {
+    "HCM2": {
+      "mapset": "HCSET2",
+      "copybook": "copy/HCSET2.cpy"
+    }
+  },
+  "scenarios": [
+    {
+      "id": "origin",
+      "path": "happy",
+      "summary": "INQUIRE ASSOCIATION(EIBTASKN) with all five origin options (RESP / RESP2), then with two of them: the stated origin, ODFACILTYPE as the CVDA 213",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC61 I"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "deleteq",
+      "path": "happy",
+      "summary": "DELETEQ TS removes the queue with its items and NEXT position (QIDERR afterwards, and for a second delete); a queue written anew starts at item 1; a name of binary zeros is INVREQ",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC61 D"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "receive-terminal",
+      "path": "happy",
+      "summary": "SEND MAP, then RECEIVE MAP ... TERMINAL ASIS: the input of the terminal that started the task",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC61 M"
+        },
+        {
+          "at": 10,
+          "aid": "ENTER",
+          "map": "HCM2",
+          "fields": {
+            "NAME": "Mixed cAsE"
+          }
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
