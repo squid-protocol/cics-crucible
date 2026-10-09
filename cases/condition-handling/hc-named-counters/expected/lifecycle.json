@@ -1,0 +1,236 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-named-counters",
+ "scenario": "lifecycle",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC71",
+   "program": "HCCNTR",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCCNTR",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC71 L"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNTR",
+     "queue": "HCLOG",
+     "data": {
+      "length": 26,
+      "text": "L1  R=16 S=201 V=000000000"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNTR",
+     "queue": "HCLOG",
+     "data": {
+      "length": 26,
+      "text": "L2  R=16 S=201 V=000000000"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNTR",
+     "queue": "HCLOG",
+     "data": {
+      "length": 26,
+      "text": "L3  R=00 S=000 V=000000000"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNTR",
+     "queue": "HCLOG",
+     "data": {
+      "length": 26,
+      "text": "L4  R=16 S=202 V=000000000"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNTR",
+     "queue": "HCLOG",
+     "data": {
+      "length": 26,
+      "text": "L5  R=00 S=000 V=000000005"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNTR",
+     "queue": "HCLOG",
+     "data": {
+      "length": 26,
+      "text": "L6  R=00 S=000 V=000000006"
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNTR",
+     "queue": "HCLOG",
+     "data": {
+      "length": 26,
+      "text": "L7  R=00 S=000 V=000000007"
+     },
+     "resp": "NORMAL",
+     "item": 7
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNTR",
+     "queue": "HCLOG",
+     "data": {
+      "length": 26,
+      "text": "L8  R=00 S=000 V=000000007"
+     },
+     "resp": "NORMAL",
+     "item": 8
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNTR",
+     "queue": "HCLOG",
+     "data": {
+      "length": 26,
+      "text": "L9  R=00 S=000 V=000000000"
+     },
+     "resp": "NORMAL",
+     "item": 9
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNTR",
+     "queue": "HCLOG",
+     "data": {
+      "length": 26,
+      "text": "L10 R=00 S=000 V=000000000"
+     },
+     "resp": "NORMAL",
+     "item": 10
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNTR",
+     "queue": "HCLOG",
+     "data": {
+      "length": 26,
+      "text": "L11 R=00 S=000 V=000000000"
+     },
+     "resp": "NORMAL",
+     "item": 11
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNTR",
+     "queue": "HCLOG",
+     "data": {
+      "length": 26,
+      "text": "L12 R=16 S=201 V=000000000"
+     },
+     "resp": "NORMAL",
+     "item": 12
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNTR",
+     "queue": "HCLOG",
+     "data": {
+      "length": 26,
+      "text": "L13 R=00 S=000 V=000000000"
+     },
+     "resp": "NORMAL",
+     "item": 13
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNTR",
+     "queue": "HCLOG",
+     "data": {
+      "length": 26,
+      "text": "L14 R=00 S=000 V=000000009"
+     },
+     "resp": "NORMAL",
+     "item": 14
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNTR",
+     "queue": "HCLOG",
+     "data": {
+      "length": 26,
+      "text": "L15 R=16 S=201 V=000000000"
+     },
+     "resp": "NORMAL",
+     "item": 15
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCCNTR",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCCNTR",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "L1  R=16 S=201 V=000000000",
+    "L2  R=16 S=201 V=000000000",
+    "L3  R=00 S=000 V=000000000",
+    "L4  R=16 S=202 V=000000000",
+    "L5  R=00 S=000 V=000000005",
+    "L6  R=00 S=000 V=000000006",
+    "L7  R=00 S=000 V=000000007",
+    "L8  R=00 S=000 V=000000007",
+    "L9  R=00 S=000 V=000000000",
+    "L10 R=00 S=000 V=000000000",
+    "L11 R=00 S=000 V=000000000",
+    "L12 R=16 S=201 V=000000000",
+    "L13 R=00 S=000 V=000000000",
+    "L14 R=00 S=000 V=000000009",
+    "L15 R=16 S=201 V=000000000"
+   ]
+  }
+ }
+}

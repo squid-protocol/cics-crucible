@@ -1,0 +1,51 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-named-counters",
+  "trap": "condition-handling",
+  "title": "Named counters: GET COUNTER of a counter that is not there is INVREQ RESP2 201 (not NOTFND), DEFINE COUNTER (initial value, duplicate INVREQ 202), DELETE COUNTER, QUERY COUNTER, pools, and names outside IBM's character rules (INVREQ 403 / 404)",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCCNTR.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-named-counters.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "lifecycle",
+      "path": "happy",
+      "summary": "GET / DELETE of a counter that is not there (INVREQ 201), DEFINE with and without VALUE, a second DEFINE (INVREQ 202), GET, QUERY, DELETE, and the same name in another pool",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC71 L"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "names",
+      "path": "happy",
+      "summary": "names outside IBM's rules: INVREQ 404 (counter) and 403 (pool) for DEFINE / GET / DELETE; a counter using every allowed kind of character",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC71 N"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
