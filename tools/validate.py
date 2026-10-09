@@ -530,6 +530,8 @@ class Case:
             for opt in ("ATI", "TTI"):
                 if a.get(opt, "").upper() != "YES":
                     self.err(f"CSD TYPETERM {name}: {opt}(YES) is required by the reference region (SPEC section 2)")
+            if a.get("UCTRAN", "NO").upper() not in ("YES", "NO", "TRANID"):
+                self.err(f"CSD TYPETERM {name}: UCTRAN({a['UCTRAN']}) is not YES, NO or TRANID (SPEC section 2)")
             if a.get("DEVICE", "3270").upper() not in ("3270", "LUTYPE2"):
                 self.err(f"CSD TYPETERM {name}: DEVICE({a['DEVICE']}) -- the reference region's terminal is DEVICE(3270) "
                          "or DEVICE(LUTYPE2) (SPEC section 2)")
@@ -542,6 +544,20 @@ class Case:
         if starts_terminal and self.case["terminal"] not in terms:
             self.err(f"a program STARTs a terminal task but the CSD does not define TERMINAL({self.case['terminal']}) "
                      "with ATI(YES) (SPEC section 2)")
+
+        # SPEC section 2 (UCTRAN): the terminal's UCTRANST comes from its TYPETERM, so a case that asks for or sets it states
+        # UCTRAN there; and with UCTRAN(YES) or TRANID the typed input is upper case (no input translation is modelled)
+        uses_uctranst = any("UCTRANST" in dict(opts) for code in self._all_code() for opts in exec_cics(code))
+        tt = types.get(terms.get(self.case["terminal"], {}).get("TYPETERM", "").upper(), {})
+        if uses_uctranst and "UCTRAN" not in tt:
+            self.err(f"a program uses UCTRANST but TERMINAL({self.case['terminal']})'s TYPETERM does not state UCTRAN "
+                     "(SPEC section 2)")
+        if tt.get("UCTRAN", "NO").upper() != "NO":
+            for sc in self.case["scenarios"]:
+                for st in sc["steps"]:
+                    if st.get("text") and st["text"] != st["text"].upper():
+                        self.err(f"scenario {sc['id']}: step text {st['text']!r} is not upper case, but the terminal's "
+                                 "TYPETERM says UCTRAN (SPEC section 2)")
 
     def _all_code(self) -> list[list[str]]:
         return [cobol_code(self.dir / rel) for rel in self.case["sources"]["cobol"] if (self.dir / rel).is_file()]

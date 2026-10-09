@@ -1,0 +1,128 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-deedit-uctranst",
+ "scenario": "deedit",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC41",
+   "program": "HCDEED",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCDEED",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC41 D"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDEED",
+     "queue": "HCLOG",
+     "data": {
+      "length": 17,
+      "text": "D1 00146704B R=00"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDEED",
+     "queue": "HCLOG",
+     "data": {
+      "length": 17,
+      "text": "D2 000002568 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDEED",
+     "queue": "HCLOG",
+     "data": {
+      "length": 17,
+      "text": "D3 012L      R=00"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDEED",
+     "queue": "HCLOG",
+     "data": {
+      "length": 17,
+      "text": "D4 A         R=00"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDEED",
+     "queue": "HCLOG",
+     "data": {
+      "length": 17,
+      "text": "D5 0000123C  R=00"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDEED",
+     "queue": "HCLOG",
+     "data": {
+      "length": 17,
+      "text": "D6           R=22"
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCDEED",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCDEED",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "D1 00146704B R=00",
+    "D2 000002568 R=00",
+    "D3 012L      R=00",
+    "D4 A         R=00",
+    "D5 0000123C  R=00",
+    "D6           R=22"
+   ]
+  }
+ }
+}
