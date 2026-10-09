@@ -663,6 +663,13 @@ class Case:
                 if verb in ("SEND", "RECEIVE") and "MAP" in o and literal(o["MAP"]):
                     m = literal(o["MAP"]).upper()
                     ms = (literal(o.get("MAPSET")) or m).upper()
+                    if m in self.case.get("unheld_maps", []):
+                        # deliberately a map its mapset does not hold (the ABM0 trap): no mapset may hold it
+                        if m in self.bms:
+                            self.err(f"{rel}: MAP('{m}') is listed in unheld_maps but the BMS sources hold it")
+                        if ms not in {b["mapset"] for b in self.bms.values()}:
+                            self.err(f"{rel}: MAP('{m}') MAPSET('{ms}'): the mapset is not in the BMS sources")
+                        continue
                     if m not in self.bms:
                         self.err(f"{rel}: MAP('{m}') is not in the BMS sources")
                     elif self.bms[m]["mapset"] != ms:
