@@ -182,7 +182,7 @@
         {"type": "object", "required": ["event", "program", "abcode", "cause", "outcome"], "additionalProperties": false,
          "properties": {"event": {"const": "ABEND"}, "program": {"$ref": "#/$defs/name8"},
                         "abcode": {"type": "string", "pattern": "^[A-Z0-9#@$]{4}$"},
-                        "cause": {"enum": ["command", "condition"]}, "condition": {"$ref": "#/$defs/cond"},
+                        "cause": {"enum": ["command", "condition", "system"]}, "condition": {"$ref": "#/$defs/cond"},
                         "outcome": {"enum": ["terminated", "exit"]},
                         "exit": {"type": "object", "required": ["program", "label"], "additionalProperties": false,
                                  "properties": {"program": {"$ref": "#/$defs/name8"}, "label": {"type": "string"}}},

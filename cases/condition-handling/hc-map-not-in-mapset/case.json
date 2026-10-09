@@ -1,0 +1,88 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-map-not-in-mapset",
+  "trap": "condition-handling",
+  "title": "SEND MAP / RECEIVE MAP for a map its mapset does not hold (MAPSET omitted, so it is the MAP name): abend ABM0, no condition, a HANDLE ABEND exit takes it",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCMAB.cbl"
+    ],
+    "bms": [
+      "bms/HCSET3.bms"
+    ],
+    "csd": [
+      "csd/hc-map-not-in-mapset.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "unheld_maps": [
+    "HCSET3",
+    "HCNONE"
+  ],
+  "maps": {
+    "HCM3": {
+      "mapset": "HCSET3",
+      "copybook": "copy/HCSET3.cpy"
+    }
+  },
+  "scenarios": [
+    {
+      "id": "in-mapset",
+      "path": "happy",
+      "summary": "SEND MAP('HCM3') MAPSET('HCSET3'): the map is in its mapset, the screen is sent",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC61 O"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "omitted-mapset",
+      "path": "trap",
+      "summary": "SEND MAP('HCSET3') with no MAPSET: map HCSET3 is not in mapset HCSET3 (its map is HCM3), ABM0",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC61 S"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "receive",
+      "path": "trap",
+      "summary": "RECEIVE MAP('HCSET3') with no MAPSET: the same, ABM0",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC61 R"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "exit",
+      "path": "trap",
+      "summary": "HANDLE ABEND LABEL, then SEND MAP('HCNONE') MAPSET('HCSET3'): ABM0 goes to the exit, which logs ASSIGN ABCODE",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC61 X"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}

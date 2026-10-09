@@ -157,6 +157,9 @@ tasks it starts.
   copybook.
 * `undefined_programs` lists program names that a program deliberately LINKs/XCTLs to but
   that have no CSD definition (the PGMIDERR traps); everything else must resolve.
+* `unheld_maps` (optional, additive) lists map names that a program deliberately names in SEND MAP /
+  RECEIVE MAP although no BMS source holds a map of that name (the ABM0 trap: the map is not in
+  its mapset); the mapset named (or, with MAPSET omitted, the map name) must still be a mapset.
 * A scenario's `path` is `happy` or `trap` (which side of the trap it drives), `initial` seeds
   temporary storage queues (`ts_queues`: queue → list of items), and `steps` are the operator
   actions:
@@ -254,7 +257,7 @@ asked for RESP; `resp2` is given only where IBM documents the value.
 | `READQ-TS` | `queue`, `item` (number, or `"NEXT"`), `resp`, `length` (after; only on NORMAL / LENGERR), `data` (the bytes written into INTO, or null) | |
 | `WRITEQ-TS` | `queue`, `data`, `resp`, `item` (number assigned) | |
 | `READ` | `file`, `ridfld`, `resp` | file control |
-| `ABEND` | `abcode`, `cause` (`command` for EXEC CICS ABEND, `condition` for an unhandled condition), `condition` (when cause is `condition`), `outcome` (`terminated` or `exit`), `exit` (`{"program", "label"}` when outcome is `exit`) | an abend handled by a HANDLE ABEND LABEL exit continues at that label in that program; the lower levels are gone |
+| `ABEND` | `abcode`, `cause` (`command` for EXEC CICS ABEND, `condition` for an unhandled condition, `system` for an abend CICS itself raises for a command that raises no condition -- BMS's ABM0 for a map the mapset does not hold; additive, SPEC rule 5), `condition` (when cause is `condition`), `outcome` (`terminated` or `exit`), `exit` (`{"program", "label"}` when outcome is `exit`) | an abend handled by a HANDLE ABEND LABEL exit continues at that label in that program; the lower levels are gone |
 
 Abend codes for unhandled conditions are IBM's AEIx/AEYx/AEXx codes (e.g. NOTFND → AEIM,
 LENGERR → AEIV, ITEMERR → AEIZ, QIDERR → AEYH, MAPFAIL → AEI9, ENDDATA → AEI2, PGMIDERR →
@@ -301,7 +304,7 @@ wrong.
    a CSD `DEFINE PROGRAM`; each CSD `DEFINE TRANSACTION` names a program that exists; every
    literal `PROGRAM('X')` on LINK/XCTL is defined in the CSD or listed in
    `undefined_programs`; every literal `TRANSID('X')` on RETURN/START is a CSD transaction;
-   every literal `MAP`/`MAPSET` exists in the BMS sources and each mapset has a CSD
+   every literal `MAP`/`MAPSET` exists in the BMS sources (a map in `unheld_maps` must not) and each mapset has a CSD
    `DEFINE MAPSET`; every `COPY` resolves in the copy directories or is IBM-supplied.
 3. BMS vs symbolic map copybook: same named fields, in order, with lengths and DSATTS bytes.
 4. Layouts: the record exists; field sizes are computed (DISPLAY, COMP/BINARY/COMP-5, COMP-3,

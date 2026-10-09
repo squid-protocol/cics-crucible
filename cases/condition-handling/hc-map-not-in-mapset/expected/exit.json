@@ -1,0 +1,79 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-map-not-in-mapset",
+ "scenario": "exit",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC61",
+   "program": "HCMAB",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCMAB",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC61 X"
+     }
+    },
+    {
+     "event": "ABEND",
+     "program": "HCMAB",
+     "abcode": "ABM0",
+     "cause": "system",
+     "outcome": "exit",
+     "exit": {
+      "program": "HCMAB",
+      "label": "MAP-ABEND"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCMAB",
+     "queue": "HCLOG",
+     "data": {
+      "length": 7,
+      "text": "X1 ABM0"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCMAB",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCMAB",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "X1 ABM0"
+   ]
+  }
+ }
+}

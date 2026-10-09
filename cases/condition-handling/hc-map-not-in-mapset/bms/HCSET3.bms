@@ -1,0 +1,12 @@
+***********************************************************************
+* cics-crucible  condition-handling / hc-map-not-in-mapset   (Apache-2.0)
+* Mapset HCSET3: HCM3 (one unprotected field).
+***********************************************************************
+HCSET3   DFHMSD TYPE=&SYSPARM,MODE=INOUT,LANG=COBOL,STORAGE=AUTO,      X
+               TIOAPFX=YES,CTRL=(FREEKB)
+HCM3     DFHMDI SIZE=(24,80),LINE=1,COLUMN=1
+         DFHMDF POS=(1,1),LENGTH=5,ATTRB=(ASKIP,BRT),INITIAL='NAME?'
+NAME     DFHMDF POS=(3,10),LENGTH=12,ATTRB=(UNPROT,NORM,IC,FSET)
+         DFHMDF POS=(3,23),LENGTH=1,ATTRB=(ASKIP,NORM)
+         DFHMSD TYPE=FINAL
+         END
