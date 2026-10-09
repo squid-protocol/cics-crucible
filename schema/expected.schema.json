@@ -45,7 +45,7 @@
         {"type": "object", "required": ["kind", "step"], "additionalProperties": false,
          "properties": {"kind": {"const": "terminal"}, "step": {"type": "integer", "minimum": 0}}},
         {"type": "object", "required": ["kind", "task", "event"], "additionalProperties": false,
-         "properties": {"kind": {"enum": ["start", "run"]}, "task": {"type": "integer", "minimum": 1},
+         "properties": {"kind": {"enum": ["start", "run", "immediate"]}, "task": {"type": "integer", "minimum": 1},
                         "event": {"type": "integer", "minimum": 0}}}
       ]
     },
@@ -135,7 +135,9 @@
                         "level": {"type": "integer", "minimum": 1},
                         "transid": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/name4"}]},
                         "commarea": {"$ref": "#/$defs/area_or_null"},
-                        "caller_commarea": {"$ref": "#/$defs/area_or_null"}, "note": {"type": "string"}}},
+                        "caller_commarea": {"$ref": "#/$defs/area_or_null"},
+                        "immediate": {"const": true},
+                        "resp": {"$ref": "#/$defs/cond"}, "resp2": {"type": "integer"}, "note": {"type": "string"}}},
         {"type": "object", "required": ["event", "program", "transid", "termid", "from", "protect", "resp", "expires"], "additionalProperties": false,
          "properties": {"event": {"const": "START"}, "program": {"$ref": "#/$defs/name8"},
                         "transid": {"$ref": "#/$defs/name4"},

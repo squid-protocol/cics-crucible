@@ -1,0 +1,84 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "pc-return-immediate",
+  "trap": "pseudo-conversational",
+  "title": "EXEC CICS RETURN ... IMMEDIATE (the next transaction attached at once, with the COMMAREA, without a terminal input) and LINK ... SYNCONRETURN (ignored on a local link); RETURN IMMEDIATE's INVREQ RESP2 1 and 2",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/PCIMMA.cbl",
+      "src/PCIMMB.cbl",
+      "src/PCIMML.cbl",
+      "src/PCIMMS.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/pc-return-immediate.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "immediate",
+      "path": "happy",
+      "summary": "RETURN TRANSID(PC52) COMMAREA(8) IMMEDIATE attaches PC52 at once with the COMMAREA; its own RETURN TRANSID (not immediate) waits for the next ENTER",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "PC51 I"
+        },
+        {
+          "at": 10,
+          "aid": "ENTER"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "synconreturn",
+      "path": "happy",
+      "summary": "LINK PROGRAM COMMAREA LENGTH SYNCONRETURN to a local program: the option is ignored, the link and its COMMAREA are as without it",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "PC51 L"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "link-level2",
+      "path": "trap",
+      "summary": "RETURN IMMEDIATE in a LINKed program (not the highest logical level): INVREQ RESP2 2, and the program goes on",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "PC51 N"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "no-terminal",
+      "path": "trap",
+      "summary": "RETURN IMMEDIATE in a task started with no terminal: INVREQ RESP2 1, and the program goes on",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "PC51 S"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
