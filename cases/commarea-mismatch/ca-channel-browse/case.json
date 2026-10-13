@@ -1,0 +1,50 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "ca-channel-browse",
+  "trap": "commarea-mismatch",
+  "title": "Channel browse, MOVE, QUERY and DELETE CHANNEL: STARTBROWSE / GETNEXT / ENDBROWSE CONTAINER, MOVE CONTAINER across channels, QUERY CHANNEL's count, DELETE CHANNEL taking its containers, CHANNELERR / CONTAINERERR / TOKENERR / END",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/CABROW.cbl",
+      "src/CABRERR.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/ca-channel-browse.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "browse-move-delete",
+      "path": "happy",
+      "summary": "CABROW puts three containers in a new channel, counts them (QUERY CHANNEL), browses them (three GETNEXTs, END, ENDBROWSE, then a stale token), MOVEs one to a new channel, and DELETEs the channel: the count, the moved container and the re-created channel are checked after each step",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA07"
+        }
+      ]
+    },
+    {
+      "id": "unhandled-channelerr",
+      "path": "trap",
+      "summary": "DELETE CHANNEL of a channel that does not exist, with neither RESP nor HANDLE CONDITION: the task abends AEZV",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA08"
+        }
+      ]
+    }
+  ]
+}
