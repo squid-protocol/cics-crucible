@@ -1,0 +1,82 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "pc-return-channel",
+  "trap": "pseudo-conversational",
+  "title": "EXEC CICS RETURN TRANSID ... CHANNEL (the next task of the conversation starts with the channel and its containers): ASSIGN CHANNEL and GET CONTAINER in the next task, a channel changed across turns, and RETURN CHANNEL below the highest logical level (INVREQ RESP2 2)",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/PCRCA.cbl",
+      "src/PCRCB.cbl",
+      "src/PCRCL.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/pc-return-channel.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "carry",
+      "path": "happy",
+      "summary": "PC61 PUTs container STATE in channel PCCHAN and RETURNs TRANSID(PC62) CHANNEL(PCCHAN); the next ENTER starts PC62, whose current channel is PCCHAN and whose GET CONTAINER finds STATE",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "PC61 C"
+        },
+        {
+          "at": 10,
+          "aid": "ENTER"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "modify",
+      "path": "happy",
+      "summary": "A channel changed across turns: PC62 replaces STATE, adds EXTRA and RETURNs its current channel again; the next turn reads both, deletes EXTRA and replaces STATE; the third turn sees the deletion",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "PC61 M"
+        },
+        {
+          "at": 10,
+          "aid": "ENTER"
+        },
+        {
+          "at": 20,
+          "aid": "ENTER"
+        },
+        {
+          "at": 30,
+          "aid": "ENTER"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "link-level2",
+      "path": "trap",
+      "summary": "RETURN TRANSID CHANNEL in a LINKed program (not the highest logical level): INVREQ RESP2 2, and the program goes on",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "PC61 L"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
