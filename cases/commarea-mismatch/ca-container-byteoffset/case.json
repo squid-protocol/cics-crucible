@@ -1,0 +1,50 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "ca-container-byteoffset",
+  "trap": "commarea-mismatch",
+  "title": "GET CONTAINER BYTEOFFSET: reads from offset 0, the middle, the last byte, past the container's remaining data, a negative offset, after a PREPEND, and an offset at or past the end (LENGERR RESP2 12)",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/CABOFF.cbl",
+      "src/CABOFFX.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/ca-container-byteoffset.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "read",
+      "path": "happy",
+      "summary": "CABOFF puts a 10-byte BIT container and gets it with BYTEOFFSET 0, 3, 9, 7 (FLENGTH above what is left: 3 bytes come back) and -1 (zero assumed); PREPENDs two bytes and reads at 0 and 10; FLENGTH comes back as the length returned",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA09"
+        }
+      ]
+    },
+    {
+      "id": "past-end",
+      "path": "trap",
+      "summary": "CABOFFX gets a 10-byte container at BYTEOFFSET 9 (NORMAL, 1 byte), 10 and 15 (LENGERR RESP2 12 each: the offset is at or past the end), then from 0 to show the container is unchanged",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA0A"
+        }
+      ]
+    }
+  ]
+}
