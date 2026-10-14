@@ -37,7 +37,7 @@ part of the format:
 | Security | none (no NOTAUTH). Nobody signs on, so every task's user is the default user, `CICSUSER` (the SIT `DFLTUSER` default; ASSIGN USERID: "If no user is explicitly signed on, CICS returns the default user ID"). |
 | Temporary storage | every queue named in a case is main or auxiliary TS, local, non-recoverable. |
 | Transient data | a TD queue a case uses is an intrapartition queue the case CSD defines, `DEFINE TDQUEUE(name) TYPE(INTRA)` (IBM, TDQUEUE resources), with a destination id of 1-4 characters; it is non-recoverable and has no trigger level (`RECOVSTATUS(NO)`, no `TRIGGERLEVEL`). Extrapartition, indirect and remote queues are not modelled. A TD queue is read destructively and in order: `READQ TD` removes the item it returns, and there is no item number. Additive (SPEC rule 5). |
-| Files | a CSD `DEFINE FILE` plus the case's `data/` records; a file is opened on first use. |
+| Files | a CSD `DEFINE FILE` plus the case's `data/` records; a file is opened on first use. A file is a local VSAM KSDS with a fixed record length, not recoverable (no `RECOVERY`, so no syncpoint locks), enabled and read/update-able; a seed is `data/<FILE>.dat`, one record per line (printable ASCII, read as EBCDIC 037), every line the same length, in ascending key order, the key being the leading bytes the case's `RIDFLD` names; a case's programs pass `LENGTH` equal to that record length so no scenario depends on how a fixed or variable length file reads `LENGTH`. No task other than the case's own touches the file. Additive (SPEC rule 5). |
 | Language | Enterprise COBOL, translated by the CICS translator; `HANDLE CONDITION`/`HANDLE AID`/`HANDLE ABEND LABEL` transfers are `GO TO`s (the translator's `GO TO ... DEPENDING ON` after the command). |
 
 A case may narrow these (e.g. a CSD `TYPETERM` with `EXTENDEDDS(YES)`) but never contradict
@@ -213,7 +213,7 @@ MAPFAIL).
 * Any object in a log may carry a `note` (task, event, SEND-MAP field): commentary for
   humans, never compared.
 * `final` (optional) is the state of the named TS queues (`ts_queues`) and, additively, TD queues
-  (`td_queues`: remaining items, oldest first) after the scenario; queues not named are not compared.
+  (`td_queues`: remaining items, oldest first) and files (`files`: file name -> every record in key order, as text; each the seed's length) after the scenario; queues not named are not compared.
 
 ### 6.1 Values
 
@@ -263,7 +263,9 @@ asked for RESP; `resp2` is given only where IBM documents the value.
 | `READQ-TD` | `queue`, `resp`, `resp2` (only where IBM documents it), `length` (after; only on NORMAL / LENGERR), `data` (the bytes written into INTO, or null) | `EXEC CICS READQ TD`: destructive, oldest item first, no item number (IBM, READQ TD). An empty queue is QZERO. Additive (SPEC rule 5): new event type |
 | `WRITEQ-TD` | `queue`, `data`, `resp`, `resp2` (only where IBM documents it) | `EXEC CICS WRITEQ TD`: appends one item (IBM, WRITEQ TD). Additive: new event type |
 | `DELETEQ-TD` | `queue`, `resp`, `resp2` (only where IBM documents it) | `EXEC CICS DELETEQ TD`: deletes the queue's items (IBM, DELETEQ TD). Whether the queue then still exists is not stated by this format: a case never relies on it. Additive: new event type |
-| `READ` | `file`, `ridfld`, `resp` | file control |
+| `READ` | `file`, `ridfld`, `update` (true when the command has `UPDATE`; omitted otherwise), `resp`, `resp2` (only where IBM documents it), `length` (after; only on NORMAL), `data` (the bytes written into INTO, or null) | `EXEC CICS READ FILE ... INTO ... RIDFLD`; a READ with UPDATE holds the record's exclusive control until REWRITE, UNLOCK, DELETE, syncpoint or task end (IBM, READ). Optional keys added (SPEC rule 5) |
+| `REWRITE` | `file`, `data` (the record written from FROM), `resp`, `resp2` (only where IBM documents it) | `EXEC CICS REWRITE FILE FROM`; it must follow a READ UPDATE (IBM, REWRITE). Additive: new event type |
+| `UNLOCK` | `file`, `resp`, `resp2` (only where IBM documents it) | `EXEC CICS UNLOCK FILE`, no `TOKEN`: releases the exclusive control a READ UPDATE took (IBM, UNLOCK). Additive: new event type |
 | `ABEND` | `abcode`, `cause` (`command` for EXEC CICS ABEND, `condition` for an unhandled condition, `system` for an abend CICS itself raises for a command that raises no condition -- BMS's ABM0 for a map the mapset does not hold; additive, SPEC rule 5), `condition` (when cause is `condition`), `outcome` (`terminated` or `exit`), `exit` (`{"program", "label"}` when outcome is `exit`) | an abend handled by a HANDLE ABEND LABEL exit continues at that label in that program; the lower levels are gone |
 
 Abend codes for unhandled conditions are IBM's AEIx/AEYx/AEXx codes (e.g. NOTFND → AEIM,
@@ -321,6 +323,7 @@ wrong.
    fields of the map, `meaning` agrees with `attr`, and `attr` with `attr_from: map` equals
    the byte the DFHMDF ATTRB produces.
 6. `NOTES.md` exists, has the section headings above, and cites at least one IBM document.
+7a. Files (section 2): a `data/` seed is `<FILE>.dat` for a CSD `FILE`, with equal-length, unique, printable lines; every `FILE` of a `READ` / `WRITE` / `REWRITE` / `DELETE` / `UNLOCK` / `STARTBR` command and every `READ` / `REWRITE` / `UNLOCK` event file is a CSD `FILE`; `final.files` names CSD files and records of the seed's length; a NORMAL `READ` / `REWRITE` data length is the seed's.
 7. TD queues (section 2): every CSD `TDQUEUE` is `TYPE(INTRA)` with a 1-4 character id; every literal
    `QUEUE` of a `READQ` / `WRITEQ` / `DELETEQ` `TD` command, every `td_queues` name (initial and final) and
    every `READQ-TD` / `WRITEQ-TD` / `DELETEQ-TD` event queue is a CSD `TDQUEUE`.

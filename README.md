@@ -108,7 +108,7 @@ sentence states outright. They are the first places to look if a real CICS regio
     (transid/termid, `at` ≥ `expires`), including the other requests of a coalesced
     terminal start.
 * **Coverage:** no case uses `FLENGTH` (the fullword LENGTH form) yet. `DATALENGTH` is
-  avoided on purpose (it matters only for DPL). File control (READ against a KSDS) is in the
+  avoided on purpose (it matters only for DPL). File control (READ / REWRITE / UNLOCK against a KSDS) is in the
   format but not in a case yet.
 
 ## Layout
