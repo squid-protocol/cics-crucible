@@ -1,0 +1,62 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-web-parse-url",
+  "trap": "ghost-tasks",
+  "title": "EXEC CICS WEB PARSE URL: scheme, host, port, path and query string of a URL (default ports, IPv4 / IPv6 hosts), INVREQ for an incorrect URL or bad escape, LENGERR for a short output buffer",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/GTWPARS.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/gt-web-parse-url.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "parse",
+      "path": "happy",
+      "summary": "Five well-formed URLs: scheme returned upper case, explicit and default ports (80 / 443), a dotted IPv4 host, an IPv6 host without its brackets",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT71 P"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "errors",
+      "path": "trap",
+      "summary": "A URL with no scheme is INVREQ RESP2 28; a bad percent escape is INVREQ RESP2 65",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT71 E"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "lengerr",
+      "path": "trap",
+      "summary": "One output buffer too short per command: HOSTLENGTH 4 is LENGERR RESP2 29, PATHLENGTH 1 is 30, QUERYSTRLEN 1 is 8",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT71 L"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}

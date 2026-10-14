@@ -1,0 +1,80 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "gt-web-parse-url",
+ "scenario": "errors",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "GT71",
+   "program": "GTWPARS",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "GTWPARS",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "GT71 E"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTWPARS",
+     "queue": "GTWLOG",
+     "data": {
+      "length": 88,
+      "text": "E1  R=16 S=028 SCH=      P=00000 HL=000 H=                     P=           Q=          "
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTWPARS",
+     "queue": "GTWLOG",
+     "data": {
+      "length": 88,
+      "text": "E2  R=16 S=065 SCH=      P=00000 HL=000 H=                     P=           Q=          "
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "GTWPARS",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "GTWPARS",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "GTWLOG": [
+    "E1  R=16 S=028 SCH=      P=00000 HL=000 H=                     P=           Q=          ",
+    "E2  R=16 S=065 SCH=      P=00000 HL=000 H=                     P=           Q=          "
+   ]
+  }
+ }
+}
