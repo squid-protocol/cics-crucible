@@ -1,0 +1,116 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-receive-retrieve-set",
+ "scenario": "enddata",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA0D",
+   "program": "CARCST",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "CARCST",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "CA0D N"
+     },
+     "note": "RECEIVE SET(pointer) LENGTH: the data area is set to the length of the data received (6) [RECEIVE-3270]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CARCST",
+     "queue": "RSLOG",
+     "data": {
+      "length": 31,
+      "text": "RC010000006CA0D N              "
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "the view LS-IN(1:6) reads the typed input [RECEIVE-3270] [SET5]"
+    },
+    {
+     "event": "START",
+     "program": "CARCST",
+     "transid": "CA0E",
+     "termid": null,
+     "interval": "000000",
+     "from": null,
+     "protect": false,
+     "resp": "NORMAL",
+     "expires": "2026-03-02T10:00:00"
+    },
+    {
+     "event": "RETURN",
+     "program": "CARCST",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 2,
+   "transid": "CA0E",
+   "program": "CARTWK",
+   "termid": null,
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "start",
+    "task": 1,
+    "event": 2
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RETRIEVE",
+     "program": "CARTWK",
+     "resp": "ENDDATA",
+     "data": null,
+     "note": "START without FROM, RTRANSID, RTERMID or QUEUE: the first RETRIEVE is ENDDATA [RETRIEVE]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CARTWK",
+     "queue": "RSLOG",
+     "data": {
+      "length": 31,
+      "text": "RT010290000                    "
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "RETURN",
+     "program": "CARTWK",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "RSLOG": [
+    "RC010000006CA0D N              ",
+    "RT010290000                    "
+   ]
+  }
+ }
+}
