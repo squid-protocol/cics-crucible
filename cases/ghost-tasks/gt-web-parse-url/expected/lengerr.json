@@ -1,0 +1,92 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "gt-web-parse-url",
+ "scenario": "lengerr",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "GT71",
+   "program": "GTWPARS",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "GTWPARS",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "GT71 L"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTWPARS",
+     "queue": "GTWLOG",
+     "data": {
+      "length": 88,
+      "text": "L1  R=22 S=029 SCH=      P=00000 HL=000 H=                     P=           Q=          "
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTWPARS",
+     "queue": "GTWLOG",
+     "data": {
+      "length": 88,
+      "text": "L2  R=22 S=030 SCH=      P=00000 HL=000 H=                     P=           Q=          "
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTWPARS",
+     "queue": "GTWLOG",
+     "data": {
+      "length": 88,
+      "text": "L3  R=22 S=008 SCH=      P=00000 HL=000 H=                     P=           Q=          "
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "GTWPARS",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "GTWPARS",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "GTWLOG": [
+    "L1  R=22 S=029 SCH=      P=00000 HL=000 H=                     P=           Q=          ",
+    "L2  R=22 S=030 SCH=      P=00000 HL=000 H=                     P=           Q=          ",
+    "L3  R=22 S=008 SCH=      P=00000 HL=000 H=                     P=           Q=          "
+   ]
+  }
+ }
+}

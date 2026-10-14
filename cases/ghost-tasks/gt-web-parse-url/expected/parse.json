@@ -1,0 +1,116 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "gt-web-parse-url",
+ "scenario": "parse",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "GT71",
+   "program": "GTWPARS",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "GTWPARS",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "GT71 P"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTWPARS",
+     "queue": "GTWLOG",
+     "data": {
+      "length": 88,
+      "text": "P1  R=00 S=000 SCH=HTTPS P=08443 HL=011 H=example.com          P=a/b        Q=x=1&y=2   "
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTWPARS",
+     "queue": "GTWLOG",
+     "data": {
+      "length": 88,
+      "text": "P2  R=00 S=000 SCH=HTTP  P=00080 HL=011 H=example.org          P=docs       Q=q=7       "
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTWPARS",
+     "queue": "GTWLOG",
+     "data": {
+      "length": 88,
+      "text": "P3  R=00 S=000 SCH=HTTPS P=00443 HL=011 H=example.net          P=s          Q=k=v       "
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTWPARS",
+     "queue": "GTWLOG",
+     "data": {
+      "length": 88,
+      "text": "P4  R=00 S=000 SCH=HTTP  P=08080 HL=009 H=192.0.2.7            P=a          Q=b=c       "
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTWPARS",
+     "queue": "GTWLOG",
+     "data": {
+      "length": 88,
+      "text": "P5  R=00 S=000 SCH=HTTP  P=00081 HL=011 H=2001:db8::1          P=a          Q=b=c       "
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "GTWPARS",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "GTWPARS",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "GTWLOG": [
+    "P1  R=00 S=000 SCH=HTTPS P=08443 HL=011 H=example.com          P=a/b        Q=x=1&y=2   ",
+    "P2  R=00 S=000 SCH=HTTP  P=00080 HL=011 H=example.org          P=docs       Q=q=7       ",
+    "P3  R=00 S=000 SCH=HTTPS P=00443 HL=011 H=example.net          P=s          Q=k=v       ",
+    "P4  R=00 S=000 SCH=HTTP  P=08080 HL=009 H=192.0.2.7            P=a          Q=b=c       ",
+    "P5  R=00 S=000 SCH=HTTP  P=00081 HL=011 H=2001:db8::1          P=a          Q=b=c       "
+   ]
+  }
+ }
+}
