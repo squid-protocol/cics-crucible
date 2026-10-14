@@ -1,0 +1,51 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-dcounters",
+  "trap": "condition-handling",
+  "title": "Doubleword named counters: DEFINE / GET / QUERY / DELETE DCOUNTER with an 8-byte unsigned VALUE logged as hex, GET returns the value before the increment, QUERY does not advance, values past 2**31 and 2**32 kept exactly, a deleted counter is INVREQ RESP2 201",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCDCNT.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-dcounters.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "life",
+      "path": "happy",
+      "summary": "GET / DELETE of a DCOUNTER that is not there (INVREQ 201), DEFINE VALUE(5), GET, GET, QUERY, GET, QUERY, DELETE, then GET and QUERY of the deleted counter (INVREQ 201)",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC72 L"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "big",
+      "path": "happy",
+      "summary": "DEFINE at 2**31-1, 2**32-1 and 5; GET across 2**31 and 2**32, QUERY, and GET with a doubleword INCREMENT of 2**32: values kept exactly (hex)",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC72 B"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
