@@ -36,6 +36,7 @@ part of the format:
 | Origin data | what `INQUIRE ASSOCIATION(EIBTASKN)` returns for the task's own origin (`ODAPPLID`, `ODUSERID`, `ODFACILNAME`, `ODNETWORKID`, `ODFACILTYPE`) is a fact the case states in its optional `origin` object (`applid`, `userid`, `facilname`, `networkid`: up to 8 characters; `faciltype`: one of IBM's facility types, e.g. `TERMINAL`), for the tasks that terminal input starts (IBM: origin data is "created when a new request first arrives at a CICS region"; its pages do not say what the fields hold for a terminal task). A case whose programs `INQUIRE ASSOCIATION` must state it, and only for `EIBTASKN`, the task's own number; a task a START, a RUN TRANSID or a RETURN IMMEDIATE started has no stated origin. |
 | Security | none (no NOTAUTH). Nobody signs on, so every task's user is the default user, `CICSUSER` (the SIT `DFLTUSER` default; ASSIGN USERID: "If no user is explicitly signed on, CICS returns the default user ID"). |
 | Temporary storage | every queue named in a case is main or auxiliary TS, local, non-recoverable. |
+| Transient data | a TD queue a case uses is an intrapartition queue the case CSD defines, `DEFINE TDQUEUE(name) TYPE(INTRA)` (IBM, TDQUEUE resources), with a destination id of 1-4 characters; it is non-recoverable and has no trigger level (`RECOVSTATUS(NO)`, no `TRIGGERLEVEL`). Extrapartition, indirect and remote queues are not modelled. A TD queue is read destructively and in order: `READQ TD` removes the item it returns, and there is no item number. Additive (SPEC rule 5). |
 | Files | a CSD `DEFINE FILE` plus the case's `data/` records; a file is opened on first use. |
 | Language | Enterprise COBOL, translated by the CICS translator; `HANDLE CONDITION`/`HANDLE AID`/`HANDLE ABEND LABEL` transfers are `GO TO`s (the translator's `GO TO ... DEPENDING ON` after the command). |
 
@@ -162,7 +163,8 @@ tasks it starts.
   RECEIVE MAP although no BMS source holds a map of that name (the ABM0 trap: the map is not in
   its mapset); the mapset named (or, with MAPSET omitted, the map name) must still be a mapset.
 * A scenario's `path` is `happy` or `trap` (which side of the trap it drives), `initial` seeds
-  temporary storage queues (`ts_queues`: queue → list of items), and `steps` are the operator
+  temporary storage queues (`ts_queues`: queue → list of items) and, optionally and additively, intrapartition
+  transient data queues (`td_queues`: queue → items, oldest first; each queue must be a CSD `TDQUEUE`), and `steps` are the operator
   actions:
 
 | Step key | Meaning |
@@ -210,8 +212,8 @@ MAPFAIL).
 * `end` is `normal` (the level-1 RETURN) or `abend` (the task was terminated).
 * Any object in a log may carry a `note` (task, event, SEND-MAP field): commentary for
   humans, never compared.
-* `final` (optional) is the state of the named TS queues after the scenario; queues not
-  named are not compared.
+* `final` (optional) is the state of the named TS queues (`ts_queues`) and, additively, TD queues
+  (`td_queues`: remaining items, oldest first) after the scenario; queues not named are not compared.
 
 ### 6.1 Values
 
@@ -258,6 +260,9 @@ asked for RESP; `resp2` is given only where IBM documents the value.
 | `READQ-TS` | `queue`, `item` (number, or `"NEXT"`), `resp`, `length` (after; only on NORMAL / LENGERR), `data` (the bytes written into INTO, or null) | |
 | `WRITEQ-TS` | `queue`, `data`, `resp`, `item` (number assigned) | |
 | `WRITE-OPERATOR` | `data` (the TEXT area sent to the console), `resp` | `EXEC CICS WRITE OPERATOR TEXT(area)`; a plain message only (a text that starts `DFHnnnn` / `DFHaannnn`, which IBM reformats, or is over 113 characters, which it splits into lines, is not used). Additive (SPEC rule 5): a new event type |
+| `READQ-TD` | `queue`, `resp`, `resp2` (only where IBM documents it), `length` (after; only on NORMAL / LENGERR), `data` (the bytes written into INTO, or null) | `EXEC CICS READQ TD`: destructive, oldest item first, no item number (IBM, READQ TD). An empty queue is QZERO. Additive (SPEC rule 5): new event type |
+| `WRITEQ-TD` | `queue`, `data`, `resp`, `resp2` (only where IBM documents it) | `EXEC CICS WRITEQ TD`: appends one item (IBM, WRITEQ TD). Additive: new event type |
+| `DELETEQ-TD` | `queue`, `resp`, `resp2` (only where IBM documents it) | `EXEC CICS DELETEQ TD`: deletes the queue's items (IBM, DELETEQ TD). Whether the queue then still exists is not stated by this format: a case never relies on it. Additive: new event type |
 | `READ` | `file`, `ridfld`, `resp` | file control |
 | `ABEND` | `abcode`, `cause` (`command` for EXEC CICS ABEND, `condition` for an unhandled condition, `system` for an abend CICS itself raises for a command that raises no condition -- BMS's ABM0 for a map the mapset does not hold; additive, SPEC rule 5), `condition` (when cause is `condition`), `outcome` (`terminated` or `exit`), `exit` (`{"program", "label"}` when outcome is `exit`) | an abend handled by a HANDLE ABEND LABEL exit continues at that label in that program; the lower levels are gone |
 
@@ -316,7 +321,10 @@ wrong.
    fields of the map, `meaning` agrees with `attr`, and `attr` with `attr_from: map` equals
    the byte the DFHMDF ATTRB produces.
 6. `NOTES.md` exists, has the section headings above, and cites at least one IBM document.
-7. The reference region (section 2): every CSD `TYPETERM` has `ATI(YES) TTI(YES)`, every
+7. TD queues (section 2): every CSD `TDQUEUE` is `TYPE(INTRA)` with a 1-4 character id; every literal
+   `QUEUE` of a `READQ` / `WRITEQ` / `DELETEQ` `TD` command, every `td_queues` name (initial and final) and
+   every `READQ-TD` / `WRITEQ-TD` / `DELETEQ-TD` event queue is a CSD `TDQUEUE`.
+8. The reference region (section 2): every CSD `TYPETERM` has `ATI(YES) TTI(YES)`, every
    `TERMINAL` names a defined TYPETERM, and a case whose programs `START ... TERMID` defines
    `TERMINAL(<case terminal>)`.
 

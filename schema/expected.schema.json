@@ -14,7 +14,8 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "ts_queues": {"type": "object", "additionalProperties": {"type": "array", "items": {"$ref": "#/$defs/tsitem"}}}
+        "ts_queues": {"type": "object", "additionalProperties": {"type": "array", "items": {"$ref": "#/$defs/tsitem"}}},
+        "td_queues": {"type": "object", "propertyNames": {"$ref": "#/$defs/name4"}, "additionalProperties": {"type": "array", "items": {"$ref": "#/$defs/tsitem"}}}
       }
     }
   },
@@ -175,6 +176,19 @@
                         "queue": {"type": "string", "pattern": "^[A-Z0-9#@$]{1,16}$"},
                         "data": {"$ref": "#/$defs/area"}, "resp": {"$ref": "#/$defs/cond"},
                         "item": {"oneOf": [{"type": "null"}, {"type": "integer", "minimum": 1}]}, "note": {"type": "string"}}},
+        {"type": "object", "required": ["event", "program", "queue", "resp", "data"], "additionalProperties": false,
+         "properties": {"event": {"const": "READQ-TD"}, "program": {"$ref": "#/$defs/name8"},
+                        "queue": {"$ref": "#/$defs/name4"}, "resp": {"$ref": "#/$defs/cond"},
+                        "resp2": {"type": "integer"}, "length": {"type": "integer", "minimum": 0},
+                        "data": {"$ref": "#/$defs/area_or_null"}, "note": {"type": "string"}}},
+        {"type": "object", "required": ["event", "program", "queue", "data", "resp"], "additionalProperties": false,
+         "properties": {"event": {"const": "WRITEQ-TD"}, "program": {"$ref": "#/$defs/name8"},
+                        "queue": {"$ref": "#/$defs/name4"}, "data": {"$ref": "#/$defs/area"},
+                        "resp": {"$ref": "#/$defs/cond"}, "resp2": {"type": "integer"}, "note": {"type": "string"}}},
+        {"type": "object", "required": ["event", "program", "queue", "resp"], "additionalProperties": false,
+         "properties": {"event": {"const": "DELETEQ-TD"}, "program": {"$ref": "#/$defs/name8"},
+                        "queue": {"$ref": "#/$defs/name4"}, "resp": {"$ref": "#/$defs/cond"},
+                        "resp2": {"type": "integer"}, "note": {"type": "string"}}},
         {"type": "object", "required": ["event", "program", "data", "resp"], "additionalProperties": false,
          "properties": {"event": {"const": "WRITE-OPERATOR"}, "program": {"$ref": "#/$defs/name8"},
                         "data": {"$ref": "#/$defs/area"}, "resp": {"$ref": "#/$defs/cond"}, "note": {"type": "string"}}},
