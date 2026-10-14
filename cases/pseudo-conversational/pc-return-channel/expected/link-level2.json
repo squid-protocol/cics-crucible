@@ -1,0 +1,107 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "pc-return-channel",
+ "scenario": "link-level2",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "PC61",
+   "program": "PCRCA",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "PCRCA",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "PC61 L"
+     }
+    },
+    {
+     "event": "LINK",
+     "program": "PCRCA",
+     "target": "PCRCL",
+     "length": 0,
+     "commarea": null,
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "PCRCL",
+     "queue": "PCRLOG",
+     "data": {
+      "length": 31,
+      "text": "PUT200000000000"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "RETURN",
+     "program": "PCRCL",
+     "level": 2,
+     "transid": "PC62",
+     "channel": "PCCHAN",
+     "resp": "INVREQ",
+     "resp2": 2,
+     "note": "CHANNEL on a RETURN not at the highest logical level: INVREQ RESP2 2; the command returns to the program [RETURN]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "PCRCL",
+     "queue": "PCRLOG",
+     "data": {
+      "length": 31,
+      "text": "RET101600200000"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "RETURN",
+     "program": "PCRCL",
+     "level": 2,
+     "caller_commarea": null
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "PCRCA",
+     "queue": "PCRLOG",
+     "data": {
+      "length": 31,
+      "text": "LNK100000000000"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "RETURN",
+     "program": "PCRCA",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "PCRLOG": [
+    "PUT200000000000",
+    "RET101600200000",
+    "LNK100000000000"
+   ]
+  }
+ }
+}

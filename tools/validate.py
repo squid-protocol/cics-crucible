@@ -843,6 +843,10 @@ class Case:
                             self.err(f"{w}: an immediate task follows the task that RETURNed it")
                         if task["eibaid"] is not None:
                             self.err(f"{w}: an immediate task has no eibaid (IBM does not state one)")
+            prev = log["tasks"][ti - 1] if ti else None
+            if prev and prev["termid"] == task["termid"] and prev["events"] and prev["events"][-1].get("channel") \
+                    and prev["events"][-1].get("transid") == task["transid"] and task["commarea"] is not None:
+                self.err(f"{w}: the RETURN CHANNEL before it passed no commarea")
             if task["commarea"] is None and task["eibcalen"] != 0:
                 self.err(f"{w}: eibcalen {task['eibcalen']} with no commarea")
             if task["commarea"] is not None and task["commarea"]["length"] != task["eibcalen"]:
@@ -867,26 +871,18 @@ class Case:
             if ev["commarea"] is not None and ev["commarea"]["length"] != ev["length"]:
                 self.err(f"{w}: commarea length is not the LINK/XCTL length")
         if k == "RETURN":
-            if "immediate" in ev and "resp" not in ev and ev["level"] != 1:
-                self.err(f"{w}: a RETURN IMMEDIATE that succeeded is at level 1")
-            if ("resp" in ev) != ("resp2" in ev) or ("resp" in ev and "immediate" not in ev):
-                self.err(f"{w}: resp / resp2 only together, on a RETURN IMMEDIATE that failed")
-            if "resp" in ev:  # a RETURN IMMEDIATE that failed went on in the program: it has no area of its own
-                if ev["resp"] == "NORMAL" or "commarea" in ev or "caller_commarea" in ev:
-                    self.err(f"{w}: a failed RETURN IMMEDIATE carries no commarea, and is not NORMAL")
+            for msg in return_errors(ev):
+                self.err(f"{w}: {msg}")
+            if "resp" in ev:  # a RETURN that failed went on in the program: it has no area of its own
                 if ev.get("transid") not in self.transactions:
                     self.err(f"{w}: transid {ev.get('transid')} not in the CSD")
             elif ev["level"] == 1:
                 if ev.get("transid") is not None and ev["transid"] not in self.transactions:
                     self.err(f"{w}: transid {ev['transid']} not in the CSD")
-                if "caller_commarea" in ev:
-                    self.err(f"{w}: caller_commarea only at level > 1")
                 self._area(f"{w} commarea", ev.get("commarea"))
                 if not is_last:
                     self.err(f"{w}: a level-1 RETURN must end the task")
             else:
-                if "transid" in ev or "commarea" in ev:
-                    self.err(f"{w}: transid/commarea only at level 1")
                 self._area(f"{w} caller_commarea", ev.get("caller_commarea"))
         if k == "START":
             if ev["transid"] not in self.transactions:
@@ -982,6 +978,31 @@ class Case:
             self.err("NOTES.md: cites no IBM document")
 
 
+def return_errors(ev: dict[str, Any]) -> list[str]:
+    """The structural rules of a RETURN event (SPEC 6.2): IMMEDIATE and CHANNEL succeed only at level 1, and a RETURN
+    that failed (resp / resp2) is one of those two options refused below the highest logical level, or IMMEDIATE
+    in a task with no terminal."""
+    errs: list[str] = []
+    failed = "resp" in ev
+    if ("resp" in ev) != ("resp2" in ev) or (failed and "immediate" not in ev and "channel" not in ev):
+        errs.append("resp / resp2 only together, on a RETURN IMMEDIATE or CHANNEL that failed")
+    if not failed and ev["level"] != 1 and ("immediate" in ev or "channel" in ev):
+        errs.append("a RETURN IMMEDIATE / CHANNEL that succeeded is at level 1")
+    if "channel" in ev and ev.get("transid") is None:
+        errs.append("a RETURN CHANNEL has a transid: the channel is for the next task")
+    if failed:
+        if ev["resp"] == "NORMAL" or "commarea" in ev or "caller_commarea" in ev:
+            errs.append("a failed RETURN carries no commarea, and is not NORMAL")
+    elif ev["level"] == 1:
+        if "caller_commarea" in ev:
+            errs.append("caller_commarea only at level > 1")
+        if "channel" in ev and ev.get("commarea") is not None:
+            errs.append("a RETURN CHANNEL passes no commarea (the next task has EIBCALEN 0)")
+    elif "transid" in ev or "commarea" in ev:
+        errs.append("transid/commarea only at level 1")
+    return errs
+
+
 def self_test() -> None:
     """Checks of the validator's own tables against the 3270 attribute encoding (SPEC 6.3)."""
     cases = {("ASKIP", "NORM"): 0xF0, ("ASKIP", "BRT"): 0xF8, ("ASKIP", "DRK", "FSET"): 0x7D,
@@ -1010,6 +1031,19 @@ def self_test() -> None:
         f = Path(td) / "t.csd"
         f.write_text("DEFINE FILE(HCUF) GROUP(G) DSNAME(A.B)\n      READ(YES) UPDATE(YES)\n", encoding="utf-8")
         assert csd_resources(f)["FILE"]["HCUF"]["UPDATE"] == "YES"
+    ok = {"event": "RETURN", "program": "P", "level": 1, "transid": "PC62", "commarea": None, "channel": "PCCHAN"}
+    assert not return_errors(ok)
+    assert not return_errors({**ok, "immediate": True})
+    assert not return_errors({"event": "RETURN", "program": "P", "level": 2, "transid": "PC62", "channel": "PCCHAN",
+                              "resp": "INVREQ", "resp2": 2})
+    assert not return_errors({"event": "RETURN", "program": "P", "level": 2, "transid": "PC62", "immediate": True,
+                              "resp": "INVREQ", "resp2": 2})
+    assert return_errors({**ok, "commarea": {"length": 1, "text": "A"}}), "CHANNEL and a passed commarea"
+    assert return_errors({**ok, "transid": None}), "CHANNEL without a transid"
+    assert return_errors({**ok, "level": 2, "commarea": None}), "a successful CHANNEL below level 1"
+    assert return_errors({"event": "RETURN", "program": "P", "level": 2, "resp": "INVREQ", "resp2": 2}), \
+        "a failed RETURN of neither option"
+    assert return_errors({**ok, "resp": "NORMAL", "resp2": 0}), "a failed RETURN is not NORMAL"
     print("self-test: ok")
 
 
