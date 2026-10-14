@@ -84,7 +84,8 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "ts_queues": {"type": "object", "additionalProperties": {"type": "array", "items": {"$ref": "#/$defs/tsitem"}}}
+            "ts_queues": {"type": "object", "additionalProperties": {"type": "array", "items": {"$ref": "#/$defs/tsitem"}}},
+            "td_queues": {"type": "object", "propertyNames": {"$ref": "#/$defs/name4"}, "additionalProperties": {"type": "array", "items": {"$ref": "#/$defs/tsitem"}}}
           }
         },
         "steps": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/step"}},

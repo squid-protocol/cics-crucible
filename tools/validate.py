@@ -492,7 +492,13 @@ class Case:
         self.transactions = {t: a.get("PROGRAM", "").upper() for t, a in self.csd.get("TRANSACTION", {}).items()}
         self.mapsets_csd = set(self.csd.get("MAPSET", {}))
         self.files_csd = set(self.csd.get("FILE", {}))
+        self.tdq_csd = set(self.csd.get("TDQUEUE", {}))
         self._region()
+        for q, a in self.csd.get("TDQUEUE", {}).items():
+            if a.get("TYPE", "").upper() != "INTRA":
+                self.err(f"CSD TDQUEUE {q}: TYPE({a.get('TYPE', '')}) -- only TYPE(INTRA) is modelled (SPEC section 2)")
+            if not re.fullmatch(r"[A-Z0-9#@$]{1,4}", q):
+                self.err(f"CSD TDQUEUE {q}: a destination id is 1-4 characters (SPEC section 2)")
         for t, p in self.transactions.items():
             if p not in self.programs:
                 self.err(f"CSD transaction {t} names program {p!r}, which has no DEFINE PROGRAM")
@@ -676,6 +682,10 @@ class Case:
                         self.err(f"{rel}: MAP('{m}') is in mapset {self.bms[m]['mapset']}, not {ms}")
                     if m not in self.case["maps"]:
                         self.err(f"{rel}: MAP('{m}') is not listed in case.json maps")
+                if verb in ("READQ", "WRITEQ", "DELETEQ") and ("TD", None) in opts and literal(o.get("QUEUE")):
+                    q = literal(o["QUEUE"]).upper()
+                    if q not in self.tdq_csd:
+                        self.err(f"{rel}: {verb} TD QUEUE('{q}') has no CSD DEFINE TDQUEUE")
                 if verb in ("READ", "WRITE", "REWRITE", "DELETE", "STARTBR") and literal(o.get("FILE")):
                     f = literal(o["FILE"]).upper()
                     if f not in self.files_csd:
@@ -690,6 +700,9 @@ class Case:
     def _scenarios(self) -> None:
         for sc in self.case["scenarios"]:
             last = -1
+            for q in sc.get("initial", {}).get("td_queues", {}):
+                if q not in self.tdq_csd:
+                    self.err(f"scenario {sc['id']}: initial td_queues names {q}, which has no CSD DEFINE TDQUEUE")
             for i, st in enumerate(sc["steps"]):
                 if st["at"] <= last:
                     self.err(f"scenario {sc['id']} step {i}: 'at' must increase")
@@ -770,6 +783,9 @@ class Case:
         if log["case"] != self.case["id"] or log["scenario"] != sc["id"]:
             self.err(f"expected/{fname}: case/scenario do not match")
         undefined = set(self.case.get("undefined_programs", []))
+        for q in log.get("final", {}).get("td_queues", {}):
+            if q not in self.tdq_csd:
+                self.err(f"expected/{fname}: final td_queues names {q}, which has no CSD DEFINE TDQUEUE")
         for ti, task in enumerate(log["tasks"]):
             w = f"expected/{fname} task {task['seq']}"
             if task["seq"] != ti + 1:
@@ -851,10 +867,12 @@ class Case:
             if ("interval" in ev) == ("time" in ev):
                 self.err(f"{w}: exactly one of interval / time")
             self._area(f"{w} from", ev["from"])
-        if k in ("RETRIEVE", "READQ-TS", "RECEIVE"):
+        if k in ("RETRIEVE", "READQ-TS", "READQ-TD", "RECEIVE"):
             self._area(f"{w} data", ev["data"])
-        if k in ("WRITEQ-TS", "WRITE-OPERATOR"):
+        if k in ("WRITEQ-TS", "WRITEQ-TD", "WRITE-OPERATOR"):
             self._area(f"{w} data", ev["data"])
+        if k in ("READQ-TD", "WRITEQ-TD", "DELETEQ-TD") and ev["queue"] not in self.tdq_csd:
+            self.err(f"{w}: queue {ev['queue']} has no CSD DEFINE TDQUEUE")
         if k == "READ" and ev["file"] not in self.files_csd:
             self.err(f"{w}: file {ev['file']} not in the CSD")
         if k == "ABEND":
@@ -943,6 +961,13 @@ def self_test() -> None:
     assert attr_meaning(0x3C) == {"protected": True, "numeric": True, "display": "dark", "mdt": False}
     assert attr_meaning(0x41) == attr_meaning(0xC1)
     assert pic_info("S9(7)V99")[1:4] == (True, 7, 2)
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        f = Path(td) / "t.csd"
+        f.write_text("DEFINE TDQUEUE(HCTD) GROUP(G) TYPE(INTRA)\n      RECOVSTATUS(NO)\n", encoding="utf-8")
+        assert csd_resources(f)["TDQUEUE"]["HCTD"]["TYPE"] == "INTRA"
+    opts = cics_options("READQ TD QUEUE('HCTD') INTO(X) LENGTH(L)")
+    assert opts[0][0] == "READQ" and ("TD", None) in opts and literal(dict(opts)["QUEUE"]) == "HCTD"
     print("self-test: ok")
 
 
