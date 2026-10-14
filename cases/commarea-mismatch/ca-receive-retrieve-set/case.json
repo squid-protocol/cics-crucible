@@ -1,0 +1,65 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "ca-receive-retrieve-set",
+  "trap": "commarea-mismatch",
+  "title": "RECEIVE SET(ptr) and RETRIEVE SET(ptr) into a POINTER variable: LENGTH is output only and bounds the SET ADDRESS OF view; a short input, LENGTH equal to the START FROM length, ENDDATA",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/CARCST.cbl",
+      "src/CARTWK.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/ca-receive-retrieve-set.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "short-input",
+      "path": "happy",
+      "summary": "CARCST RECEIVEs SET the 6 typed bytes 'CA0D S' into a pointer: LENGTH 6, the view read only through LS-IN(1:6)",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA0D S"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "retrieve-equal",
+      "path": "happy",
+      "summary": "START INTERVAL(0) FROM 20 bytes: CARTWK RETRIEVEs SET, LENGTH 20 equals the FROM length and the view reads the 20 bytes, then the second RETRIEVE is ENDDATA",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA0D E"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "enddata",
+      "path": "trap",
+      "summary": "START INTERVAL(0) with no FROM: the first RETRIEVE SET is ENDDATA and the program reads neither pointer nor LENGTH",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA0D N"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}

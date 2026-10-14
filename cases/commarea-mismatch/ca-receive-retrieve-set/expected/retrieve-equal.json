@@ -1,0 +1,143 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-receive-retrieve-set",
+ "scenario": "retrieve-equal",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA0D",
+   "program": "CARCST",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "CARCST",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "CA0D E"
+     },
+     "note": "RECEIVE SET(pointer) LENGTH: the data area is set to the length of the data received (6) [RECEIVE-3270]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CARCST",
+     "queue": "RSLOG",
+     "data": {
+      "length": 31,
+      "text": "RC010000006CA0D E              "
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "the view LS-IN(1:6) reads the typed input [RECEIVE-3270] [SET5]"
+    },
+    {
+     "event": "START",
+     "program": "CARCST",
+     "transid": "CA0E",
+     "termid": null,
+     "interval": "000000",
+     "from": {
+      "length": 20,
+      "text": "ORDER 0003 READY"
+     },
+     "protect": false,
+     "resp": "NORMAL",
+     "expires": "2026-03-02T10:00:00"
+    },
+    {
+     "event": "RETURN",
+     "program": "CARCST",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 2,
+   "transid": "CA0E",
+   "program": "CARTWK",
+   "termid": null,
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "start",
+    "task": 1,
+    "event": 2
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RETRIEVE",
+     "program": "CARTWK",
+     "resp": "NORMAL",
+     "length": 20,
+     "data": {
+      "length": 20,
+      "text": "ORDER 0003 READY"
+     },
+     "note": "RETRIEVE SET(pointer) LENGTH: the data area is set to the length of the data (20, equal to the FROM length) [RETRIEVE]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CARTWK",
+     "queue": "RSLOG",
+     "data": {
+      "length": 31,
+      "text": "RT010000020ORDER 0003 READY    "
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "the view LS-DATA(1:20) reads the START data [RETRIEVE] [SET5]"
+    },
+    {
+     "event": "RETRIEVE",
+     "program": "CARTWK",
+     "resp": "ENDDATA",
+     "data": null,
+     "note": "the data was retrieved once: no more data is stored [RETRIEVE]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CARTWK",
+     "queue": "RSLOG",
+     "data": {
+      "length": 31,
+      "text": "RT020290000                    "
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "RETURN",
+     "program": "CARTWK",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "RSLOG": [
+    "RC010000006CA0D E              ",
+    "RT010000020ORDER 0003 READY    ",
+    "RT020290000                    "
+   ]
+  }
+ }
+}

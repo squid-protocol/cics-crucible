@@ -1,0 +1,61 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-receive-retrieve-set",
+ "scenario": "short-input",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA0D",
+   "program": "CARCST",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "CARCST",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "CA0D S"
+     },
+     "note": "RECEIVE SET(pointer) LENGTH: the data area is set to the length of the data received (6) [RECEIVE-3270]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CARCST",
+     "queue": "RSLOG",
+     "data": {
+      "length": 31,
+      "text": "RC010000006CA0D S              "
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "the view LS-IN(1:6) reads the typed input [RECEIVE-3270] [SET5]"
+    },
+    {
+     "event": "RETURN",
+     "program": "CARCST",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "RSLOG": [
+    "RC010000006CA0D S              "
+   ]
+  }
+ }
+}
