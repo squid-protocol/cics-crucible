@@ -1,0 +1,128 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-getmain-pointer",
+ "scenario": "zero-length",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA0C",
+   "program": "CAGMZ",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGMZ",
+     "queue": "GMLOG",
+     "data": {
+      "length": 26,
+      "text": "PRE0000000ZERO=N          "
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "the pointer starts at the address of WS-DUMMY, not zero"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGMZ",
+     "queue": "GMLOG",
+     "data": {
+      "length": 26,
+      "text": "GMF0022001ZERO=Y          "
+     },
+     "resp": "NORMAL",
+     "item": 2,
+     "note": "FLENGTH 0: LENGERR (22) RESP2 1 'The FLENGTH value is less than 1 ...'; ptr-ref set to zero [GETMAIN] [RESP-CODES]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGMZ",
+     "queue": "GMLOG",
+     "data": {
+      "length": 26,
+      "text": "GMFN022001ZERO=Y          "
+     },
+     "resp": "NORMAL",
+     "item": 3,
+     "note": "FLENGTH -1: LENGERR RESP2 1, pointer zero: 'a zero or negative value' [GETMAIN]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGMZ",
+     "queue": "GMLOG",
+     "data": {
+      "length": 26,
+      "text": "GML0022001ZERO=Y          "
+     },
+     "resp": "NORMAL",
+     "item": 4,
+     "note": "LENGTH 0: LENGERR RESP2 1 'Also occurs if the LENGTH value is zero'; pointer zero [GETMAIN]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGMZ",
+     "queue": "GMLOG",
+     "data": {
+      "length": 26,
+      "text": "GMOK000000ZERO=N          "
+     },
+     "resp": "NORMAL",
+     "item": 5,
+     "note": "FLENGTH 8 INITIMG 'Q': NORMAL, pointer set [GETMAIN]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGMZ",
+     "queue": "GMLOG",
+     "data": {
+      "length": 26,
+      "text": "VIEW000000QQQQQQQQ        "
+     },
+     "resp": "NORMAL",
+     "item": 6,
+     "note": "SET ADDRESS OF LS-CHK: 8 bytes of INITIMG [GETMAIN] [SET5]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGMZ",
+     "queue": "GMLOG",
+     "data": {
+      "length": 26,
+      "text": "FMOK000000                "
+     },
+     "resp": "NORMAL",
+     "item": 7,
+     "note": "FREEMAIN DATA(LS-CHK): NORMAL [FREEMAIN]"
+    },
+    {
+     "event": "RETURN",
+     "program": "CAGMZ",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "GMLOG": [
+    "PRE0000000ZERO=N          ",
+    "GMF0022001ZERO=Y          ",
+    "GMFN022001ZERO=Y          ",
+    "GML0022001ZERO=Y          ",
+    "GMOK000000ZERO=N          ",
+    "VIEW000000QQQQQQQQ        ",
+    "FMOK000000                "
+   ]
+  }
+ }
+}

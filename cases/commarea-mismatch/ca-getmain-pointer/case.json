@@ -1,0 +1,50 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "ca-getmain-pointer",
+  "trap": "commarea-mismatch",
+  "title": "GETMAIN SET(ptr) FLENGTH INITIMG, SET ADDRESS OF, pointer arithmetic through a binary REDEFINES, ADDRESS OF a subordinate item and FREEMAIN; a length below 1 raises LENGERR RESP2 1 and zeroes the pointer",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/CAGMPT.cbl",
+      "src/CAGMZ.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/ca-getmain-pointer.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "alloc",
+      "path": "happy",
+      "summary": "CAGMPT GETMAINs 16 bytes with INITIMG 'Z', views them with SET ADDRESS OF, writes HEAD + 12 bytes, reaches the 12 bytes by adding 4 to the pointer and by ADDRESS OF the subordinate item, writes through that view, then FREEMAINs",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA0B"
+        }
+      ]
+    },
+    {
+      "id": "zero-length",
+      "path": "trap",
+      "summary": "CAGMZ issues GETMAIN with FLENGTH 0, FLENGTH -1 and LENGTH 0 (LENGERR RESP2 1 each, pointer zero), then a valid GETMAIN and FREEMAIN",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA0C"
+        }
+      ]
+    }
+  ]
+}

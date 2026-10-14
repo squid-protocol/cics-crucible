@@ -1,0 +1,141 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-getmain-pointer",
+ "scenario": "alloc",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA0B",
+   "program": "CAGMPT",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGMPT",
+     "queue": "GMLOG",
+     "data": {
+      "length": 26,
+      "text": "GM01000000                "
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "GETMAIN SET FLENGTH(16) INITIMG: NORMAL; GETMAIN and FREEMAIN are not events [GETMAIN]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGMPT",
+     "queue": "GMLOG",
+     "data": {
+      "length": 26,
+      "text": "GM02000000ZZZZZZZZZZZZZZZZ"
+     },
+     "resp": "NORMAL",
+     "item": 2,
+     "note": "SET ADDRESS OF LS-AREA TO the pointer: all 16 bytes are the INITIMG byte 'Z' [GETMAIN] [SET5]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGMPT",
+     "queue": "GMLOG",
+     "data": {
+      "length": 26,
+      "text": "GM03000000HEADABCDEFGHIJKL"
+     },
+     "resp": "NORMAL",
+     "item": 3,
+     "note": "the write through the view: LS-HEAD then LS-BODY [ADDROF]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGMPT",
+     "queue": "GMLOG",
+     "data": {
+      "length": 26,
+      "text": "GM04000000ABCDEFGHIJKL    "
+     },
+     "resp": "NORMAL",
+     "item": 4,
+     "note": "pointer + 4 via the binary REDEFINES: the view starts at LS-BODY, 12 bytes [REDEF] [SET5]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGMPT",
+     "queue": "GMLOG",
+     "data": {
+      "length": 26,
+      "text": "GM05000000ABCDEFGHIJKL    "
+     },
+     "resp": "NORMAL",
+     "item": 5,
+     "note": "SET pointer TO ADDRESS OF LS-BODY, then SET ADDRESS OF LS-SUB: same 12 bytes [SET5]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGMPT",
+     "queue": "GMLOG",
+     "data": {
+      "length": 26,
+      "text": "GM06000000EQ=Y NEBASE=Y   "
+     },
+     "resp": "NORMAL",
+     "item": 6,
+     "note": "ADDRESS OF LS-BODY equals base + 4 and differs from the base [SET5] [REDEF]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGMPT",
+     "queue": "GMLOG",
+     "data": {
+      "length": 26,
+      "text": "GM07000000HEADMNOPQRSTUVWX"
+     },
+     "resp": "NORMAL",
+     "item": 7,
+     "note": "a write through LS-SUB shows in LS-AREA: the views share the storage [GETMAIN]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGMPT",
+     "queue": "GMLOG",
+     "data": {
+      "length": 26,
+      "text": "FM01000000                "
+     },
+     "resp": "NORMAL",
+     "item": 8,
+     "note": "FREEMAIN DATA(LS-AREA): storage that a GETMAIN acquired, so no INVREQ [FREEMAIN]"
+    },
+    {
+     "event": "RETURN",
+     "program": "CAGMPT",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "GMLOG": [
+    "GM01000000                ",
+    "GM02000000ZZZZZZZZZZZZZZZZ",
+    "GM03000000HEADABCDEFGHIJKL",
+    "GM04000000ABCDEFGHIJKL    ",
+    "GM05000000ABCDEFGHIJKL    ",
+    "GM06000000EQ=Y NEBASE=Y   ",
+    "GM07000000HEADMNOPQRSTUVWX",
+    "FM01000000                "
+   ]
+  }
+ }
+}
