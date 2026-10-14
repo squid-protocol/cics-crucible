@@ -1,0 +1,280 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-container-ccsid",
+ "scenario": "convert",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA07",
+   "program": "CACCSID",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCSID",
+     "queue": "CCLOG",
+     "data": {
+      "length": 31,
+      "text": "GET001600200000"
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "no CHANNEL and no current channel: INTOCCSID is valid only with a channel, INVREQ RESP2 2; FLENGTH not logged [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCSID",
+     "queue": "CCLOG",
+     "data": {
+      "length": 31,
+      "text": "PUT100000000000"
+     },
+     "resp": "NORMAL",
+     "item": 2,
+     "note": "CCCHAN does not exist: created; FROMCCSID(037) implies CHAR [PUT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCSID",
+     "queue": "CCLOG",
+     "data": {
+      "length": 31,
+      "text": "GET100000000006"
+     },
+     "resp": "NORMAL",
+     "item": 3,
+     "note": "INTOCCSID(1208): ABC123 as CCSID 1208 bytes X'414243313233', 6 bytes [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCSID",
+     "queue": "CCRAW",
+     "data": {
+      "length": 6,
+      "hex": "414243313233"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCSID",
+     "queue": "CCLOG",
+     "data": {
+      "length": 31,
+      "text": "GET200000000006"
+     },
+     "resp": "NORMAL",
+     "item": 4,
+     "note": "INTOCCSID(037): the CCSID it was put in, EBCDIC bytes, unchanged [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCSID",
+     "queue": "CCRAW",
+     "data": {
+      "length": 6,
+      "hex": "C1C2C3F1F2F3"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCSID",
+     "queue": "CCLOG",
+     "data": {
+      "length": 31,
+      "text": "GET300000000006"
+     },
+     "resp": "NORMAL",
+     "item": 5,
+     "note": "no INTOCCSID: defaults to the region's CCSID (037) [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCSID",
+     "queue": "CCRAW",
+     "data": {
+      "length": 6,
+      "hex": "C1C2C3F1F2F3"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCSID",
+     "queue": "CCLOG",
+     "data": {
+      "length": 31,
+      "text": "PUT200000000000"
+     },
+     "resp": "NORMAL",
+     "item": 6,
+     "note": "FROMCCSID(1208): the ASCII bytes are stored as CCSID 1208 character data [PUT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCSID",
+     "queue": "CCLOG",
+     "data": {
+      "length": 31,
+      "text": "GET400000000006"
+     },
+     "resp": "NORMAL",
+     "item": 7,
+     "note": "INTOCCSID(1208): the container's own CCSID, bytes unchanged [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCSID",
+     "queue": "CCRAW",
+     "data": {
+      "length": 6,
+      "hex": "414243313233"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCSID",
+     "queue": "CCLOG",
+     "data": {
+      "length": 31,
+      "text": "GET500000000006"
+     },
+     "resp": "NORMAL",
+     "item": 8,
+     "note": "INTOCCSID(037): converted from 1208 to EBCDIC [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCSID",
+     "queue": "CCRAW",
+     "data": {
+      "length": 6,
+      "hex": "C1C2C3F1F2F3"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCSID",
+     "queue": "CCLOG",
+     "data": {
+      "length": 31,
+      "text": "GET600000000006"
+     },
+     "resp": "NORMAL",
+     "item": 9,
+     "note": "no INTOCCSID: the region's CCSID, so converted from 1208 to 037 [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCSID",
+     "queue": "CCRAW",
+     "data": {
+      "length": 6,
+      "hex": "C1C2C3F1F2F3"
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCSID",
+     "queue": "CCLOG",
+     "data": {
+      "length": 31,
+      "text": "PUT300000000000"
+     },
+     "resp": "NORMAL",
+     "item": 10,
+     "note": "DATATYPE(CHAR) and no FROMCCSID: the data is taken to be in the region's CCSID [PUT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCSID",
+     "queue": "CCLOG",
+     "data": {
+      "length": 31,
+      "text": "GET700000000006"
+     },
+     "resp": "NORMAL",
+     "item": 11,
+     "note": "INTOCCSID(1208): converted from the region's 037 [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCSID",
+     "queue": "CCRAW",
+     "data": {
+      "length": 6,
+      "hex": "414243313233"
+     },
+     "resp": "NORMAL",
+     "item": 7
+    },
+    {
+     "event": "RETURN",
+     "program": "CACCSID",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "CCLOG": [
+    "GET001600200000",
+    "PUT100000000000",
+    "GET100000000006",
+    "GET200000000006",
+    "GET300000000006",
+    "PUT200000000000",
+    "GET400000000006",
+    "GET500000000006",
+    "GET600000000006",
+    "PUT300000000000",
+    "GET700000000006"
+   ],
+   "CCRAW": [
+    {
+     "hex": "414243313233"
+    },
+    {
+     "hex": "C1C2C3F1F2F3"
+    },
+    {
+     "hex": "C1C2C3F1F2F3"
+    },
+    {
+     "hex": "414243313233"
+    },
+    {
+     "hex": "C1C2C3F1F2F3"
+    },
+    {
+     "hex": "C1C2C3F1F2F3"
+    },
+    {
+     "hex": "414243313233"
+    }
+   ]
+  }
+ }
+}

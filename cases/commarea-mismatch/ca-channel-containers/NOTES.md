@@ -151,7 +151,7 @@ no HANDLE ABEND exit: the task is terminated. `BAD2` is never written.
 * [LINK] CICS TS 6.x, EXEC CICS LINK (CHANNEL "a channel that is to be made available to the called program"): https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-link
 * [XCTL] CICS TS 6.x, EXEC CICS XCTL (CHANNEL): https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-xctl
 * [ASSIGN] CICS TS 6.x, EXEC CICS ASSIGN (CHANNEL: "the 16-character name of the current channel of the program, if one exists; otherwise, blanks"): https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-assign
-* [CURRENT] CICS TS 5.6, The current channel (set by LINK, XCTL, START and a pseudo-conversational RETURN with CHANNEL; a LINKed program "can also return containers to the calling program"): https://www.ibm.com/docs/en/cics-ts/5.6.0?topic=channels-current-channel
+* [CURRENT] CICS TS 5.6, The current channel (the channel a program is passed by LINK or XCTL; a LINKed program "can also return containers to the calling program"; RETURN is not described there, see pc-return-channel for RETURN CHANNEL): https://www.ibm.com/docs/en/cics-ts/5.6.0?topic=channels-current-channel
 * [SCOPE] CICS TS 6.x, The scope of a channel: https://www.ibm.com/docs/en/cics-ts/6.x?topic=channels-scope-channel
 * [HANDLE] CICS TS 6.x, EXEC CICS HANDLE CONDITION: https://www.ibm.com/docs/en/cics-ts/6.x?topic=summary-handle-condition
 * [AEZJ] CICS TS 6.x, abend code AEZJ ("CONTAINERERR condition not handled"): https://www.ibm.com/docs/en/cics-ts/6.x?topic=codes-aezj
