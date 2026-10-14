@@ -1,0 +1,50 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "ca-container-ccsid",
+  "trap": "commarea-mismatch",
+  "title": "Character conversion of a container: FROMCCSID / INTOCCSID (037 and 1208), DATATYPE(CHAR), INTOCCSID and FROMCCSID on a BIT container",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/CACCSID.cbl",
+      "src/CACCBIT.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/ca-container-ccsid.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "convert",
+      "path": "happy",
+      "summary": "CACCSID puts CHAR containers as CCSID 037, as 1208 and with DATATYPE(CHAR) alone, and gets each with INTOCCSID 1208, 037 and none: the bytes come back in the CCSID asked for, the region's (037) by default; INTOCCSID with no channel is INVREQ",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA07"
+        }
+      ]
+    },
+    {
+      "id": "bit-container",
+      "path": "trap",
+      "summary": "CACCBIT puts a BIT container and gets it with INTOCCSID (CCSIDERR RESP2 3, bytes unconverted) and without (NORMAL); a PUT of a BIT container with FROMCCSID is INVREQ RESP2 34",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA08"
+        }
+      ]
+    }
+  ]
+}

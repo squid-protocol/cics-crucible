@@ -1,0 +1,120 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-container-ccsid",
+ "scenario": "bit-container",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA08",
+   "program": "CACCBIT",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCBIT",
+     "queue": "CCLOG",
+     "data": {
+      "length": 31,
+      "text": "PUT100000000000"
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "CCBITCHN does not exist: created; BIT: \"The data in the container cannot be converted\" [PUT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCBIT",
+     "queue": "CCLOG",
+     "data": {
+      "length": 31,
+      "text": "GET112300300000"
+     },
+     "resp": "NORMAL",
+     "item": 2,
+     "note": "INTOCCSID on a BIT container: CCSIDERR (123) RESP2 3, data returned without conversion; FLENGTH not logged [GET] [RESP-CODES]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCBIT",
+     "queue": "CCRAW",
+     "data": {
+      "length": 6,
+      "hex": "C1C2C3F1F2F3"
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "the data was returned without any code page conversion: the bytes put [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCBIT",
+     "queue": "CCLOG",
+     "data": {
+      "length": 31,
+      "text": "GET200000000006"
+     },
+     "resp": "NORMAL",
+     "item": 3,
+     "note": "no INTOCCSID: BIT data is returned as put, NORMAL [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCBIT",
+     "queue": "CCRAW",
+     "data": {
+      "length": 6,
+      "hex": "C1C2C3F1F2F3"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACCBIT",
+     "queue": "CCLOG",
+     "data": {
+      "length": 31,
+      "text": "PUT201603400000"
+     },
+     "resp": "NORMAL",
+     "item": 4,
+     "note": "BIT with FROMCCSID: INVREQ RESP2 34 [PUT]"
+    },
+    {
+     "event": "RETURN",
+     "program": "CACCBIT",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "CCLOG": [
+    "PUT100000000000",
+    "GET112300300000",
+    "GET200000000006",
+    "PUT201603400000"
+   ],
+   "CCRAW": [
+    {
+     "hex": "C1C2C3F1F2F3"
+    },
+    {
+     "hex": "C1C2C3F1F2F3"
+    }
+   ]
+  }
+ }
+}
