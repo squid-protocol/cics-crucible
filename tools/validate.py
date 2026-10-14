@@ -493,6 +493,7 @@ class Case:
         self.mapsets_csd = set(self.csd.get("MAPSET", {}))
         self.files_csd = set(self.csd.get("FILE", {}))
         self.tdq_csd = set(self.csd.get("TDQUEUE", {}))
+        self._seeds()
         self._region()
         for q, a in self.csd.get("TDQUEUE", {}).items():
             if a.get("TYPE", "").upper() != "INTRA":
@@ -686,7 +687,7 @@ class Case:
                     q = literal(o["QUEUE"]).upper()
                     if q not in self.tdq_csd:
                         self.err(f"{rel}: {verb} TD QUEUE('{q}') has no CSD DEFINE TDQUEUE")
-                if verb in ("READ", "WRITE", "REWRITE", "DELETE", "STARTBR") and literal(o.get("FILE")):
+                if verb in ("READ", "WRITE", "REWRITE", "DELETE", "UNLOCK", "STARTBR") and literal(o.get("FILE")):
                     f = literal(o["FILE"]).upper()
                     if f not in self.files_csd:
                         self.err(f"{rel}: FILE('{f}') has no CSD DEFINE FILE")
@@ -696,6 +697,27 @@ class Case:
                     continue
                 if not any((cd / f"{name}.cpy").is_file() for cd in self.copydirs):
                     self.err(f"{rel}: COPY {name} does not resolve in {self.case['sources']['copy']}")
+
+    def _seeds(self) -> None:
+        """data/<FILE>.dat: one fixed-width record per line, a file the CSD defines (SPEC section 2)."""
+        self.seed_width: dict[str, int] = {}
+        for rel in self.case["sources"]["data"]:
+            p = self.dir / rel
+            if not p.is_file():
+                continue
+            f = p.stem.upper()
+            if p.suffix != ".dat" or f not in self.files_csd:
+                self.err(f"{rel}: a seed is data/<FILE>.dat for a CSD DEFINE FILE")
+                continue
+            recs = p.read_text(encoding="utf-8").splitlines()
+            if not recs or any(r == "" or not r.isascii() or not r.isprintable() for r in recs):
+                self.err(f"{rel}: records must be non-empty printable ASCII lines")
+                continue
+            if len({len(r) for r in recs}) != 1:
+                self.err(f"{rel}: records must all have the same length")
+            if len(set(recs)) != len(recs):
+                self.err(f"{rel}: duplicate records")
+            self.seed_width[f] = len(recs[0])
 
     def _scenarios(self) -> None:
         for sc in self.case["scenarios"]:
@@ -786,6 +808,11 @@ class Case:
         for q in log.get("final", {}).get("td_queues", {}):
             if q not in self.tdq_csd:
                 self.err(f"expected/{fname}: final td_queues names {q}, which has no CSD DEFINE TDQUEUE")
+        for f, recs in log.get("final", {}).get("files", {}).items():
+            if f not in self.files_csd:
+                self.err(f"expected/{fname}: final files names {f}, which has no CSD DEFINE FILE")
+            elif f in self.seed_width and any(len(r) != self.seed_width[f] for r in recs):
+                self.err(f"expected/{fname}: final files {f}: a record is not {self.seed_width[f]} bytes")
         for ti, task in enumerate(log["tasks"]):
             w = f"expected/{fname} task {task['seq']}"
             if task["seq"] != ti + 1:
@@ -873,8 +900,16 @@ class Case:
             self._area(f"{w} data", ev["data"])
         if k in ("READQ-TD", "WRITEQ-TD", "DELETEQ-TD") and ev["queue"] not in self.tdq_csd:
             self.err(f"{w}: queue {ev['queue']} has no CSD DEFINE TDQUEUE")
-        if k == "READ" and ev["file"] not in self.files_csd:
+        if k in ("READ", "REWRITE", "UNLOCK") and ev["file"] not in self.files_csd:
             self.err(f"{w}: file {ev['file']} not in the CSD")
+        if k == "READ" and ev.get("data") is not None:
+            self._area(f"{w} data", ev["data"])
+        if k == "REWRITE":
+            self._area(f"{w} data", ev["data"])
+        if k in ("READ", "REWRITE") and ev["file"] in self.seed_width:
+            n = ev["data"]["length"] if ev.get("data") else None
+            if ev["resp"] == "NORMAL" and n is not None and n != self.seed_width[ev["file"]]:
+                self.err(f"{w}: record length {n} is not the file's {self.seed_width[ev['file']]}")
         if k == "ABEND":
             if ev["cause"] == "condition" and "condition" not in ev:
                 self.err(f"{w}: cause condition needs 'condition'")
@@ -968,6 +1003,13 @@ def self_test() -> None:
         assert csd_resources(f)["TDQUEUE"]["HCTD"]["TYPE"] == "INTRA"
     opts = cics_options("READQ TD QUEUE('HCTD') INTO(X) LENGTH(L)")
     assert opts[0][0] == "READQ" and ("TD", None) in opts and literal(dict(opts)["QUEUE"]) == "HCTD"
+    opts = cics_options("READ FILE('HCUF') INTO(R) LENGTH(L) RIDFLD(K) UPDATE")
+    assert opts[0][0] == "READ" and ("UPDATE", None) in opts and literal(dict(opts)["FILE"]) == "HCUF"
+    assert cics_options("UNLOCK FILE('HCUF')")[0][0] == "UNLOCK"
+    with tempfile.TemporaryDirectory() as td:
+        f = Path(td) / "t.csd"
+        f.write_text("DEFINE FILE(HCUF) GROUP(G) DSNAME(A.B)\n      READ(YES) UPDATE(YES)\n", encoding="utf-8")
+        assert csd_resources(f)["FILE"]["HCUF"]["UPDATE"] == "YES"
     print("self-test: ok")
 
 

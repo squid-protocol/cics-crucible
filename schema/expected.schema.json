@@ -15,7 +15,8 @@
       "additionalProperties": false,
       "properties": {
         "ts_queues": {"type": "object", "additionalProperties": {"type": "array", "items": {"$ref": "#/$defs/tsitem"}}},
-        "td_queues": {"type": "object", "propertyNames": {"$ref": "#/$defs/name4"}, "additionalProperties": {"type": "array", "items": {"$ref": "#/$defs/tsitem"}}}
+        "td_queues": {"type": "object", "propertyNames": {"$ref": "#/$defs/name4"}, "additionalProperties": {"type": "array", "items": {"$ref": "#/$defs/tsitem"}}},
+        "files": {"type": "object", "propertyNames": {"$ref": "#/$defs/name8"}, "additionalProperties": {"type": "array", "items": {"type": "string"}}}
       }
     }
   },
@@ -195,7 +196,17 @@
         {"type": "object", "required": ["event", "program", "file", "ridfld", "resp"], "additionalProperties": false,
          "properties": {"event": {"const": "READ"}, "program": {"$ref": "#/$defs/name8"},
                         "file": {"$ref": "#/$defs/name8"}, "ridfld": {"$ref": "#/$defs/text_or_hex"},
-                        "resp": {"$ref": "#/$defs/cond"}, "note": {"type": "string"}}},
+                        "update": {"type": "boolean"}, "resp": {"$ref": "#/$defs/cond"}, "resp2": {"type": "integer"},
+                        "length": {"type": "integer", "minimum": 0}, "data": {"$ref": "#/$defs/area_or_null"},
+                        "note": {"type": "string"}}},
+        {"type": "object", "required": ["event", "program", "file", "data", "resp"], "additionalProperties": false,
+         "properties": {"event": {"const": "REWRITE"}, "program": {"$ref": "#/$defs/name8"},
+                        "file": {"$ref": "#/$defs/name8"}, "data": {"$ref": "#/$defs/area"},
+                        "resp": {"$ref": "#/$defs/cond"}, "resp2": {"type": "integer"}, "note": {"type": "string"}}},
+        {"type": "object", "required": ["event", "program", "file", "resp"], "additionalProperties": false,
+         "properties": {"event": {"const": "UNLOCK"}, "program": {"$ref": "#/$defs/name8"},
+                        "file": {"$ref": "#/$defs/name8"}, "resp": {"$ref": "#/$defs/cond"},
+                        "resp2": {"type": "integer"}, "note": {"type": "string"}}},
         {"type": "object", "required": ["event", "program", "abcode", "cause", "outcome"], "additionalProperties": false,
          "properties": {"event": {"const": "ABEND"}, "program": {"$ref": "#/$defs/name8"},
                         "abcode": {"type": "string", "pattern": "^[A-Z0-9#@$]{4}$"},
