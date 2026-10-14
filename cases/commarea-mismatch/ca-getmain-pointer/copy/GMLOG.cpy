@@ -1,0 +1,8 @@
+      * One trace record: what a command returned and what the
+      * program then saw, written to TS queue GMLOG after it
+      * (GETMAIN and FREEMAIN are not events).
+       01  WS-LOG.
+           05  LG-TAG            PIC X(4).
+           05  LG-RESP           PIC 9(3).
+           05  LG-RESP2          PIC 9(3).
+           05  LG-DATA           PIC X(16).
