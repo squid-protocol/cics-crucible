@@ -1,0 +1,94 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-address-commarea",
+ "scenario": "link-view",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA02",
+   "program": "CAADDR",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "CAADDR",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "CA02 L"
+     }
+    },
+    {
+     "event": "LINK",
+     "program": "CAADDR",
+     "target": "CAADSB",
+     "length": 20,
+     "resp": "NORMAL",
+     "commarea": {
+      "length": 20,
+      "layout": "CALLER",
+      "fields": {
+       "AD-EYE": "CADR",
+       "AD-REQUEST": "PING",
+       "AD-REPLY": ""
+      }
+     },
+     "note": "the callee never names DFHCOMMAREA: it gets the address with ADDRESS COMMAREA"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAADSB",
+     "queue": "CALOG",
+     "data": {
+      "length": 46,
+      "text": "C1  P=PRESENT CALEN=0020 EYE=CADR REQ=PING    "
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "the pointer addresses the caller's WS-AREA: EIBCALEN 20, the caller's EYE and REQUEST read through the view"
+    },
+    {
+     "event": "RETURN",
+     "program": "CAADSB",
+     "level": 2,
+     "caller_commarea": {
+      "length": 20,
+      "layout": "CALLER",
+      "fields": {
+       "AD-EYE": "CADR",
+       "AD-REQUEST": "PING",
+       "AD-REPLY": "PONG"
+      }
+     },
+     "note": "the callee's write through the view is the caller's WS-AREA: same storage"
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "CAADDR",
+     "text": "MODE=L REPLY=PONG                                                               ",
+     "length": 80,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "CAADDR",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

@@ -1,0 +1,67 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "ca-address-commarea",
+  "trap": "commarea-mismatch",
+  "title": "ADDRESS COMMAREA and ADDRESS EIB with SET ADDRESS OF: the callee's pointer is the caller's storage, no COMMAREA gives X'FF000000', the EIB view is the EIB",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/CAADDR.cbl",
+      "src/CAADSB.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/ca-address-commarea.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {
+    "CALLER": {
+      "source": "src/CAADDR.cbl",
+      "record": "WS-AREA"
+    }
+  },
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "link-view",
+      "path": "happy",
+      "summary": "LINK with COMMAREA(WS-AREA) LENGTH(20): the callee's ADDRESS COMMAREA pointer sees the caller's bytes and its write through SET ADDRESS OF lands in the caller's area",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA02 L"
+        }
+      ]
+    },
+    {
+      "id": "no-commarea",
+      "path": "trap",
+      "summary": "EIBCALEN 0, in the terminal task and in a callee LINKed without COMMAREA: ADDRESS COMMAREA gives the null value X'FF000000'",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA02 N"
+        }
+      ]
+    },
+    {
+      "id": "eib-view",
+      "path": "happy",
+      "summary": "ADDRESS EIB then SET ADDRESS OF a view: its fields equal the DFHEIBLK fields",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA02 E"
+        }
+      ]
+    }
+  ]
+}
