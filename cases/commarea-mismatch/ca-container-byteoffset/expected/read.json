@@ -1,0 +1,259 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-container-byteoffset",
+ "scenario": "read",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA09",
+   "program": "CABOFF",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFF",
+     "queue": "BOLOG",
+     "data": {
+      "length": 31,
+      "text": "PUT100000000000"
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "BOCHAN does not exist: created; BIT data [PUT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFF",
+     "queue": "BOLOG",
+     "data": {
+      "length": 31,
+      "text": "GET100000000010"
+     },
+     "resp": "NORMAL",
+     "item": 2,
+     "note": "BYTEOFFSET 0, FLENGTH 16 maximum: the whole 10 bytes; FLENGTH set to the length returned [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFF",
+     "queue": "BORAW",
+     "data": {
+      "length": 10,
+      "hex": "C1C2C3C4C5C6C7C8C9D1"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFF",
+     "queue": "BOLOG",
+     "data": {
+      "length": 31,
+      "text": "GET200000000007"
+     },
+     "resp": "NORMAL",
+     "item": 3,
+     "note": "BYTEOFFSET 3: the data returned begins at offset 3, 7 bytes remain [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFF",
+     "queue": "BORAW",
+     "data": {
+      "length": 7,
+      "hex": "C4C5C6C7C8C9D1"
+     },
+     "resp": "NORMAL",
+     "item": 2,
+     "note": "DEFGHIJ"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFF",
+     "queue": "BOLOG",
+     "data": {
+      "length": 31,
+      "text": "GET300000000001"
+     },
+     "resp": "NORMAL",
+     "item": 4,
+     "note": "BYTEOFFSET 9, the last byte: 1 byte returned [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFF",
+     "queue": "BORAW",
+     "data": {
+      "length": 1,
+      "hex": "D1"
+     },
+     "resp": "NORMAL",
+     "item": 3,
+     "note": "J"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFF",
+     "queue": "BOLOG",
+     "data": {
+      "length": 31,
+      "text": "GET400000000003"
+     },
+     "resp": "NORMAL",
+     "item": 5,
+     "note": "BYTEOFFSET 7 with FLENGTH 16: maximum length returned is the container length minus BYTEOFFSET, 3 [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFF",
+     "queue": "BORAW",
+     "data": {
+      "length": 3,
+      "hex": "C8C9D1"
+     },
+     "resp": "NORMAL",
+     "item": 4,
+     "note": "HIJ"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFF",
+     "queue": "BOLOG",
+     "data": {
+      "length": 31,
+      "text": "GET500000000010"
+     },
+     "resp": "NORMAL",
+     "item": 6,
+     "note": "BYTEOFFSET -1: less than zero, zero is assumed, the whole 10 bytes [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFF",
+     "queue": "BORAW",
+     "data": {
+      "length": 10,
+      "hex": "C1C2C3C4C5C6C7C8C9D1"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFF",
+     "queue": "BOLOG",
+     "data": {
+      "length": 31,
+      "text": "PUT200000000000"
+     },
+     "resp": "NORMAL",
+     "item": 7,
+     "note": "PREPEND: XY goes in front of the existing data, now 12 bytes [PUT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFF",
+     "queue": "BOLOG",
+     "data": {
+      "length": 31,
+      "text": "GET600000000012"
+     },
+     "resp": "NORMAL",
+     "item": 8,
+     "note": "BYTEOFFSET 0: XYABCDEFGHIJ [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFF",
+     "queue": "BORAW",
+     "data": {
+      "length": 12,
+      "hex": "E7E8C1C2C3C4C5C6C7C8C9D1"
+     },
+     "resp": "NORMAL",
+     "item": 6,
+     "note": "XYABCDEFGHIJ"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFF",
+     "queue": "BOLOG",
+     "data": {
+      "length": 31,
+      "text": "GET700000000002"
+     },
+     "resp": "NORMAL",
+     "item": 9,
+     "note": "BYTEOFFSET 10 of 12 (it was past the end before the PREPEND): the last 2 bytes [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFF",
+     "queue": "BORAW",
+     "data": {
+      "length": 2,
+      "hex": "C9D1"
+     },
+     "resp": "NORMAL",
+     "item": 7,
+     "note": "IJ"
+    },
+    {
+     "event": "RETURN",
+     "program": "CABOFF",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "BOLOG": [
+    "PUT100000000000",
+    "GET100000000010",
+    "GET200000000007",
+    "GET300000000001",
+    "GET400000000003",
+    "GET500000000010",
+    "PUT200000000000",
+    "GET600000000012",
+    "GET700000000002"
+   ],
+   "BORAW": [
+    {
+     "hex": "C1C2C3C4C5C6C7C8C9D1"
+    },
+    {
+     "hex": "C4C5C6C7C8C9D1"
+    },
+    {
+     "hex": "D1"
+    },
+    {
+     "hex": "C8C9D1"
+    },
+    {
+     "hex": "C1C2C3C4C5C6C7C8C9D1"
+    },
+    {
+     "hex": "E7E8C1C2C3C4C5C6C7C8C9D1"
+    },
+    {
+     "hex": "C9D1"
+    }
+   ]
+  }
+ }
+}

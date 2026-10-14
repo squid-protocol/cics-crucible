@@ -1,0 +1,133 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-container-byteoffset",
+ "scenario": "past-end",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA0A",
+   "program": "CABOFFX",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFFX",
+     "queue": "BOLOG",
+     "data": {
+      "length": 31,
+      "text": "PUT100000000000"
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "BOCHAN does not exist: created; BIT data [PUT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFFX",
+     "queue": "BOLOG",
+     "data": {
+      "length": 31,
+      "text": "GET100000000001"
+     },
+     "resp": "NORMAL",
+     "item": 2,
+     "note": "BYTEOFFSET 9 = length - 1: NORMAL, 1 byte [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFFX",
+     "queue": "BORAW",
+     "data": {
+      "length": 1,
+      "hex": "D1"
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "J"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFFX",
+     "queue": "BOLOG",
+     "data": {
+      "length": 31,
+      "text": "GET202201200000"
+     },
+     "resp": "NORMAL",
+     "item": 3,
+     "note": "BYTEOFFSET 10 = the container length: LENGERR (22) RESP2 12 'The offset is greater than, or equal to, the length of the container'; FLENGTH and the area not logged [GET] [RESP-CODES]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFFX",
+     "queue": "BOLOG",
+     "data": {
+      "length": 31,
+      "text": "GET302201200000"
+     },
+     "resp": "NORMAL",
+     "item": 4,
+     "note": "BYTEOFFSET 15, past the end: LENGERR RESP2 12; FLENGTH and the area not logged [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFFX",
+     "queue": "BOLOG",
+     "data": {
+      "length": 31,
+      "text": "GET400000000010"
+     },
+     "resp": "NORMAL",
+     "item": 5,
+     "note": "BYTEOFFSET 0 after the failed GETs: the container still holds the 10 bytes [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABOFFX",
+     "queue": "BORAW",
+     "data": {
+      "length": 10,
+      "hex": "C1C2C3C4C5C6C7C8C9D1"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "RETURN",
+     "program": "CABOFFX",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "BOLOG": [
+    "PUT100000000000",
+    "GET100000000001",
+    "GET202201200000",
+    "GET302201200000",
+    "GET400000000010"
+   ],
+   "BORAW": [
+    {
+     "hex": "D1"
+    },
+    {
+     "hex": "C1C2C3C4C5C6C7C8C9D1"
+    }
+   ]
+  }
+ }
+}
