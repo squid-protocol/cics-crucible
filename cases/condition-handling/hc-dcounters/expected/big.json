@@ -1,0 +1,200 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-dcounters",
+ "scenario": "big",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC72",
+   "program": "HCDCNT",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCDCNT",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC72 B"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDCNT",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "B1  R=00 S=000 V=0000000000000000"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDCNT",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "B2  R=00 S=000 V=000000007FFFFFFF"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDCNT",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "B3  R=00 S=000 V=0000000080000000"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDCNT",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "B4  R=00 S=000 V=0000000080000001"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDCNT",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "B5  R=00 S=000 V=0000000000000000"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDCNT",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "B6  R=00 S=000 V=00000000FFFFFFFF"
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDCNT",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "B7  R=00 S=000 V=0000000100000000"
+     },
+     "resp": "NORMAL",
+     "item": 7
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDCNT",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "B8  R=00 S=000 V=0000000100000001"
+     },
+     "resp": "NORMAL",
+     "item": 8
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDCNT",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "B9  R=00 S=000 V=0000000000000000"
+     },
+     "resp": "NORMAL",
+     "item": 9
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDCNT",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "B10 R=00 S=000 V=0000000000000005"
+     },
+     "resp": "NORMAL",
+     "item": 10
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDCNT",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "B11 R=00 S=000 V=0000000100000005"
+     },
+     "resp": "NORMAL",
+     "item": 11
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDCNT",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "B12 R=00 S=000 V=0000000200000005"
+     },
+     "resp": "NORMAL",
+     "item": 12
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCDCNT",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCDCNT",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "B1  R=00 S=000 V=0000000000000000",
+    "B2  R=00 S=000 V=000000007FFFFFFF",
+    "B3  R=00 S=000 V=0000000080000000",
+    "B4  R=00 S=000 V=0000000080000001",
+    "B5  R=00 S=000 V=0000000000000000",
+    "B6  R=00 S=000 V=00000000FFFFFFFF",
+    "B7  R=00 S=000 V=0000000100000000",
+    "B8  R=00 S=000 V=0000000100000001",
+    "B9  R=00 S=000 V=0000000000000000",
+    "B10 R=00 S=000 V=0000000000000005",
+    "B11 R=00 S=000 V=0000000100000005",
+    "B12 R=00 S=000 V=0000000200000005"
+   ]
+  }
+ }
+}
