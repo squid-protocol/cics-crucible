@@ -13,6 +13,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+from datetime import datetime, timedelta
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
@@ -454,6 +455,7 @@ class Case:
         self._programs()
         self._origin()
         self._scenarios()
+        self._http()
         ids = [s["id"] for s in case["scenarios"]]
         if len(set(ids)) != len(ids):
             self.err("duplicate scenario ids")
@@ -749,6 +751,110 @@ class Case:
                     if "cursor" in st and st["cursor"] not in names:
                         self.err(f"scenario {sc['id']} step {i}: cursor field {st['cursor']} not in map")
 
+    # -- HTTP peer (SPEC section 2, HTTP peer)
+    def _web_server_cmds(self) -> list[dict[str, str | None]]:
+        """The server-role WEB RECEIVE / WEB SEND commands of the programs (a SESSTOKEN is the client role)."""
+        out = []
+        for code in self._all_code():
+            for opts in exec_cics(code):
+                d = dict(opts)
+                if opts[0][0] == "WEB" and ("RECEIVE" in d or "SEND" in d) and "SESSTOKEN" not in d:
+                    out.append(d)
+        return out
+
+    def _http(self) -> None:
+        peers = self.case.get("peers", {})
+        reqs = [(sc, r) for sc in self.case["scenarios"] for r in sc.get("requests", [])]
+        servers = {n: a for n, a in self.csd.get("URIMAP", {}).items() if a.get("USAGE", "").upper() == "SERVER"}
+        if (reqs or peers) and not self._web_server_cmds():
+            self.err("requests / peers but no program issues a server WEB RECEIVE / WEB SEND")
+        if self._web_server_cmds() and not reqs:
+            self.err("a program issues a server WEB RECEIVE / WEB SEND but no scenario has a request (SPEC section 2)")
+        for n, a in servers.items():
+            for k in ("TRANSACTION", "PROGRAM", "HOST", "PATH", "SCHEME"):
+                if not a.get(k):
+                    self.err(f"CSD URIMAP {n}: USAGE(SERVER) here states {k} (SPEC section 2)")
+            if a.get("TRANSACTION", "").upper() in self.transactions \
+                    and self.transactions[a["TRANSACTION"].upper()] != a.get("PROGRAM", "").upper():
+                self.err(f"CSD URIMAP {n}: alias transaction {a['TRANSACTION']} runs "
+                         f"{self.transactions[a['TRANSACTION'].upper()]}, not PROGRAM({a.get('PROGRAM')})")
+            elif a.get("TRANSACTION", "").upper() not in self.transactions:
+                self.err(f"CSD URIMAP {n}: alias transaction {a.get('TRANSACTION')} has no CSD DEFINE TRANSACTION")
+            if a.get("SCHEME", "").upper() not in ("HTTP", ""):
+                self.err(f"CSD URIMAP {n}: SCHEME({a['SCHEME']}) -- only HTTP is modelled (SPEC section 2)")
+            if "*" in a.get("HOST", "") and a["HOST"] != "*":
+                self.err(f"CSD URIMAP {n}: HOST may use only a single `*`")
+            if "*" in a.get("PATH", "")[:-1]:
+                self.err(f"CSD URIMAP {n}: PATH may use `*` only as its last character")
+        for sc, r in reqs:
+            w = f"scenario {sc['id']} request at {r['at']}"
+            if r["peer"] not in peers:
+                self.err(f"{w}: peer {r['peer']!r} is not stated in case.json `peers` (an unstated peer is a defined failure)")
+            if r["method"] in ("GET", "HEAD", "DELETE") and "body" in r:
+                self.err(f"{w}: {r['method']} carries no body here")
+            hits = [n for n, a in servers.items() if urimap_matches(a, r)]
+            if len(hits) != 1:
+                self.err(f"{w}: matches {len(hits)} server URIMAPs {hits}; exactly one (IBM takes the most specific, "
+                         "a case never relies on it)")
+            if ("body" in r) != ("mediatype" in r):
+                self.err(f"{w}: body and mediatype go together")
+        for sc in self.case["scenarios"]:
+            ats = [st["at"] for st in sc["steps"]] + [r["at"] for r in sc.get("requests", [])]
+            if len(set(ats)) != len(ats):
+                self.err(f"scenario {sc['id']}: a step and a request (or two requests) share a second (SPEC section 4)")
+            if not sc["steps"] and not sc.get("requests"):
+                self.err(f"scenario {sc['id']}: no steps and no requests")
+            rq = [r["at"] for r in sc.get("requests", [])]
+            if rq != sorted(rq):
+                self.err(f"scenario {sc['id']}: requests must be in order of `at`")
+        # a peer's script is replayed in every scenario: its nth request there gets responses[n]; the script is as long as
+        # the most requests the peer sends in one scenario
+        for n, p in peers.items():
+            most = max((sum(1 for r in sc.get("requests", []) if r["peer"] == n) for sc in self.case["scenarios"]), default=0)
+            if len(p["responses"]) != most:
+                self.err(f"peer {n}: {len(p['responses'])} responses stated, but it sends at most {most} requests in a scenario")
+
+    def _http_task(self, w: str, sc: dict[str, Any], log: dict[str, Any], ti: int, task: dict[str, Any],
+                   trig: dict[str, Any]) -> None:
+        reqs = sc.get("requests", [])
+        if trig["request"] >= len(reqs):
+            return self.err(f"{w}: trigger request {trig['request']} out of range")
+        r = reqs[trig["request"]]
+        if sum(1 for t in log["tasks"] if t["trigger"] == trig) != 1:
+            self.err(f"{w}: request {trig['request']} must start exactly one task")
+        if task["eibaid"] is not None or task["termid"] is not None:
+            self.err(f"{w}: an http task has no terminal and no eibaid")
+        clock = datetime.fromisoformat(self.case["clock"]) + timedelta(seconds=r["at"])
+        if task["at"] != clock.isoformat():
+            self.err(f"{w}: at {task['at']} is not the request's time {clock.isoformat()}")
+        hits = [a for a in self.csd.get("URIMAP", {}).values() if urimap_matches(a, r)]
+        if len(hits) == 1:
+            u = hits[0]
+            if task["transid"] != u.get("TRANSACTION", "").upper() or task["program"] != u.get("PROGRAM", "").upper():
+                self.err(f"{w}: the URIMAP routes this request to {u.get('TRANSACTION')} / {u.get('PROGRAM')}")
+        peer = self.case.get("peers", {}).get(r["peer"])
+        sends = [e for e in task["events"] if e["event"] == "WEB-SEND"]
+        if len(sends) != 1:
+            return self.err(f"{w}: an http task sends exactly one response (WEB SEND), has {len(sends)}")
+        if peer is None:
+            return
+        nth = sum(1 for q in reqs[:trig["request"]] if q["peer"] == r["peer"])
+        want = peer["responses"][nth] if nth < len(peer["responses"]) else None
+        if want is None:
+            return self.err(f"{w}: peer {r['peer']} states no response for this request")
+        e = sends[0]
+        if e["resp"] != "NORMAL":
+            return
+        if e["status"] != want["status"]:
+            self.err(f"{w}: WEB-SEND status {e['status']}, the peer expects {want['status']}")
+        if want.get("mediatype") != e.get("mediatype"):
+            self.err(f"{w}: WEB-SEND mediatype {e.get('mediatype')!r}, the peer expects {want.get('mediatype')!r}")
+        got = e["from"].get("text") if e["from"] else None
+        if want.get("body") is not None and (got is None or got.rstrip(" ") != want["body"].rstrip(" ")):
+            self.err(f"{w}: WEB-SEND body {got!r}, the peer expects {want['body']!r}")
+        if want.get("body") is None and e["from"] is not None:
+            self.err(f"{w}: WEB-SEND sends a body the peer does not state")
+
     # -- values
     def _value(self, where: str, v: Any, size: int | None, pic: str | None = None, usage: str = "DISPLAY") -> None:
         if isinstance(v, dict):
@@ -813,16 +919,21 @@ class Case:
                 self.err(f"expected/{fname}: final files names {f}, which has no CSD DEFINE FILE")
             elif f in self.seed_width and any(len(r) != self.seed_width[f] for r in recs):
                 self.err(f"expected/{fname}: final files {f}: a record is not {self.seed_width[f]} bytes")
+        for ri in range(len(sc.get("requests", []))):
+            if not any(t["trigger"] == {"kind": "http", "request": ri} for t in log["tasks"]):
+                self.err(f"expected/{fname}: request {ri} starts no task")
         for ti, task in enumerate(log["tasks"]):
             w = f"expected/{fname} task {task['seq']}"
             if task["seq"] != ti + 1:
                 self.err(f"{w}: seq should be {ti + 1}")
             if task["transid"] not in self.transactions:
                 self.err(f"{w}: transid {task['transid']} not in the CSD")
-            elif self.transactions[task["transid"]] != task["program"]:
+            elif self.transactions[task["transid"]] != task["program"] and task["trigger"]["kind"] != "http":
                 self.err(f"{w}: transid {task['transid']} runs {self.transactions[task['transid']]}, not {task['program']}")
             trig = task["trigger"]
-            if trig["kind"] == "terminal":
+            if trig["kind"] == "http":
+                self._http_task(w, sc, log, ti, task, trig)
+            elif trig["kind"] == "terminal":
                 if trig["step"] >= len(sc["steps"]):
                     self.err(f"{w}: trigger step {trig['step']} out of range")
                 elif task["eibaid"] != sc["steps"][trig["step"]]["aid"]:
@@ -858,6 +969,7 @@ class Case:
             if task["end"] == "abend" and not (last["event"] == "ABEND" and last["outcome"] == "terminated"):
                 self.err(f"{w}: end abend but the last event is not a terminating ABEND")
             for ei, ev in enumerate(task["events"]):
+                self._in_http = task["trigger"]["kind"] == "http"
                 self._event(f"{w} event {ei} ({ev['event']})", ev, undefined, ev is last)
 
     def _event(self, w: str, ev: dict[str, Any], undefined: set[str], is_last: bool) -> None:
@@ -894,6 +1006,12 @@ class Case:
             self._area(f"{w} data", ev["data"])
         if k in ("WRITEQ-TS", "WRITEQ-TD", "WRITE-OPERATOR"):
             self._area(f"{w} data", ev["data"])
+        if k in ("WEB-RECEIVE", "WEB-SEND") and not self._in_http:
+            self.err(f"{w}: only a task started by an inbound request issues a server WEB command")
+        if k == "WEB-RECEIVE":
+            self._area(f"{w} data", ev["data"])
+        if k == "WEB-SEND":
+            self._area(f"{w} from", ev["from"])
         if k in ("READQ-TD", "WRITEQ-TD", "DELETEQ-TD") and ev["queue"] not in self.tdq_csd:
             self.err(f"{w}: queue {ev['queue']} has no CSD DEFINE TDQUEUE")
         if k in ("READ", "REWRITE", "UNLOCK") and ev["file"] not in self.files_csd:
@@ -978,6 +1096,20 @@ class Case:
             self.err("NOTES.md: cites no IBM document")
 
 
+def urimap_matches(attrs: dict[str, str], req: dict[str, Any]) -> bool:
+    """Whether an installed SERVER URIMAP matches an inbound request (SPEC section 2, HTTP peer): USAGE(SERVER), enabled,
+    the scheme (SCHEME(HTTP) accepts HTTP), HOST equal or the single `*`, PATH equal or ending in `*` as a prefix."""
+    if attrs.get("USAGE", "").upper() != "SERVER" or attrs.get("STATUS", "ENABLED").upper() != "ENABLED":
+        return False
+    if attrs.get("SCHEME", "").upper() != req["scheme"].upper():
+        return False
+    host = attrs.get("HOST", "")
+    if host != "*" and host.lower() != req["host"].lower():
+        return False
+    path = attrs.get("PATH", "")
+    return req["path"].startswith(path[:-1]) if path.endswith("*") else req["path"] == path
+
+
 def return_errors(ev: dict[str, Any]) -> list[str]:
     """The structural rules of a RETURN event (SPEC 6.2): IMMEDIATE and CHANNEL succeed only at level 1, and a RETURN
     that failed (resp / resp2) is one of those two options refused below the highest logical level, or IMMEDIATE
@@ -1038,6 +1170,13 @@ def self_test() -> None:
                               "resp": "INVREQ", "resp2": 2})
     assert not return_errors({"event": "RETURN", "program": "P", "level": 2, "transid": "PC62", "immediate": True,
                               "resp": "INVREQ", "resp2": 2})
+    req = {"scheme": "HTTP", "host": "Crucible.Example", "path": "/crucible/echo"}
+    srv = {"USAGE": "SERVER", "SCHEME": "HTTP", "HOST": "*", "PATH": "/crucible/echo"}
+    assert urimap_matches(srv, req) and urimap_matches({**srv, "HOST": "crucible.example"}, req)
+    assert urimap_matches({**srv, "PATH": "/crucible/*"}, req) and not urimap_matches({**srv, "PATH": "/crucible/ech"}, req)
+    assert not urimap_matches({**srv, "HOST": "other"}, req) and not urimap_matches({**srv, "USAGE": "CLIENT"}, req)
+    assert not urimap_matches({**srv, "STATUS": "DISABLED"}, req) and not urimap_matches({**srv, "SCHEME": "HTTPS"}, req)
+    assert dict(cics_options("WEB SEND FROM(B) FROMLENGTH(L) STATUSCODE(S)"))["SEND"] is None
     assert return_errors({**ok, "commarea": {"length": 1, "text": "A"}}), "CHANNEL and a passed commarea"
     assert return_errors({**ok, "transid": None}), "CHANNEL without a transid"
     assert return_errors({**ok, "level": 2, "commarea": None}), "a successful CHANNEL below level 1"

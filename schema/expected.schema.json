@@ -49,7 +49,9 @@
          "properties": {"kind": {"const": "terminal"}, "step": {"type": "integer", "minimum": 0}}},
         {"type": "object", "required": ["kind", "task", "event"], "additionalProperties": false,
          "properties": {"kind": {"enum": ["start", "run", "immediate"]}, "task": {"type": "integer", "minimum": 1},
-                        "event": {"type": "integer", "minimum": 0}}}
+                        "event": {"type": "integer", "minimum": 0}}},
+        {"type": "object", "required": ["kind", "request"], "additionalProperties": false,
+         "properties": {"kind": {"const": "http"}, "request": {"type": "integer", "minimum": 0}}}
       ]
     },
     "task": {
@@ -191,6 +193,17 @@
          "properties": {"event": {"const": "DELETEQ-TD"}, "program": {"$ref": "#/$defs/name8"},
                         "queue": {"$ref": "#/$defs/name4"}, "resp": {"$ref": "#/$defs/cond"},
                         "resp2": {"type": "integer"}, "note": {"type": "string"}}},
+        {"type": "object", "required": ["event", "program", "resp", "length", "data"], "additionalProperties": false,
+         "properties": {"event": {"const": "WEB-RECEIVE"}, "program": {"$ref": "#/$defs/name8"},
+                        "resp": {"$ref": "#/$defs/cond"}, "resp2": {"type": "integer"},
+                        "length": {"type": "integer", "minimum": 0}, "data": {"$ref": "#/$defs/area_or_null"},
+                        "note": {"type": "string"}}},
+        {"type": "object", "required": ["event", "program", "status", "from", "resp"], "additionalProperties": false,
+         "properties": {"event": {"const": "WEB-SEND"}, "program": {"$ref": "#/$defs/name8"},
+                        "status": {"type": "integer", "minimum": 100, "maximum": 599},
+                        "statustext": {"type": "string"}, "mediatype": {"type": "string", "minLength": 1},
+                        "from": {"$ref": "#/$defs/area_or_null"},
+                        "resp": {"$ref": "#/$defs/cond"}, "resp2": {"type": "integer"}, "note": {"type": "string"}}},
         {"type": "object", "required": ["event", "program", "data", "resp"], "additionalProperties": false,
          "properties": {"event": {"const": "WRITE-OPERATOR"}, "program": {"$ref": "#/$defs/name8"},
                         "data": {"$ref": "#/$defs/area"}, "resp": {"$ref": "#/$defs/cond"}, "note": {"type": "string"}}},

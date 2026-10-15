@@ -1,0 +1,40 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-http-inbound",
+  "trap": "ghost-tasks",
+  "title": "An inbound HTTP request is a task: SERVER URIMAP to an alias transaction, WEB RECEIVE of the body, WEB SEND of the response to a stated client peer",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": ["src/GTHECHO.cbl"],
+    "bms": [],
+    "csd": ["csd/gt-http-inbound.csd"],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "peers": {
+    "client-a": {
+      "responses": [
+        {"status": 200, "mediatype": "text/plain", "body": "ECHO:HELLO"},
+        {"status": 200, "mediatype": "text/plain", "body": "ECHO:AB"}
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "id": "echo",
+      "path": "happy",
+      "summary": "No operator step: client-a POSTs HELLO to /crucible/echo at 10:00:00 and AB at 10:00:05; each request is its own GT81 task that answers 200 with ECHO: and the body",
+      "steps": [],
+      "requests": [
+        {"at": 0, "peer": "client-a", "method": "POST", "scheme": "HTTP", "host": "crucible.example",
+         "path": "/crucible/echo", "mediatype": "text/plain", "body": "HELLO"},
+        {"at": 5, "peer": "client-a", "method": "POST", "scheme": "HTTP", "host": "crucible.example",
+         "path": "/crucible/echo", "mediatype": "text/plain", "body": "AB"}
+      ],
+      "until": 60
+    }
+  ]
+}

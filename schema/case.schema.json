@@ -60,6 +60,19 @@
         }
       }
     },
+    "peers": {
+      "type": "object",
+      "propertyNames": {"$ref": "#/$defs/peername"},
+      "additionalProperties": {
+        "type": "object",
+        "required": ["responses"],
+        "additionalProperties": false,
+        "properties": {
+          "responses": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/peerresponse"}},
+          "note": {"type": "string"}
+        }
+      }
+    },
     "undefined_programs": {"type": "array", "items": {"$ref": "#/$defs/name8"}},
     "unheld_maps": {"type": "array", "items": {"$ref": "#/$defs/name8"}},
     "scenarios": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/scenario"}}
@@ -69,6 +82,34 @@
     "name4": {"type": "string", "pattern": "^[A-Z0-9#@$]{1,4}$"},
     "name8": {"type": "string", "pattern": "^[A-Z0-9#@$]{1,8}$"},
     "cobolname": {"type": "string", "pattern": "^[A-Z0-9][A-Z0-9-]*$"},
+    "peername": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"},
+    "peerresponse": {
+      "type": "object",
+      "required": ["status"],
+      "additionalProperties": false,
+      "properties": {
+        "status": {"type": "integer", "minimum": 100, "maximum": 599},
+        "mediatype": {"type": "string", "minLength": 1},
+        "body": {"type": "string"},
+        "note": {"type": "string"}
+      }
+    },
+    "request": {
+      "type": "object",
+      "required": ["at", "peer", "method", "scheme", "host", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "at": {"type": "integer", "minimum": 0},
+        "peer": {"$ref": "#/$defs/peername"},
+        "method": {"enum": ["GET", "HEAD", "POST", "PUT", "DELETE"]},
+        "scheme": {"const": "HTTP"},
+        "host": {"type": "string", "pattern": "^[A-Za-z0-9.-]{1,116}$"},
+        "path": {"type": "string", "pattern": "^/[^\\s?*]{0,254}$"},
+        "mediatype": {"type": "string", "minLength": 1},
+        "body": {"type": "string"},
+        "note": {"type": "string"}
+      }
+    },
     "aid": {"enum": ["ENTER", "CLEAR", "PA1", "PA2", "PA3",
                      "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12",
                      "PF13", "PF14", "PF15", "PF16", "PF17", "PF18", "PF19", "PF20", "PF21", "PF22", "PF23", "PF24"]},
@@ -88,7 +129,8 @@
             "td_queues": {"type": "object", "propertyNames": {"$ref": "#/$defs/name4"}, "additionalProperties": {"type": "array", "items": {"$ref": "#/$defs/tsitem"}}}
           }
         },
-        "steps": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/step"}},
+        "requests": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/request"}},
+        "steps": {"type": "array", "items": {"$ref": "#/$defs/step"}},
         "until": {"type": "integer", "minimum": 0}
       }
     },

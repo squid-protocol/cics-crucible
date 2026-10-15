@@ -38,6 +38,7 @@ part of the format:
 | Temporary storage | every queue named in a case is main or auxiliary TS, local, non-recoverable. |
 | Transient data | a TD queue a case uses is an intrapartition queue the case CSD defines, `DEFINE TDQUEUE(name) TYPE(INTRA)` (IBM, TDQUEUE resources), with a destination id of 1-4 characters; it is non-recoverable and has no trigger level (`RECOVSTATUS(NO)`, no `TRIGGERLEVEL`). Extrapartition, indirect and remote queues are not modelled. A TD queue is read destructively and in order: `READQ TD` removes the item it returns, and there is no item number. Additive (SPEC rule 5). |
 | Files | a CSD `DEFINE FILE` plus the case's `data/` records; a file is opened on first use. A file is a local VSAM KSDS with a fixed record length, not recoverable (no `RECOVERY`, so no syncpoint locks), enabled and read/update-able; a seed is `data/<FILE>.dat`, one record per line (printable ASCII, read as EBCDIC 037), every line the same length, in ascending key order, the key being the leading bytes the case's `RIDFLD` names; a case's programs pass `LENGTH` equal to that record length so no scenario depends on how a fixed or variable length file reads `LENGTH`. No task other than the case's own touches the file. Additive (SPEC rule 5). |
+| HTTP peer | an inbound HTTP request is a fact of the scenario, like an operator step: the scenario's optional `requests` (section 5), each sent by a named **client peer** the case states in `case.json` `peers` (section 5) with the one response it expects to each of its requests. The request starts a task if exactly one installed `DEFINE URIMAP(...) USAGE(SERVER)` matches it (IBM, URIMAP resource definitions: SCHEME(HTTP); HOST equal or the single `*`; PATH equal or ending in `*` as a prefix; STATUS enabled; "if an HTTP request is matched by more than one URIMAP definition, the most specific match is taken": a case never relies on that, so no request matches two). The task runs the URIMAP's alias `TRANSACTION` (a CSD transaction naming the URIMAP's `PROGRAM`) with no terminal (`termid` and `eibaid` null) and no COMMAREA; its `trigger` is `{"kind": "http", "request": i}` (section 6). The program answers with exactly one `WEB SEND` (server): the `WEB-SEND` event is delivered to the request's peer, and the peer's stated response must equal it. Talking to a peer the script does not state (a request naming no stated peer, a response with no stated counterpart, a second response) is a **defined failure**: the case is invalid, and a runner that reaches it reports an `http-peer` failure, not a response. HTTPS, chunking, headers, HTTP methods' effects and the client role (`WEB OPEN` / `CONVERSE`) are not modelled. Additive (SPEC rule 5). |
 | Language | Enterprise COBOL, translated by the CICS translator; `HANDLE CONDITION`/`HANDLE AID`/`HANDLE ABEND LABEL` transfers are `GO TO`s (the translator's `GO TO ... DEPENDING ON` after the command). |
 
 A case may narrow these (e.g. a CSD `TYPETERM` with `EXTENDEDDS(YES)`) but never contradict
@@ -122,7 +123,7 @@ tasks it starts.
   parent observable (no FETCH; no shared resource).
 * **Dispatch order.** The scheduler never pre-empts a task. When a task ends, it dispatches,
   in order: expired START requests (earliest expiry first, ties by issue order), then the
-  next operator step once its time has come. Virtual time jumps to the next expiry or step.
+  next operator step or inbound HTTP request (section 5, `requests`) once its time has come. Virtual time jumps to the next expiry or step.
   After the last step it keeps dispatching until no request expires before `until`.
 * **No ties by design.** Real CICS is multi-tasking; the order above is only the observable
   order because cases are written so that it cannot matter: no operator step and START
@@ -163,10 +164,15 @@ tasks it starts.
 * `unheld_maps` (optional, additive) lists map names that a program deliberately names in SEND MAP /
   RECEIVE MAP although no BMS source holds a map of that name (the ABM0 trap: the map is not in
   its mapset); the mapset named (or, with MAPSET omitted, the map name) must still be a mapset.
+* `peers` (optional, additive) states the client peers of a case's HTTP scenarios (section 2, HTTP peer):
+  `{"<peer id>": {"responses": [{"status", "mediatype"?, "body"?}, ...]}}`. A peer's script is replayed in every scenario: the
+  nth request that peer sends in a scenario (in order of `at`) is answered by `responses[n]`, and the script is as long as the
+  most requests the peer sends in one scenario. `body` is text (the characters, after any code-page conversion; trailing
+  blanks are not compared); a response with no `body` has none, and a `WEB SEND` that sends one fails the case.
 * A scenario's `path` is `happy` or `trap` (which side of the trap it drives), `initial` seeds
   temporary storage queues (`ts_queues`: queue → list of items) and, optionally and additively, intrapartition
   transient data queues (`td_queues`: queue → items, oldest first; each queue must be a CSD `TDQUEUE`), and `steps` are the operator
-  actions:
+  actions (with `requests`, below, `steps` may be empty; a scenario has at least one of them):
 
 | Step key | Meaning |
 |---|---|
@@ -176,6 +182,11 @@ tasks it starts.
 | `map` + `fields` | formatted input: the fields of the map on the screen that the terminal transmits (every field whose MDT is on — typed into, or sent with FSET/MDT and left alone). Value: the transmitted characters (the 3270 sends no nulls; trailing blanks are data). `""` is a field transmitted with no data — cleared with ERASE EOF, or an MDT-on field left empty — which BMS reports as length 0 with the flag byte X'80' |
 | `cursor` | optional: field name where the cursor was left (EIBCPOSN) |
 | `note` | optional commentary, never compared |
+
+A scenario's optional `requests` (additive) are the inbound HTTP requests, each
+`{"at", "peer", "method", "scheme": "HTTP", "host", "path", "mediatype"?, "body"?}`: `at` is whole seconds after `clock`, in order,
+and never equal to a step's `at` or another request's (section 4: no ties); `peer` names an entry of `peers`; `body` and
+`mediatype` go together and only a `POST` or `PUT` has a body. A request is not an event: the task it starts is.
 
 A step with neither `text` nor `map` (e.g. ENTER on a screen written by SEND TEXT) transmits
 nothing the program reads; only its AID matters.
@@ -260,6 +271,8 @@ asked for RESP; `resp2` is given only where IBM documents the value.
 | `RUN` | `transid`, `resp`, `resp2` (not NORMAL) | RUN TRANSID; its CHILD token is not observable. The child task's `trigger` is `{"kind": "run", "task", "event"}` |
 | `READQ-TS` | `queue`, `item` (number, or `"NEXT"`), `resp`, `length` (after; only on NORMAL / LENGERR), `data` (the bytes written into INTO, or null) | |
 | `WRITEQ-TS` | `queue`, `data`, `resp`, `item` (number assigned) | |
+| `WEB-RECEIVE` | `resp`, `resp2` (only where IBM documents it), `length` (the LENGTH value after the command), `data` (the bytes written into INTO, or null) | `EXEC CICS WEB RECEIVE` (server, buffer form) in an `http` task: the request body (IBM, WEB RECEIVE (server)). LENGERR RESP2 36 / 57 when the body exceeds MAXLENGTH. Additive: new event type, only in an `http` task |
+| `WEB-SEND` | `status` (STATUSCODE), `statustext` (optional), `mediatype` (optional), `from` (the bytes of FROM, FROMLENGTH of them, or null), `resp`, `resp2` (only where IBM documents it) | `EXEC CICS WEB SEND` (server) in an `http` task: the response, delivered to the request's client peer and compared with its stated response (section 2, HTTP peer; IBM, WEB SEND (server)). An `http` task has exactly one. Additive: new event type, only in an `http` task |
 | `WRITE-OPERATOR` | `data` (the TEXT area sent to the console), `resp` | `EXEC CICS WRITE OPERATOR TEXT(area)`; a plain message only (a text that starts `DFHnnnn` / `DFHaannnn`, which IBM reformats, or is over 113 characters, which it splits into lines, is not used). Additive (SPEC rule 5): a new event type |
 | `READQ-TD` | `queue`, `resp`, `resp2` (only where IBM documents it), `length` (after; only on NORMAL / LENGERR), `data` (the bytes written into INTO, or null) | `EXEC CICS READQ TD`: destructive, oldest item first, no item number (IBM, READQ TD). An empty queue is QZERO. Additive (SPEC rule 5): new event type |
 | `WRITEQ-TD` | `queue`, `data`, `resp`, `resp2` (only where IBM documents it) | `EXEC CICS WRITEQ TD`: appends one item (IBM, WRITEQ TD). Additive: new event type |
@@ -331,6 +344,12 @@ wrong.
 8. The reference region (section 2): every CSD `TYPETERM` has `ATI(YES) TTI(YES)`, every
    `TERMINAL` names a defined TYPETERM, and a case whose programs `START ... TERMID` defines
    `TERMINAL(<case terminal>)`.
+9. HTTP peer (sections 2, 5, 6): every request names a stated peer, matches exactly one `USAGE(SERVER)` URIMAP and shares no
+   second with a step or another request; each peer's script is as long as its most requests in a scenario; every SERVER URIMAP
+   states `TRANSACTION`, `PROGRAM`, `HOST`, `PATH`, `SCHEME(HTTP)`, with an alias CSD transaction that runs `PROGRAM`; a program
+   issuing a server `WEB RECEIVE` / `WEB SEND` needs a scenario with requests; every request starts exactly one task, whose
+   `at`, transid and program are the request's and the URIMAP's, with null `termid` / `eibaid`, and which sends one `WEB-SEND`
+   equal to its peer's response (`WEB-RECEIVE` / `WEB-SEND` appear in no other task).
 
 `python3 tools/validate.py --self-test` checks the validator's own ATTRB → attribute-byte and
 bit-decoding tables against SPEC 6.3.
