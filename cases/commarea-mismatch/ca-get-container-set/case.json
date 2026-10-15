@@ -1,0 +1,50 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "ca-get-container-set",
+  "trap": "commarea-mismatch",
+  "title": "GET CONTAINER SET(ptr) FLENGTH(len): FLENGTH is output only, the SET ADDRESS OF view covers the container's data, a repeated GET SET and a GET SET after a replacing PUT; CONTAINERERR RESP2 10 and CHANNELERR RESP2 2",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/CAGCST.cbl",
+      "src/CAGCSX.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/ca-get-container-set.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "set",
+      "path": "happy",
+      "summary": "CAGCST PUTs a 20-byte BIT container, GETs it with SET and FLENGTH (preset 99, comes back 20), views it, GETs SET again, PUTs 8 bytes over it and GETs SET once more (FLENGTH 8); no pointer from before the PUT is read",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA0F"
+        }
+      ]
+    },
+    {
+      "id": "errors",
+      "path": "trap",
+      "summary": "CAGCSX GETs SET a container that does not exist (CONTAINERERR RESP2 10) and from a channel that does not exist (CHANNELERR RESP2 2), then the real container (FLENGTH 20)",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA0G"
+        }
+      ]
+    }
+  ]
+}

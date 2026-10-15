@@ -1,0 +1,115 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-get-container-set",
+ "scenario": "set",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA0F",
+   "program": "CAGCST",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGCST",
+     "queue": "GCLOG",
+     "data": {
+      "length": 31,
+      "text": "PUT100000000000                "
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "GCCHAN does not exist: created; 20-byte BIT container DATA [PUT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGCST",
+     "queue": "GCLOG",
+     "data": {
+      "length": 31,
+      "text": "GET100000000020ABCDEFGHIJKLMNOP"
+     },
+     "resp": "NORMAL",
+     "item": 2,
+     "note": "GET CONTAINER SET FLENGTH: FLENGTH is output only, so the preset 99 is replaced by the data length 20; the view reads the container's first 16 bytes [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGCST",
+     "queue": "GCLOG",
+     "data": {
+      "length": 31,
+      "text": "GET200000000020EFGHIJKLMNOPQRST"
+     },
+     "resp": "NORMAL",
+     "item": 3,
+     "note": "the view covers all 20 bytes: bytes 5 to 20 [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGCST",
+     "queue": "GCLOG",
+     "data": {
+      "length": 31,
+      "text": "GET300000000020ABCDEFGHIJKLMNOP"
+     },
+     "resp": "NORMAL",
+     "item": 4,
+     "note": "a second GET SET of the same container: NORMAL, FLENGTH 20, same data; only the new pointer is used [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGCST",
+     "queue": "GCLOG",
+     "data": {
+      "length": 31,
+      "text": "PUT200000000000                "
+     },
+     "resp": "NORMAL",
+     "item": 5,
+     "note": "PUT replaces DATA with 8 bytes; no pointer from before the PUT is read again [PUT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGCST",
+     "queue": "GCLOG",
+     "data": {
+      "length": 31,
+      "text": "GET400000000008uvwxyz12        "
+     },
+     "resp": "NORMAL",
+     "item": 6,
+     "note": "GET SET after the PUT: FLENGTH is the new length 8 (preset 77 replaced) and the view reads the new data [GET]"
+    },
+    {
+     "event": "RETURN",
+     "program": "CAGCST",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "GCLOG": [
+    "PUT100000000000                ",
+    "GET100000000020ABCDEFGHIJKLMNOP",
+    "GET200000000020EFGHIJKLMNOPQRST",
+    "GET300000000020ABCDEFGHIJKLMNOP",
+    "PUT200000000000                ",
+    "GET400000000008uvwxyz12        "
+   ]
+  }
+ }
+}
