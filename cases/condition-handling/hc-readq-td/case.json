@@ -1,0 +1,110 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-readq-td",
+  "trap": "condition-handling",
+  "title": "READQ TD: destructive FIFO read of an intrapartition queue (oldest first, the read destroys the record), QZERO on an empty or drained queue, QIDERR on an undefined queue (READQ / WRITEQ / DELETEQ), DELETEQ TD then READQ, LENGERR on a short INTO area",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCRQTD.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-readq-td.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "fifo",
+      "path": "happy",
+      "summary": "WRITEQ TD of items of 5, 7 and 8 bytes, then READQ TD x4 into an 8-byte area: oldest first, each read destroys its record (5, 7, 8 bytes), the fourth is QZERO; the queue ends empty",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC82 F"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "seeded",
+      "path": "happy",
+      "summary": "HCQ1 starts with one item; WRITEQ TD appends a second; READQ TD returns the seeded item first, then the written one, then QZERO",
+      "initial": {
+        "td_queues": {
+          "HCQ1": [
+            "SEEDED1"
+          ]
+        }
+      },
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC82 S"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "empty",
+      "path": "trap",
+      "summary": "READQ TD of an empty queue: QZERO, the INTO area is not written",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC82 E"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "undefined",
+      "path": "trap",
+      "summary": "READQ TD, WRITEQ TD and DELETEQ TD of HCNQ, a queue the CSD does not define: QIDERR each",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC82 U"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "deleteq",
+      "path": "trap",
+      "summary": "WRITEQ TD of three items, DELETEQ TD of the queue, then READQ TD: the data is gone, QZERO",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC82 D"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "lengerr",
+      "path": "trap",
+      "summary": "an 8-byte item read into a 4-byte area with LENGTH(4): LENGERR, the first 4 bytes are moved and LENGTH comes back 8",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC82 L"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}

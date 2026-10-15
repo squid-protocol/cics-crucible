@@ -37,7 +37,7 @@ only with a documented reason recorded in the case's `NOTES.md` (see
 
 ## Status
 
-Format `cics-crucible/1` ([SPEC.md](SPEC.md)). 38 cases and 139 scenarios. No release tag
+Format `cics-crucible/1` ([SPEC.md](SPEC.md)). 39 cases and 145 scenarios. No release tag
 yet (see [RELEASING.md](RELEASING.md)).
 
 | Trap | Case | Scenarios | What it pins down |
@@ -52,6 +52,7 @@ yet (see [RELEASING.md](RELEASING.md)).
 | condition-handling | [`hc-inquire-deleteq`](cases/condition-handling/hc-inquire-deleteq) | 3 | `INQUIRE ASSOCIATION(EIBTASKN)` origin data (`ODAPPLID`, `ODUSERID`, `ODFACILNAME`, `ODNETWORKID`, `ODFACILTYPE` as the CVDA 213); `DELETEQ TS` (the queue and its `NEXT` position gone, QIDERR for a missing queue, INVREQ for a name of binary zeros, a queue written anew starts at item 1); `RECEIVE MAP ... TERMINAL ASIS` |
 | condition-handling | [`hc-named-counters`](cases/condition-handling/hc-named-counters) | 2 | named counters: `GET` / `DELETE` / `QUERY COUNTER` of a counter that is not there is INVREQ RESP2 201 (IBM lists no NOTFND), `DEFINE COUNTER` with and without `VALUE` (initial zero), a duplicate DEFINE (INVREQ 202), the same name in another pool, `QUERY` leaves the value, names outside IBM's character rules (INVREQ 404 counter, 403 pool) |
 | condition-handling | [`hc-dcounters`](cases/condition-handling/hc-dcounters) | 2 | doubleword named counters: `DEFINE` / `GET` / `QUERY` / `DELETE DCOUNTER` with an 8-byte unsigned `VALUE` logged as hex, GET returns the value before the increment, `QUERY` does not advance, values past 2**31 and 2**32 kept exactly (incl. a doubleword `INCREMENT`), a deleted counter is INVREQ RESP2 201 |
+| condition-handling | [`hc-readq-td`](cases/condition-handling/hc-readq-td) | 6 | intrapartition TD queues: `WRITEQ TD` then `READQ TD` in FIFO order with the read destroying the record, QZERO on an empty or drained queue, QIDERR on an undefined queue (READQ / WRITEQ / DELETEQ), `DELETEQ TD` then `READQ TD`, LENGERR on a short INTO area; no trigger levels or ATI |
 | condition-handling | [`hc-file-unlock`](cases/condition-handling/hc-file-unlock) | 3 | file control on a KSDS: `READ UPDATE` + `REWRITE`, `UNLOCK` then `REWRITE` is INVREQ RESP2 30 (record unchanged), `UNLOCK` with nothing held is NORMAL, `REWRITE` with no READ UPDATE is INVREQ RESP2 30 |
 | condition-handling | [`hc-eoc-error`](cases/condition-handling/hc-eoc-error) | 2 | HANDLE CONDITION ERROR does not take EOC, whose default action is to ignore it; EOC's own label does |
 | condition-handling | [`hc-abend-link`](cases/condition-handling/hc-abend-link) | 5 | handlers not inherited by a LINKed program and restored on return; the caller's abend exit catches the callee's AEYH; a callee's own exit recovering; PUSH/POP HANDLE suspends HANDLE ABEND too |
@@ -119,7 +120,10 @@ sentence states outright. They are the first places to look if a real CICS regio
 | gt-urimap-browse (all) | The URIMAP definitions the CSD defines are the ones installed in the region, and a browse returns each of them once; the case uses no order. | "You can also browse through all the URIMAP definitions installed in the region, using the browse options (START, NEXT, and END)"; IBM states no browse order |
 | gt-web-parse-url / errors | A URL with no scheme and no `://` (`example.com/a?x=1`) is INVREQ RESP2 28. | WEB PARSE URL: INVREQ RESP2 28 "Incorrect URL"; the page does not say which strings are incorrect |
 | gt-web-parse-url / parse | A scheme typed in mixed case (`HtTp`, `hTTps`) is accepted and returned upper case. | "returned in upper case"; the page does not say the input is case-insensitive |
-| (no case yet) TD queues | SPEC: `READQ TD` of an empty intrapartition queue is QZERO; `DELETEQ TD` leaves the queue's later existence unstated, so no case may rely on it. | READQ TD / WRITEQ TD / DELETEQ TD and TDQUEUE resources pages (CICS TS 6.x names read from memory of the page set, not re-fetched this session: re-verify wording and the QZERO / QBUSY conditions before the first case, C4 `hc-readq-td`, relies on them) |
+| hc-readq-td (fifo, seeded) | Records come back oldest first (write order; a seeded item before a written one). | "All access is sequential, governed by read and write pointers" and "Once a record has been read, it cannot be read subsequently by another task" (Intrapartition transient data queues); no page found says "first in, first out" |
+| hc-readq-td / deleteq | After `DELETEQ TD` the queue is still defined and empty, so `READQ TD` is QZERO, not QIDERR. | DELETEQ TD "deletes all the transient data associated with a particular intrapartition destination (queue)" and releases its storage; the page does not say whether the queue (the TDQUEUE definition) remains; QIDERR is for a destination that "cannot be found". A write after DELETEQ TD is not relied on |
+| hc-readq-td / lengerr | A READQ TD whose INTO area is too short is LENGERR with the leading bytes moved and LENGTH the record's full length. Whether the record is also consumed is not relied on. | READQ TD: "the data is truncated to that value and the LENGERR condition occurs", "the data area is set to the original length of the data record"; the page does not say if the record stays |
+| hc-readq-td / empty | READQ TD of an empty queue leaves INTO unwritten (the log has `data` null; the case never reads INTO). | QZERO page text only; whether INTO is touched is not stated |
 
 ## Known gaps (future work)
 

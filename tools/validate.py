@@ -1025,8 +1025,13 @@ class Case:
             self._area(f"{w} data", ev["data"])
         if k == "WEB-SEND":
             self._area(f"{w} from", ev["from"])
-        if k in ("READQ-TD", "WRITEQ-TD", "DELETEQ-TD") and ev["queue"] not in self.tdq_csd:
-            self.err(f"{w}: queue {ev['queue']} has no CSD DEFINE TDQUEUE")
+        if k in ("READQ-TD", "WRITEQ-TD", "DELETEQ-TD"):
+            # QIDERR: "the symbolic destination ... cannot be found" (IBM), so that event names a queue the CSD does not define
+            if ev["resp"] == "QIDERR":
+                if ev["queue"] in self.tdq_csd:
+                    self.err(f"{w}: QIDERR names queue {ev['queue']}, which the CSD defines")
+            elif ev["queue"] not in self.tdq_csd:
+                self.err(f"{w}: queue {ev['queue']} has no CSD DEFINE TDQUEUE")
         if k in ("READ", "REWRITE", "UNLOCK") and ev["file"] not in self.files_csd:
             self.err(f"{w}: file {ev['file']} not in the CSD")
         if k == "READ" and ev.get("data") is not None:
