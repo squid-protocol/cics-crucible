@@ -37,7 +37,7 @@ only with a documented reason recorded in the case's `NOTES.md` (see
 
 ## Status
 
-Format `cics-crucible/1` ([SPEC.md](SPEC.md)). 39 cases and 145 scenarios. No release tag
+Format `cics-crucible/1` ([SPEC.md](SPEC.md)). 40 cases and 149 scenarios. No release tag
 yet (see [RELEASING.md](RELEASING.md)).
 
 | Trap | Case | Scenarios | What it pins down |
@@ -54,6 +54,7 @@ yet (see [RELEASING.md](RELEASING.md)).
 | condition-handling | [`hc-dcounters`](cases/condition-handling/hc-dcounters) | 2 | doubleword named counters: `DEFINE` / `GET` / `QUERY` / `DELETE DCOUNTER` with an 8-byte unsigned `VALUE` logged as hex, GET returns the value before the increment, `QUERY` does not advance, values past 2**31 and 2**32 kept exactly (incl. a doubleword `INCREMENT`), a deleted counter is INVREQ RESP2 201 |
 | condition-handling | [`hc-readq-td`](cases/condition-handling/hc-readq-td) | 6 | intrapartition TD queues: `WRITEQ TD` then `READQ TD` in FIFO order with the read destroying the record, QZERO on an empty or drained queue, QIDERR on an undefined queue (READQ / WRITEQ / DELETEQ), `DELETEQ TD` then `READQ TD`, LENGERR on a short INTO area; no trigger levels or ATI |
 | condition-handling | [`hc-file-unlock`](cases/condition-handling/hc-file-unlock) | 3 | file control on a KSDS: `READ UPDATE` + `REWRITE`, `UNLOCK` then `REWRITE` is INVREQ RESP2 30 (record unchanged), `UNLOCK` with nothing held is NORMAL, `REWRITE` with no READ UPDATE is INVREQ RESP2 30 |
+| condition-handling | [`hc-file-read-set`](cases/condition-handling/hc-file-read-set) | 4 | file control `SET` reads on a KSDS: `READ SET` (NOTFND RESP2 80 for an absent key), `STARTBR GTEQ` / `EQUAL`, `READNEXT SET` and `READPREV SET` in key order with `RIDFLD` updated, ENDFILE RESP2 90 at either end, `STARTBR` NOTFND past the last key, `ENDBR` |
 | condition-handling | [`hc-eoc-error`](cases/condition-handling/hc-eoc-error) | 2 | HANDLE CONDITION ERROR does not take EOC, whose default action is to ignore it; EOC's own label does |
 | condition-handling | [`hc-abend-link`](cases/condition-handling/hc-abend-link) | 5 | handlers not inherited by a LINKed program and restored on return; the caller's abend exit catches the callee's AEYH; a callee's own exit recovering; PUSH/POP HANDLE suspends HANDLE ABEND too |
 | hex-attributes | [`hx-attr-bytes`](cases/hex-attributes/hx-attr-bytes) | 4 | 3270 attribute bytes by name, literal, non-graphic X'3C', X'40'+1, X'80' input flag; null-first-byte data; MDT set by the program changes the next input; DATAONLY omissions; MAPONLY; a PA key sends no MDT fields (MAPFAIL) |
@@ -124,6 +125,9 @@ sentence states outright. They are the first places to look if a real CICS regio
 | hc-readq-td / deleteq | After `DELETEQ TD` the queue is still defined and empty, so `READQ TD` is QZERO, not QIDERR. | DELETEQ TD "deletes all the transient data associated with a particular intrapartition destination (queue)" and releases its storage; the page does not say whether the queue (the TDQUEUE definition) remains; QIDERR is for a destination that "cannot be found". A write after DELETEQ TD is not relied on |
 | hc-readq-td / lengerr | A READQ TD whose INTO area is too short is LENGERR with the leading bytes moved and LENGTH the record's full length. Whether the record is also consumed is not relied on. | READQ TD: "the data is truncated to that value and the LENGERR condition occurs", "the data area is set to the original length of the data record"; the page does not say if the record stays |
 | hc-readq-td / empty | READQ TD of an empty queue leaves INTO unwritten (the log has `data` null; the case never reads INTO). | QZERO page text only; whether INTO is touched is not stated |
+| hc-file-read-set / browse-back | The first `READPREV` after a `STARTBR` returns the record the `STARTBR` named (`K040`), then the browse goes down, and ENDFILE follows the first record. | READPREV: "your STARTBR command RIDFLD must specify the key of a record that exists on the data set"; "READPREV can be used repeatedly to read records in reverse sequential order"; no sentence says the first READPREV returns the STARTBR key's record |
+| hc-file-read-set / browse-fwd, browse-notfnd | The first `READNEXT` after a `STARTBR` returns the record the browse is positioned on (`K020` after `GTEQ` of `K015`; `K030` after `EQUAL`). | STARTBR: GTEQ "the first record that has a greater key satisfies the search"; "No records are read until a READNEXT command ... is executed"; the page does not say that READNEXT returns that record itself |
+| hc-file-read-set / browse-notfnd | `STARTBR GTEQ` of a key above the last record is NOTFND RESP2 80, and `ENDBR` after an ENDFILE (browse-fwd, browse-back) is NORMAL. | STARTBR NOTFND: "An attempt to position on a record based on the search argument provided is unsuccessful"; ENDBR: INVREQ RESP2 35 only when no successful STARTBR matches; neither page ties these two cases to its sentence |
 
 ## Known gaps (future work)
 

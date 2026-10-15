@@ -23,7 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 STUBS = ROOT / "tools" / "stubs"
-RESP = {"NORMAL": 0, "ERROR": 1, "NOTFND": 13, "INVREQ": 16, "LENGERR": 22, "ITEMERR": 26, "PGMIDERR": 27,
+RESP = {"NORMAL": 0, "ERROR": 1, "NOTFND": 13, "INVREQ": 16, "ENDFILE": 20, "LENGERR": 22, "ITEMERR": 26, "PGMIDERR": 27,
         "TRANSIDERR": 28, "ENDDATA": 29, "MAPFAIL": 36, "QIDERR": 44, "ENVDEFERR": 56}
 
 
