@@ -1,0 +1,64 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-counter-increment-wrap",
+  "trap": "condition-handling",
+  "title": "GET DCOUNTER with INCREMENT, GET with WRAP at the counter's default maximum (rewinds to the minimum), and a GET without WRAP at the limit (SUPPRESSED RESP2 101, counter unchanged)",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCCWRP.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-counter-increment-wrap.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "incr",
+      "path": "happy",
+      "summary": "DEFINE VALUE(10), GET INCREMENT(5) twice, QUERY, a GET with the default increment, QUERY",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC73 I"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "wrap",
+      "path": "happy",
+      "summary": "DEFINE at max-2, GETs up to the default maximum, GET WRAP rewinds to the minimum, QUERY, GET",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC73 W"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "limit",
+      "path": "happy",
+      "summary": "DEFINE at max-1, GETs up to the maximum, then GET (with and without INCREMENT) without WRAP at the limit: SUPPRESSED RESP2 101, then GET WRAP and GET",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC73 L"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
