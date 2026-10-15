@@ -1,0 +1,89 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-get-container-set",
+ "scenario": "errors",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA0G",
+   "program": "CAGCSX",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGCSX",
+     "queue": "GCLOG",
+     "data": {
+      "length": 31,
+      "text": "PUT100000000000                "
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "GCCHAN does not exist: created; 20-byte BIT container DATA [PUT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGCSX",
+     "queue": "GCLOG",
+     "data": {
+      "length": 31,
+      "text": "CE0111001000000                "
+     },
+     "resp": "NORMAL",
+     "item": 2,
+     "note": "GET CONTAINER('NOSUCH') SET: CONTAINERERR RESP2 10; pointer and FLENGTH not read [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGCSX",
+     "queue": "GCLOG",
+     "data": {
+      "length": 31,
+      "text": "CE0212200200000                "
+     },
+     "resp": "NORMAL",
+     "item": 3,
+     "note": "GET ... CHANNEL('GCNONE') SET: CHANNELERR RESP2 2; pointer and FLENGTH not read [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAGCSX",
+     "queue": "GCLOG",
+     "data": {
+      "length": 31,
+      "text": "OK0100000000020ZYXWVUTSRQPONMLK"
+     },
+     "resp": "NORMAL",
+     "item": 4,
+     "note": "DATA is unchanged and readable by GET SET: FLENGTH 20 (preset 55 replaced) [GET]"
+    },
+    {
+     "event": "RETURN",
+     "program": "CAGCSX",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "GCLOG": [
+    "PUT100000000000                ",
+    "CE0111001000000                ",
+    "CE0212200200000                ",
+    "OK0100000000020ZYXWVUTSRQPONMLK"
+   ]
+  }
+ }
+}
