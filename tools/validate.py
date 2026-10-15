@@ -554,6 +554,19 @@ class Case:
         if starts_terminal and self.case["terminal"] not in terms:
             self.err(f"a program STARTs a terminal task but the CSD does not define TERMINAL({self.case['terminal']}) "
                      "with ATI(YES) (SPEC section 2)")
+        # SPEC section 2 (TWA, TCTUA): the sizes are facts the CSD states; ADDRESS TWA / TCTUA needs one
+        for name, a in self.csd.get("TRANSACTION", {}).items():
+            if "TWASIZE" in a and not (a["TWASIZE"].isdigit() and 0 <= int(a["TWASIZE"]) <= 32767):
+                self.err(f"CSD TRANSACTION {name}: TWASIZE({a['TWASIZE']}) is not 0-32767 (SPEC section 2)")
+        for name, a in types.items():
+            if "USERAREALEN" in a and not (a["USERAREALEN"].isdigit() and 0 <= int(a["USERAREALEN"]) <= 255):
+                self.err(f"CSD TYPETERM {name}: USERAREALEN({a['USERAREALEN']}) is not 0-255 (SPEC section 2)")
+        addressed = {o for code in self._all_code() for opts in exec_cics(code)
+                     if opts[0][0] == "ADDRESS" for o, _ in opts[1:]}
+        if "TWA" in addressed and not any("TWASIZE" in a for a in self.csd.get("TRANSACTION", {}).values()):
+            self.err("a program issues ADDRESS TWA but no CSD TRANSACTION states TWASIZE (SPEC section 2)")
+        if "TCTUA" in addressed and not any("USERAREALEN" in a for a in types.values()):
+            self.err("a program issues ADDRESS TCTUA but no CSD TYPETERM states USERAREALEN (SPEC section 2)")
 
         # SPEC section 2 (UCTRAN): the terminal's UCTRANST comes from its TYPETERM, so a case that asks for or sets it states
         # UCTRAN there; and with UCTRAN(YES) or TRANID the typed input is upper case (no input translation is modelled)

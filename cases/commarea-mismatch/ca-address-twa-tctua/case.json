@@ -1,0 +1,67 @@
+{
+ "format": "cics-crucible/case/1",
+ "id": "ca-address-twa-tctua",
+ "trap": "commarea-mismatch",
+ "title": "ADDRESS TWA and ADDRESS TCTUA: a TWA sized by TWASIZE is shared by the programs of one task, TWASIZE(0) gives X'FF000000', a TCTUA (TYPETERM USERAREALEN) outlives the task",
+ "clock": "2026-03-02T10:00:00",
+ "terminal": "T001",
+ "sources": {
+  "cobol": [
+   "src/CATWAD.cbl",
+   "src/CATWSB.cbl"
+  ],
+  "bms": [],
+  "csd": [
+   "csd/ca-address-twa-tctua.csd"
+  ],
+  "copy": [
+   "copy"
+  ],
+  "data": []
+ },
+ "layouts": {},
+ "maps": {},
+ "scenarios": [
+  {
+   "id": "twa-sized",
+   "path": "happy",
+   "summary": "TRANSACTION TWASIZE(32): the caller stamps the TWA through ADDRESS TWA, the LINKed callee (no COMMAREA) reads the stamp and writes a reply through its own ADDRESS TWA",
+   "steps": [
+    {
+     "at": 0,
+     "aid": "ENTER",
+     "text": "CA0H W"
+    }
+   ]
+  },
+  {
+   "id": "twasize-zero",
+   "path": "trap",
+   "summary": "TRANSACTION TWASIZE(0): ADDRESS TWA gives the null value X'FF000000'",
+   "steps": [
+    {
+     "at": 0,
+     "aid": "ENTER",
+     "text": "CA0I Z"
+    }
+   ]
+  },
+  {
+   "id": "tctua-two-tasks",
+   "path": "trap",
+   "summary": "TYPETERM USERAREALEN(16): a stamp written through ADDRESS TCTUA in one task is read by the next task on the terminal",
+   "steps": [
+    {
+     "at": 0,
+     "aid": "ENTER",
+     "text": "CA0J S"
+    },
+    {
+     "at": 1,
+     "aid": "ENTER",
+     "text": "CA0J R"
+    }
+   ]
+  }
+ ]
+}
