@@ -1,0 +1,99 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "gt-http-inbound",
+  "scenario": "echo",
+  "tasks": [
+    {
+      "seq": 1,
+      "transid": "GT81",
+      "program": "GTHECHO",
+      "termid": null,
+      "at": "2026-03-02T10:00:00",
+      "trigger": {
+        "kind": "http",
+        "request": 0
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-RECEIVE",
+          "program": "GTHECHO",
+          "resp": "NORMAL",
+          "length": 5,
+          "data": {
+            "length": 5,
+            "text": "HELLO"
+          }
+        },
+        {
+          "event": "WEB-SEND",
+          "program": "GTHECHO",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 10,
+            "text": "ECHO:HELLO"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTHECHO",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    },
+    {
+      "seq": 2,
+      "transid": "GT81",
+      "program": "GTHECHO",
+      "termid": null,
+      "at": "2026-03-02T10:00:05",
+      "trigger": {
+        "kind": "http",
+        "request": 1
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-RECEIVE",
+          "program": "GTHECHO",
+          "resp": "NORMAL",
+          "length": 2,
+          "data": {
+            "length": 2,
+            "text": "AB"
+          }
+        },
+        {
+          "event": "WEB-SEND",
+          "program": "GTHECHO",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 7,
+            "text": "ECHO:AB"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTHECHO",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    }
+  ]
+}
