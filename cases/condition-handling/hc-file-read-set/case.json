@@ -1,0 +1,79 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-file-read-set",
+  "trap": "condition-handling",
+  "title": "File control: READ SET and STARTBR / READNEXT / READPREV SET over a seeded KSDS; NOTFND (RESP2 80) and ENDFILE (RESP2 90)",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCRDST.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-file-read-set.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": [
+      "data/HCRS.dat"
+    ]
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "read-set",
+      "path": "happy",
+      "summary": "READ SET of K030 (NORMAL), of the absent K035 (NOTFND RESP2 80) and of the last record K050",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC83 R"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "browse-fwd",
+      "path": "happy",
+      "summary": "STARTBR GTEQ of the absent K015 positions on K020; READNEXT SET returns K020..K050 (RIDFLD updated each time), then ENDFILE RESP2 90; ENDBR",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC83 F"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "browse-back",
+      "path": "happy",
+      "summary": "STARTBR GTEQ of K040; READPREV SET returns K040..K010 (RIDFLD updated each time), then ENDFILE RESP2 90; ENDBR",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC83 B"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "browse-notfnd",
+      "path": "trap",
+      "summary": "STARTBR GTEQ past the last key and STARTBR EQUAL of an absent key are NOTFND RESP2 80; STARTBR EQUAL of K030, READNEXT SET returns it, ENDBR",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC83 N"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}

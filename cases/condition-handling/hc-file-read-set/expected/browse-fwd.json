@@ -1,0 +1,221 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-file-read-set",
+ "scenario": "browse-fwd",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC83",
+   "program": "HCRDST",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCRDST",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC83 F"
+     }
+    },
+    {
+     "event": "STARTBR",
+     "program": "HCRDST",
+     "file": "HCRS",
+     "ridfld": "K015",
+     "mode": "GTEQ",
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRDST",
+     "queue": "HCLOG",
+     "data": {
+      "length": 40,
+      "text": "F0  R=00 S=000 K=     D=                "
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "READNEXT",
+     "program": "HCRDST",
+     "file": "HCRS",
+     "ridfld": "K015",
+     "set": true,
+     "resp": "NORMAL",
+     "data": {
+      "length": 16,
+      "text": "K020BRAVO   0020"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRDST",
+     "queue": "HCLOG",
+     "data": {
+      "length": 40,
+      "text": "F1  R=00 S=000 K=K020 D=K020BRAVO   0020"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "READNEXT",
+     "program": "HCRDST",
+     "file": "HCRS",
+     "ridfld": "K020",
+     "set": true,
+     "resp": "NORMAL",
+     "data": {
+      "length": 16,
+      "text": "K030CHARLIE 0030"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRDST",
+     "queue": "HCLOG",
+     "data": {
+      "length": 40,
+      "text": "F2  R=00 S=000 K=K030 D=K030CHARLIE 0030"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "READNEXT",
+     "program": "HCRDST",
+     "file": "HCRS",
+     "ridfld": "K030",
+     "set": true,
+     "resp": "NORMAL",
+     "data": {
+      "length": 16,
+      "text": "K040DELTA   0040"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRDST",
+     "queue": "HCLOG",
+     "data": {
+      "length": 40,
+      "text": "F3  R=00 S=000 K=K040 D=K040DELTA   0040"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "READNEXT",
+     "program": "HCRDST",
+     "file": "HCRS",
+     "ridfld": "K040",
+     "set": true,
+     "resp": "NORMAL",
+     "data": {
+      "length": 16,
+      "text": "K050ECHO    0050"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRDST",
+     "queue": "HCLOG",
+     "data": {
+      "length": 40,
+      "text": "F4  R=00 S=000 K=K050 D=K050ECHO    0050"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "READNEXT",
+     "program": "HCRDST",
+     "file": "HCRS",
+     "ridfld": "K050",
+     "set": true,
+     "resp": "ENDFILE",
+     "resp2": 90,
+     "data": null
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRDST",
+     "queue": "HCLOG",
+     "data": {
+      "length": 40,
+      "text": "F5  R=20 S=090 K=     D=                "
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "ENDBR",
+     "program": "HCRDST",
+     "file": "HCRS",
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRDST",
+     "queue": "HCLOG",
+     "data": {
+      "length": 40,
+      "text": "F6  R=00 S=000 K=     D=                "
+     },
+     "resp": "NORMAL",
+     "item": 7
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCRDST",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCRDST",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "F0  R=00 S=000 K=     D=                ",
+    "F1  R=00 S=000 K=K020 D=K020BRAVO   0020",
+    "F2  R=00 S=000 K=K030 D=K030CHARLIE 0030",
+    "F3  R=00 S=000 K=K040 D=K040DELTA   0040",
+    "F4  R=00 S=000 K=K050 D=K050ECHO    0050",
+    "F5  R=20 S=090 K=     D=                ",
+    "F6  R=00 S=000 K=     D=                "
+   ]
+  },
+  "files": {
+   "HCRS": [
+    "K010ALPHA   0010",
+    "K020BRAVO   0020",
+    "K030CHARLIE 0030",
+    "K040DELTA   0040",
+    "K050ECHO    0050"
+   ]
+  }
+ }
+}

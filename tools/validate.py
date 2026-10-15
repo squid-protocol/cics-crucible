@@ -702,7 +702,7 @@ class Case:
                     q = literal(o["QUEUE"]).upper()
                     if q not in self.tdq_csd:
                         self.err(f"{rel}: {verb} TD QUEUE('{q}') has no CSD DEFINE TDQUEUE")
-                if verb in ("READ", "WRITE", "REWRITE", "DELETE", "UNLOCK", "STARTBR") and literal(o.get("FILE")):
+                if verb in ("READ", "WRITE", "REWRITE", "DELETE", "UNLOCK", "STARTBR", "READNEXT", "READPREV", "ENDBR", "RESETBR") and literal(o.get("FILE")):
                     f = literal(o["FILE"]).upper()
                     if f not in self.files_csd:
                         self.err(f"{rel}: FILE('{f}') has no CSD DEFINE FILE")
@@ -1032,13 +1032,18 @@ class Case:
                     self.err(f"{w}: QIDERR names queue {ev['queue']}, which the CSD defines")
             elif ev["queue"] not in self.tdq_csd:
                 self.err(f"{w}: queue {ev['queue']} has no CSD DEFINE TDQUEUE")
-        if k in ("READ", "REWRITE", "UNLOCK") and ev["file"] not in self.files_csd:
+        if k in ("READ", "REWRITE", "UNLOCK", "READNEXT", "READPREV", "STARTBR", "ENDBR") and ev["file"] not in self.files_csd:
             self.err(f"{w}: file {ev['file']} not in the CSD")
-        if k == "READ" and ev.get("data") is not None:
+        if k in ("READ", "READNEXT", "READPREV") and ev.get("data") is not None:
             self._area(f"{w} data", ev["data"])
         if k == "REWRITE":
             self._area(f"{w} data", ev["data"])
-        if k in ("READ", "REWRITE") and ev["file"] in self.seed_width:
+        if k in ("STARTBR", "READNEXT", "READPREV", "ENDBR") and ev["file"] in self.files_csd \
+                and self.csd["FILE"][ev["file"]].get("BROWSE", "NO").upper() != "YES":
+            self.err(f"{w}: a browse needs the CSD file {ev['file']} to say BROWSE(YES)")
+        if k in ("READNEXT", "READPREV") and ev["resp"] == "ENDFILE" and ev.get("data") is not None:
+            self.err(f"{w}: ENDFILE returns no record")
+        if k in ("READ", "REWRITE", "READNEXT", "READPREV") and ev["file"] in self.seed_width:
             n = ev["data"]["length"] if ev.get("data") else None
             if ev["resp"] == "NORMAL" and n is not None and n != self.seed_width[ev["file"]]:
                 self.err(f"{w}: record length {n} is not the file's {self.seed_width[ev['file']]}")
