@@ -1,0 +1,88 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-post-wait-event",
+  "trap": "ghost-tasks",
+  "title": "POST and WAIT EVENT: a timer-event control area zero until a WAIT EVENT posts it (X'40' first byte, X'80' third), CANCEL of the expired POST NOTFND, WAIT EVENT on a null pointer INVREQ RESP2 2, POST TIME already past EXPIRED; terminal CONVERSE with a reply that fits and one that is cut (LENGERR)",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/GTPOST.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/gt-post-wait-event.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "post-wait-cancel",
+      "path": "happy",
+      "summary": "POST AFTER SECONDS(5) REQID SET: the area is binary zeros; WAIT EVENT ECADDR returns NORMAL and the area is posted; CANCEL of the POST's REQID is NOTFND (the request expired)",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT61 W"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "wait-null",
+      "path": "trap",
+      "summary": "WAIT EVENT ECADDR on a null pointer: INVREQ, RESP2 2",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT61 N"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "post-expired",
+      "path": "trap",
+      "summary": "POST TIME(090000) at 10:00:00: EXPIRED",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT61 P"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "converse-fits",
+      "path": "happy",
+      "summary": "CONVERSE FROM 8 bytes, TOLENGTH 10, a 5-byte reply: NORMAL, TOLENGTH 5",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT61 FREPLY"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "converse-cut",
+      "path": "trap",
+      "summary": "CONVERSE with TOLENGTH 4 and an 8-byte reply: LENGERR, INTO the first 4 bytes, TOLENGTH the original 8",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT61 CABCDEFGH"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
