@@ -1,0 +1,67 @@
+{
+ "format": "cics-crucible/case/1",
+ "id": "ca-address-eib-commarea",
+ "trap": "commarea-mismatch",
+ "title": "ADDRESS EIB read after a READQ TD QIDERR, ADDRESS COMMAREA written through, and ADDRESS COMMAREA in a task with no COMMAREA (the null value, not an error)",
+ "clock": "2026-03-02T10:00:00",
+ "terminal": "T001",
+ "sources": {
+  "cobol": [
+   "src/CAEBCA.cbl",
+   "src/CAEBSB.cbl"
+  ],
+  "bms": [],
+  "csd": [
+   "csd/ca-address-eib-commarea.csd"
+  ],
+  "copy": [
+   "copy"
+  ],
+  "data": []
+ },
+ "layouts": {
+  "CALLER": {
+   "source": "src/CAEBCA.cbl",
+   "record": "WS-AREA"
+  }
+ },
+ "maps": {},
+ "scenarios": [
+  {
+   "id": "eib-qiderr",
+   "path": "trap",
+   "summary": "ADDRESS EIB and a view of the EIB, then READQ TD of an undefined queue with RESP: the view read afterwards holds EIBRESP 44 (QIDERR), equal to DFHEIBLK's EIBRESP and to the RESP value",
+   "steps": [
+    {
+     "at": 0,
+     "aid": "ENTER",
+     "text": "CA0K Q"
+    }
+   ]
+  },
+  {
+   "id": "commarea-writethru",
+   "path": "happy",
+   "summary": "LINK with COMMAREA(WS-AREA) LENGTH(20): the callee reads EIBCALEN 20 through its EIB view and writes through its ADDRESS COMMAREA view into the caller's area",
+   "steps": [
+    {
+     "at": 0,
+     "aid": "ENTER",
+     "text": "CA0K W"
+    }
+   ]
+  },
+  {
+   "id": "no-commarea",
+   "path": "trap",
+   "summary": "a terminal task has no COMMAREA: ADDRESS COMMAREA gives the null value X'FF000000' and the EIB view's EIBCALEN is 0; nothing is refused",
+   "steps": [
+    {
+     "at": 0,
+     "aid": "ENTER",
+     "text": "CA0K N"
+    }
+   ]
+  }
+ ]
+}

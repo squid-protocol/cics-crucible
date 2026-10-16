@@ -1,0 +1,94 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-address-eib-commarea",
+ "scenario": "commarea-writethru",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA0K",
+   "program": "CAEBCA",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "CAEBCA",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "CA0K W"
+     }
+    },
+    {
+     "event": "LINK",
+     "program": "CAEBCA",
+     "target": "CAEBSB",
+     "length": 20,
+     "resp": "NORMAL",
+     "commarea": {
+      "length": 20,
+      "layout": "CALLER",
+      "fields": {
+       "AD-EYE": "CAEB",
+       "AD-REQUEST": "PING",
+       "AD-REPLY": ""
+      }
+     },
+     "note": "the callee never names DFHCOMMAREA: it gets the address with ADDRESS COMMAREA"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAEBSB",
+     "queue": "CALOG",
+     "data": {
+      "length": 53,
+      "text": "C1  P=PRESENT CALEN=0020 SAME=Y EYE=CAEB REQ=PING    "
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "EIBCALEN 20 read through the EIB view (it equals DFHEIBLK's); the COMMAREA pointer addresses the caller's WS-AREA"
+    },
+    {
+     "event": "RETURN",
+     "program": "CAEBSB",
+     "level": 2,
+     "caller_commarea": {
+      "length": 20,
+      "layout": "CALLER",
+      "fields": {
+       "AD-EYE": "CAEB",
+       "AD-REQUEST": "PING",
+       "AD-REPLY": "PONG"
+      }
+     },
+     "note": "the callee's write through the view is the caller's WS-AREA: same storage"
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "CAEBCA",
+     "text": "MODE=W REPLY=PONG                                                               ",
+     "length": 80,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "CAEBCA",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

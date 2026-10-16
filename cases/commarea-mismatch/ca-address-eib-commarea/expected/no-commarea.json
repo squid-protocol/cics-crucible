@@ -1,0 +1,62 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-address-eib-commarea",
+ "scenario": "no-commarea",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA0K",
+   "program": "CAEBCA",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "CAEBCA",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "CA0K N"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAEBCA",
+     "queue": "CALOG",
+     "data": {
+      "length": 53,
+      "text": "N1  P=ABSENT  CALEN=0000 SAME=Y EYE=     REQ=        "
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "no COMMAREA: the pointer is X'FF000000'; the EIB view's EIBCALEN is 0 and equals DFHEIBLK's; the program does not SET ADDRESS OF"
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "CAEBCA",
+     "text": "MODE=N P=ABSENT CALEN=0000                                                      ",
+     "length": 80,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "CAEBCA",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}
