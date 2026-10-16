@@ -1,0 +1,64 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-counter-shared-namespace",
+  "trap": "condition-handling",
+  "title": "A DCOUNTER read by COUNTER commands: LENGERR RESP2 001 / 002 / 003 once its value no longer fits a fullword, and DEFINE COUNTER / DEFINE DCOUNTER of a name that exists under the other command is INVREQ RESP2 202",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCCNSP.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-counter-shared-namespace.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "big",
+      "path": "happy",
+      "summary": "DCOUNTERs at 2**31, 2**32 and 2**33 read by QUERY / GET COUNTER: LENGERR RESP2 001, 002, 003",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC74 B"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "fit",
+      "path": "happy",
+      "summary": "a DCOUNTER at 2**31 - 2 read by COUNTER commands while it fits, then walked across 2**31: LENGERR 001",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC74 F"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "dup",
+      "path": "happy",
+      "summary": "DEFINE COUNTER of a DCOUNTER's name and DEFINE DCOUNTER of a COUNTER's name: INVREQ 202",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC74 D"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
