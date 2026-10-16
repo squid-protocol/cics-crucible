@@ -766,12 +766,14 @@ class Case:
 
     # -- HTTP peer (SPEC section 2, HTTP peer)
     def _web_server_cmds(self) -> list[dict[str, str | None]]:
-        """The server-role WEB RECEIVE / WEB SEND commands of the programs (a SESSTOKEN is the client role)."""
+        """The server-role WEB RECEIVE / SEND / EXTRACT / READ HTTPHEADER commands of the programs (a SESSTOKEN is the
+        client role)."""
         out = []
         for code in self._all_code():
             for opts in exec_cics(code):
                 d = dict(opts)
-                if opts[0][0] == "WEB" and ("RECEIVE" in d or "SEND" in d) and "SESSTOKEN" not in d:
+                if opts[0][0] == "WEB" and "SESSTOKEN" not in d \
+                        and ("RECEIVE" in d or "SEND" in d or "EXTRACT" in d or ("READ" in d and "HTTPHEADER" in d)):
                     out.append(d)
         return out
 
@@ -809,6 +811,8 @@ class Case:
             if len(hits) != 1:
                 self.err(f"{w}: matches {len(hits)} server URIMAPs {hits}; exactly one (IBM takes the most specific, "
                          "a case never relies on it)")
+            if "?" in r["path"] or "?" in r.get("query", ""):
+                self.err(f"{w}: the query string is its own key, without the `?`")
             if ("body" in r) != ("mediatype" in r):
                 self.err(f"{w}: body and mediatype go together")
         for sc in self.case["scenarios"]:
@@ -1200,6 +1204,7 @@ def self_test() -> None:
     assert not urimap_matches({**srv, "HOST": "other"}, req) and not urimap_matches({**srv, "USAGE": "CLIENT"}, req)
     assert not urimap_matches({**srv, "STATUS": "DISABLED"}, req) and not urimap_matches({**srv, "SCHEME": "HTTPS"}, req)
     assert dict(cics_options("WEB SEND FROM(B) FROMLENGTH(L) STATUSCODE(S)"))["SEND"] is None
+    assert "HTTPHEADER" in dict(cics_options("WEB READ HTTPHEADER('X-A') NAMELENGTH(3) VALUE(V) VALUELENGTH(L)"))
     assert return_errors({**ok, "commarea": {"length": 1, "text": "A"}}), "CHANNEL and a passed commarea"
     assert return_errors({**ok, "transid": None}), "CHANNEL without a transid"
     assert return_errors({**ok, "level": 2, "commarea": None}), "a successful CHANNEL below level 1"

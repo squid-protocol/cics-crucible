@@ -1,0 +1,54 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "gt-web-server-receive",
+  "scenario": "lengerr",
+  "tasks": [
+    {
+      "seq": 1,
+      "transid": "GT82",
+      "program": "GTWRECV",
+      "termid": null,
+      "at": "2026-03-02T10:00:00",
+      "trigger": {
+        "kind": "http",
+        "request": 0
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-RECEIVE",
+          "program": "GTWRECV",
+          "resp": "LENGERR",
+          "resp2": 57,
+          "length": 8,
+          "data": {
+            "length": 8,
+            "text": "ABCDEFGH"
+          }
+        },
+        {
+          "event": "WEB-SEND",
+          "program": "GTWRECV",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 107,
+            "text": "RCV=22/057 L=008 B=ABCDEFGH M=POST   H=crucible.example     P=gt/recv    Q=k=1&n=22   T=00/000 V=alpha     "
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWRECV",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    }
+  ]
+}
