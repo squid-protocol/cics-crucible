@@ -1,0 +1,54 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "ca-load-set",
+  "trap": "commarea-mismatch",
+  "title": "LOAD PROGRAM SET(ptr) LENGTH(len): NORMAL for a defined program (pointer set, LENGTH above zero, RELEASE), PGMIDERR RESP2 1 for an undefined one; the loaded bytes are not compared",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/CALDST.cbl",
+      "src/CALDSX.cbl",
+      "src/CALDTG.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/ca-load-set.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "undefined_programs": [
+    "CALDXX"
+  ],
+  "scenarios": [
+    {
+      "id": "load",
+      "path": "happy",
+      "summary": "CALDST LOADs the defined program CALDTG with SET and LENGTH (pointer preset null, LENGTH preset 0), logs whether each was set, then RELEASEs it; the loaded bytes are never read",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA0L"
+        }
+      ]
+    },
+    {
+      "id": "pgmiderr",
+      "path": "trap",
+      "summary": "CALDSX LOADs a program with no definition (PGMIDERR RESP2 1; pointer and LENGTH not read), then LOADs CALDTG (NORMAL) and RELEASEs it",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "CA0M"
+        }
+      ]
+    }
+  ]
+}

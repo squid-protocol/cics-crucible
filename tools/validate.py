@@ -674,7 +674,7 @@ class Case:
             for opts in exec_cics(code):
                 verb = opts[0][0]
                 o = dict(opts)
-                if verb in ("LINK", "XCTL") and literal(o.get("PROGRAM")):
+                if verb in ("LINK", "XCTL", "LOAD", "RELEASE") and literal(o.get("PROGRAM")):
                     p = literal(o["PROGRAM"]).upper()
                     if p not in self.programs and p not in undefined:
                         self.err(f"{rel}: {verb} PROGRAM('{p}') is not defined (CSD or undefined_programs)")

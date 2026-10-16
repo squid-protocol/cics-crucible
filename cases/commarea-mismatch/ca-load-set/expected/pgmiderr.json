@@ -1,0 +1,76 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-load-set",
+ "scenario": "pgmiderr",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA0M",
+   "program": "CALDSX",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "CALDSX",
+     "queue": "LDLOG",
+     "data": {
+      "length": 12,
+      "text": "PG01027001--"
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "LOAD PROGRAM('CALDXX'), no definition and autoinstall off: PGMIDERR (27) RESP2 1; pointer and LENGTH not read [LOAD]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CALDSX",
+     "queue": "LDLOG",
+     "data": {
+      "length": 12,
+      "text": "OK01000000YY"
+     },
+     "resp": "NORMAL",
+     "item": 2,
+     "note": "CALDTG still loads: NORMAL, pointer set, LENGTH above zero [LOAD]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CALDSX",
+     "queue": "LDLOG",
+     "data": {
+      "length": 12,
+      "text": "RL01000000--"
+     },
+     "resp": "NORMAL",
+     "item": 3,
+     "note": "RELEASE PROGRAM('CALDTG'): NORMAL [RELEASE]"
+    },
+    {
+     "event": "RETURN",
+     "program": "CALDSX",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "LDLOG": [
+    "PG01027001--",
+    "OK01000000YY",
+    "RL01000000--"
+   ]
+  }
+ }
+}
