@@ -1,0 +1,70 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-address-eib-commarea",
+ "scenario": "eib-qiderr",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA0K",
+   "program": "CAEBCA",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "CAEBCA",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "CA0K Q"
+     }
+    },
+    {
+     "event": "READQ-TD",
+     "program": "CAEBCA",
+     "queue": "CANQ",
+     "resp": "QIDERR",
+     "data": null,
+     "note": "CANQ is not defined: QIDERR, which is EIBRESP 44"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CAEBCA",
+     "queue": "CALOG",
+     "data": {
+      "length": 19,
+      "text": "Q1 RESP=0044 SAME=Y"
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "the view taken before the READQ TD holds the command's EIBRESP (44, QIDERR) and agrees with DFHEIBLK and with the RESP value"
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "CAEBCA",
+     "text": "MODE=Q RESP=0044 SAME=Y                                                         ",
+     "length": 80,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "CAEBCA",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}
