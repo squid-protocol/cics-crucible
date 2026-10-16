@@ -1,0 +1,152 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-counter-shared-namespace",
+ "scenario": "dup",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC74",
+   "program": "HCCNSP",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCCNSP",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC74 D"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNSP",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "D1  R=00 S=000 V=0000000000000000"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNSP",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "D2  R=16 S=202 V=0000000000000000"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNSP",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "D3  R=16 S=202 V=0000000000000000"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNSP",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "D4  R=00 S=000 V=0000000000000005"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNSP",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "D5  R=00 S=000 V=0000000000000000"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNSP",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "D6  R=16 S=202 V=0000000000000000"
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNSP",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "D7  R=00 S=000 V=0000000000000009"
+     },
+     "resp": "NORMAL",
+     "item": 7
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCNSP",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "D8  R=00 S=000 V=0000000000000009"
+     },
+     "resp": "NORMAL",
+     "item": 8
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCCNSP",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCCNSP",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "D1  R=00 S=000 V=0000000000000000",
+    "D2  R=16 S=202 V=0000000000000000",
+    "D3  R=16 S=202 V=0000000000000000",
+    "D4  R=00 S=000 V=0000000000000005",
+    "D5  R=00 S=000 V=0000000000000000",
+    "D6  R=16 S=202 V=0000000000000000",
+    "D7  R=00 S=000 V=0000000000000009",
+    "D8  R=00 S=000 V=0000000000000009"
+   ]
+  }
+ }
+}
