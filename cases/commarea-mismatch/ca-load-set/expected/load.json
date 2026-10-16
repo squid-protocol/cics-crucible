@@ -1,0 +1,63 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-load-set",
+ "scenario": "load",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA0L",
+   "program": "CALDST",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "CALDST",
+     "queue": "LDLOG",
+     "data": {
+      "length": 12,
+      "text": "LD01000000YY"
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "LOAD PROGRAM('CALDTG') SET LENGTH: NORMAL, pointer no longer null, LENGTH no longer 0 [LOAD] [LD01]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CALDST",
+     "queue": "LDLOG",
+     "data": {
+      "length": 12,
+      "text": "RL01000000--"
+     },
+     "resp": "NORMAL",
+     "item": 2,
+     "note": "RELEASE PROGRAM('CALDTG'): NORMAL [RELEASE]"
+    },
+    {
+     "event": "RETURN",
+     "program": "CALDST",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "LDLOG": [
+    "LD01000000YY",
+    "RL01000000--"
+   ]
+  }
+ }
+}

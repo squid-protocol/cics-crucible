@@ -331,7 +331,7 @@ wrong.
 1. `case.json` and every expected log against the schemas.
 2. Sources: every listed file exists; each program's PROGRAM-ID equals its file stem and has
    a CSD `DEFINE PROGRAM`; each CSD `DEFINE TRANSACTION` names a program that exists; every
-   literal `PROGRAM('X')` on LINK/XCTL is defined in the CSD or listed in
+   literal `PROGRAM('X')` on LINK/XCTL/LOAD/RELEASE is defined in the CSD or listed in
    `undefined_programs`; every literal `TRANSID('X')` on RETURN/START is a CSD transaction;
    every literal `MAP`/`MAPSET` exists in the BMS sources (a map in `unheld_maps` must not) and each mapset has a CSD
    `DEFINE MAPSET`; every `COPY` resolves in the copy directories or is IBM-supplied.
