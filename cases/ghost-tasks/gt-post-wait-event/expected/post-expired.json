@@ -1,0 +1,60 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "gt-post-wait-event",
+ "scenario": "post-expired",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "GT61",
+   "program": "GTPOST",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "GTPOST",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "GT61 P"
+     },
+     "note": "the whole input is 6 bytes"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "GTPOST",
+     "queue": "GTLOG",
+     "data": {
+      "length": 9,
+      "text": "P POST=31"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "RETURN",
+     "program": "GTPOST",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "GTLOG": [
+    "P POST=31"
+   ]
+  }
+ }
+}
