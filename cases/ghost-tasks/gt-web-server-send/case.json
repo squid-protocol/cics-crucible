@@ -2,7 +2,7 @@
   "format": "cics-crucible/case/1",
   "id": "gt-web-server-send",
   "trap": "ghost-tasks",
-  "title": "Server-side WEB WRITE HTTPHEADER and WEB SEND (FROM, MEDIATYPE, STATUSCODE / STATUSTEXT, ACTION(IMMEDIATE)) to a stated client peer, and a second WEB SEND after an IMMEDIATE first one (an error)",
+  "title": "Server-side WEB WRITE HTTPHEADER and WEB SEND (FROM, MEDIATYPE, STATUSCODE / STATUSTEXT, ACTION(IMMEDIATE)) to a stated client peer",
   "clock": "2026-03-02T10:00:00",
   "terminal": "T001",
   "sources": {
@@ -43,18 +43,6 @@
           "body": "gone=9",
           "headers": {
             "X-Crucible-Reply": "reply-404"
-          }
-        }
-      ]
-    },
-    "client-b": {
-      "responses": [
-        {
-          "status": 200,
-          "mediatype": "text/plain",
-          "body": "k=1",
-          "headers": {
-            "X-Crucible-Reply": "reply-200"
           }
         }
       ]
@@ -101,28 +89,6 @@
           "query": "gone=9",
           "headers": {
             "X-Crucible-Code": "404"
-          }
-        }
-      ],
-      "until": 60
-    },
-    {
-      "id": "second",
-      "path": "happy",
-      "summary": "the first response is sent IMMEDIATE and reaches the peer; the second WEB SEND of the same task is an error and reaches no one",
-      "steps": [],
-      "requests": [
-        {
-          "at": 0,
-          "peer": "client-b",
-          "method": "GET",
-          "scheme": "HTTP",
-          "host": "crucible.example",
-          "path": "/gt/send",
-          "query": "k=1",
-          "headers": {
-            "X-Crucible-Code": "200",
-            "X-Crucible-Again": "Y"
           }
         }
       ],

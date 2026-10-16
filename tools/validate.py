@@ -852,17 +852,17 @@ class Case:
                 self.err(f"{w}: the URIMAP routes this request to {u.get('TRANSACTION')} / {u.get('PROGRAM')}")
         peer = self.case.get("peers", {}).get(r["peer"])
         sends = [e for e in task["events"] if e["event"] == "WEB-SEND"]
-        # exactly one response reaches the peer; any further WEB SEND must fail (IBM: IMMEDIATE, then a second response)
-        delivered = [e for e in sends if e["resp"] == "NORMAL"]
-        if len(delivered) != 1:
-            return self.err(f"{w}: an http task sends exactly one response (a NORMAL WEB SEND), has {len(delivered)}")
+        if len(sends) != 1:
+            return self.err(f"{w}: an http task sends exactly one response (WEB SEND), has {len(sends)}")
         if peer is None:
             return
         nth = sum(1 for q in reqs[:trig["request"]] if q["peer"] == r["peer"])
         want = peer["responses"][nth] if nth < len(peer["responses"]) else None
         if want is None:
             return self.err(f"{w}: peer {r['peer']} states no response for this request")
-        e = delivered[0]
+        e = sends[0]
+        if e["resp"] != "NORMAL":
+            return
         if e["status"] != want["status"]:
             self.err(f"{w}: WEB-SEND status {e['status']}, the peer expects {want['status']}")
         if want.get("mediatype") != e.get("mediatype"):

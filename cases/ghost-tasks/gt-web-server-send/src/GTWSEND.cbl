@@ -11,12 +11,9 @@
       *   WEB WRITEs the response header X-Crucible-Reply, then       *
       *   WEB SENDs the body with that status, its reason phrase and  *
       *   its media type, ACTION(IMMEDIATE).                          *
-      * If the request also carries X-Crucible-Again it WEB SENDs a   *
-      * second response, which IBM says is an error after an          *
-      * IMMEDIATE first one. The reason phrase and media type come    *
-      * from the code here, so no length written back by a WEB        *
-      * command is used. A leading question mark of QUERYSTRING is    *
-      * dropped if present.                                           *
+      * The reason phrase and media type come from the code here, so *
+      * no length written back by a WEB command is used. A leading   *
+      * question mark of QUERYSTRING is dropped if present.           *
       *---------------------------------------------------------------*
        ENVIRONMENT DIVISION.
        DATA DIVISION.
@@ -26,7 +23,6 @@
        01  WS-CODE-X               PIC X(3)  VALUE SPACES.
        01  WS-CODE-N               PIC 9(3)  VALUE 0.
        01  WS-CODE                 PIC S9(4) COMP VALUE 200.
-       01  WS-AGAIN                PIC X     VALUE SPACE.
        01  WS-QRY                  PIC X(256) VALUE SPACES.
        01  WS-QLEN                 PIC S9(8) COMP VALUE 256.
        01  WS-OUT                  PIC X(20) VALUE SPACES.
@@ -62,14 +58,6 @@
                    MOVE 2 TO WS-SLEN
                    MOVE 'text/plain' TO WS-MT
            END-EVALUATE
-           EXEC CICS WEB READ HTTPHEADER('X-Crucible-Again')
-                     NAMELENGTH(16)
-                     VALUE(WS-AGAIN) VALUELENGTH(1)
-                     RESP(WS-RESP) RESP2(WS-RESP2)
-           END-EXEC
-           IF WS-RESP NOT = 0
-               MOVE SPACE TO WS-AGAIN
-           END-IF
            EXEC CICS WEB EXTRACT QUERYSTRING(WS-QRY)
                      QUERYSTRLEN(WS-QLEN)
                      RESP(WS-RESP) RESP2(WS-RESP2)
@@ -93,15 +81,4 @@
                      HOSTCODEPAGE('037')
                      RESP(WS-RESP) RESP2(WS-RESP2)
            END-EXEC
-           IF WS-AGAIN = 'Y'
-               EXEC CICS WEB SEND FROM(WS-OUT) FROMLENGTH(20)
-                         MEDIATYPE(WS-MT)
-                         STATUSCODE(WS-CODE) STATUSTEXT(WS-STAT)
-                         STATUSLEN(WS-SLEN)
-                         ACTION(DFHVALUE(IMMEDIATE))
-                         SRVCONVERT CHARACTERSET('iso-8859-1')
-                         HOSTCODEPAGE('037')
-                         RESP(WS-RESP) RESP2(WS-RESP2)
-               END-EXEC
-           END-IF
            EXEC CICS RETURN END-EXEC.
