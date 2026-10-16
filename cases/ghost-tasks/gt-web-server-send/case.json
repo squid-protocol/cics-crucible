@@ -1,0 +1,98 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-web-server-send",
+  "trap": "ghost-tasks",
+  "title": "Server-side WEB WRITE HTTPHEADER and WEB SEND (FROM, MEDIATYPE, STATUSCODE / STATUSTEXT, ACTION(IMMEDIATE)) to a stated client peer",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/GTWSEND.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/gt-web-server-send.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "peers": {
+    "client-a": {
+      "responses": [
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "item=42",
+          "headers": {
+            "X-Crucible-Reply": "reply-200"
+          }
+        },
+        {
+          "status": 201,
+          "mediatype": "application/json",
+          "body": "id=7",
+          "headers": {
+            "X-Crucible-Reply": "reply-201"
+          }
+        },
+        {
+          "status": 404,
+          "mediatype": "text/plain",
+          "body": "gone=9",
+          "headers": {
+            "X-Crucible-Reply": "reply-404"
+          }
+        }
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "id": "send",
+      "path": "happy",
+      "summary": "GET requests answered 200 OK text/plain, 201 Created application/json, 404 Not Found text/plain; the body is the request's query string and the response carries the written header X-Crucible-Reply",
+      "steps": [],
+      "requests": [
+        {
+          "at": 0,
+          "peer": "client-a",
+          "method": "GET",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/send",
+          "query": "item=42",
+          "headers": {
+            "X-Crucible-Code": "200"
+          }
+        },
+        {
+          "at": 5,
+          "peer": "client-a",
+          "method": "GET",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/send",
+          "query": "id=7",
+          "headers": {
+            "X-Crucible-Code": "201"
+          }
+        },
+        {
+          "at": 10,
+          "peer": "client-a",
+          "method": "GET",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/send",
+          "query": "gone=9",
+          "headers": {
+            "X-Crucible-Code": "404"
+          }
+        }
+      ],
+      "until": 60
+    }
+  ]
+}

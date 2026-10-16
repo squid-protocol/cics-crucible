@@ -773,7 +773,8 @@ class Case:
             for opts in exec_cics(code):
                 d = dict(opts)
                 if opts[0][0] == "WEB" and "SESSTOKEN" not in d \
-                        and ("RECEIVE" in d or "SEND" in d or "EXTRACT" in d or ("READ" in d and "HTTPHEADER" in d)):
+                        and ("RECEIVE" in d or "SEND" in d or "EXTRACT" in d or ("READ" in d and "HTTPHEADER" in d)
+                             or ("WRITE" in d and "HTTPHEADER" in d)):
                     out.append(d)
         return out
 
@@ -871,6 +872,14 @@ class Case:
             self.err(f"{w}: WEB-SEND body {got!r}, the peer expects {want['body']!r}")
         if want.get("body") is None and e["from"] is not None:
             self.err(f"{w}: WEB-SEND sends a body the peer does not state")
+        # the headers that reach the peer: the NORMAL WEB WRITE HTTPHEADERs before the delivered WEB SEND (a later one
+        # is too late for an IMMEDIATE send, and no case relies on it)
+        before = task["events"][:task["events"].index(e)]
+        wrote = {h["name"]: h["value"] for h in before if h["event"] == "WEB-WRITE-HTTPHEADER" and h["resp"] == "NORMAL"}
+        if wrote != want.get("headers", {}):
+            self.err(f"{w}: response headers written {wrote}, the peer expects {want.get('headers', {})}")
+        if any(h["event"] == "WEB-WRITE-HTTPHEADER" for h in task["events"][task["events"].index(e) + 1:]):
+            self.err(f"{w}: a WEB WRITE HTTPHEADER after the response was sent is not modelled")
 
     # -- values
     def _value(self, where: str, v: Any, size: int | None, pic: str | None = None, usage: str = "DISPLAY") -> None:
@@ -1023,7 +1032,7 @@ class Case:
             self._area(f"{w} data", ev["data"])
         if k in ("WRITEQ-TS", "WRITEQ-TD", "WRITE-OPERATOR"):
             self._area(f"{w} data", ev["data"])
-        if k in ("WEB-RECEIVE", "WEB-SEND") and not self._in_http:
+        if k in ("WEB-RECEIVE", "WEB-SEND", "WEB-WRITE-HTTPHEADER") and not self._in_http:
             self.err(f"{w}: only a task started by an inbound request issues a server WEB command")
         if k == "WEB-RECEIVE":
             self._area(f"{w} data", ev["data"])
