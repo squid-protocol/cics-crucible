@@ -1,0 +1,216 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-web-server-receive",
+  "trap": "ghost-tasks",
+  "title": "Server-side WEB RECEIVE (INTO / LENGTH / MAXLENGTH, LENGERR RESP2 57), WEB EXTRACT of the request line and WEB READ HTTPHEADER (NOTFND RESP2 1 when the header is missing), each result echoed in the WEB SEND response",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/GTWRECV.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/gt-web-server-receive.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "peers": {
+    "client-a": {
+      "responses": [
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "RCV=00/000 L=005 B=HELLO    M=POST   H=crucible.example     P=gt/recv    Q=k=1&n=22   T=00/000 V=alpha"
+        },
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "RCV=00/000 L=008 B=ABCDEFGH M=POST   H=crucible.example     P=gt/recv    Q=k=1&n=22   T=00/000 V=alpha"
+        }
+      ]
+    },
+    "client-b": {
+      "responses": [
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "RCV=22/057 L=008 B=ABCDEFGH M=POST   H=crucible.example     P=gt/recv    Q=k=1&n=22   T=00/000 V=alpha"
+        }
+      ]
+    },
+    "client-c": {
+      "responses": [
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "RCV=00/000 L=001 B=X        M=POST   H=crucible.example     P=gt/recv    Q=a=1&b=2    T=00/000 V=alpha"
+        },
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "RCV=00/000 L=003 B=NEW      M=PUT    H=other.example        P=gt/recv    Q=z=9        T=00/000 V=gamma"
+        }
+      ]
+    },
+    "client-d": {
+      "responses": [
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "RCV=00/000 L=004 B=PING     M=POST   H=crucible.example     P=gt/recv    Q=k=1&n=22   T=00/000 V=alpha"
+        },
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "RCV=00/000 L=004 B=PING     M=POST   H=crucible.example     P=gt/recv    Q=k=1&n=22   T=13/001 V="
+        }
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "id": "receive",
+      "path": "happy",
+      "summary": "POST bodies HELLO (5 bytes) and ABCDEFGH (exactly MAXLENGTH 8): both NORMAL, LENGTH is what was received",
+      "steps": [],
+      "requests": [
+        {
+          "at": 0,
+          "peer": "client-a",
+          "method": "POST",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/recv",
+          "query": "k=1&n=22",
+          "mediatype": "text/plain",
+          "body": "HELLO",
+          "headers": {
+            "X-Crucible-Tag": "alpha",
+            "X-Other": "x"
+          }
+        },
+        {
+          "at": 5,
+          "peer": "client-a",
+          "method": "POST",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/recv",
+          "query": "k=1&n=22",
+          "mediatype": "text/plain",
+          "body": "ABCDEFGH",
+          "headers": {
+            "X-Crucible-Tag": "alpha",
+            "X-Other": "x"
+          }
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "lengerr",
+      "path": "happy",
+      "summary": "POST body ABCDEFGHIJKL (12 bytes) into MAXLENGTH 8: LENGERR RESP2 57, truncated to 8, the rest discarded",
+      "steps": [],
+      "requests": [
+        {
+          "at": 0,
+          "peer": "client-b",
+          "method": "POST",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/recv",
+          "query": "k=1&n=22",
+          "mediatype": "text/plain",
+          "body": "ABCDEFGHIJKL",
+          "headers": {
+            "X-Crucible-Tag": "alpha",
+            "X-Other": "x"
+          }
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "extract",
+      "path": "happy",
+      "summary": "WEB EXTRACT of the method, host, path and query string for a POST and a PUT to other host names",
+      "steps": [],
+      "requests": [
+        {
+          "at": 0,
+          "peer": "client-c",
+          "method": "POST",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/recv",
+          "query": "a=1&b=2",
+          "mediatype": "text/plain",
+          "body": "X",
+          "headers": {
+            "X-Crucible-Tag": "alpha",
+            "X-Other": "x"
+          }
+        },
+        {
+          "at": 5,
+          "peer": "client-c",
+          "method": "PUT",
+          "scheme": "HTTP",
+          "host": "other.example",
+          "path": "/gt/recv",
+          "query": "z=9",
+          "mediatype": "text/plain",
+          "body": "NEW",
+          "headers": {
+            "X-Crucible-Tag": "gamma",
+            "X-Other": "x"
+          }
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "header",
+      "path": "happy",
+      "summary": "WEB READ HTTPHEADER of X-Crucible-Tag: present (alpha), then absent with another header present (NOTFND RESP2 1)",
+      "steps": [],
+      "requests": [
+        {
+          "at": 0,
+          "peer": "client-d",
+          "method": "POST",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/recv",
+          "query": "k=1&n=22",
+          "mediatype": "text/plain",
+          "body": "PING",
+          "headers": {
+            "X-Crucible-Tag": "alpha",
+            "X-Other": "x"
+          }
+        },
+        {
+          "at": 5,
+          "peer": "client-d",
+          "method": "POST",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/recv",
+          "query": "k=1&n=22",
+          "mediatype": "text/plain",
+          "body": "PING",
+          "headers": {
+            "X-Other": "x"
+          }
+        }
+      ],
+      "until": 60
+    }
+  ]
+}

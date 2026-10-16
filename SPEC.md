@@ -184,9 +184,12 @@ tasks it starts.
 | `note` | optional commentary, never compared |
 
 A scenario's optional `requests` (additive) are the inbound HTTP requests, each
-`{"at", "peer", "method", "scheme": "HTTP", "host", "path", "mediatype"?, "body"?}`: `at` is whole seconds after `clock`, in order,
+`{"at", "peer", "method", "scheme": "HTTP", "host", "path", "query"?, "headers"?, "mediatype"?, "body"?}`: `at` is whole seconds after `clock`, in order,
 and never equal to a step's `at` or another request's (section 4: no ties); `peer` names an entry of `peers`; `body` and
-`mediatype` go together and only a `POST` or `PUT` has a body. A request is not an event: the task it starts is.
+`mediatype` go together and only a `POST` or `PUT` has a body. `query` (additive) is the request line's query string without the `?`
+(what `WEB EXTRACT QUERYSTRING` reads; `path` never holds a `?`); `headers` (additive) maps header names to values (what
+`WEB READ HTTPHEADER` reads; IBM raises INVREQ RESP2 43 when a request has none, so a case reads headers only on a request that
+states at least one). Neither takes part in URIMAP matching. A request is not an event: the task it starts is.
 
 A step with neither `text` nor `map` (e.g. ENTER on a screen written by SEND TEXT) transmits
 nothing the program reads; only its AID matters.
@@ -350,7 +353,7 @@ wrong.
 9. HTTP peer (sections 2, 5, 6): every request names a stated peer, matches exactly one `USAGE(SERVER)` URIMAP and shares no
    second with a step or another request; each peer's script is as long as its most requests in a scenario; every SERVER URIMAP
    states `TRANSACTION`, `PROGRAM`, `HOST`, `PATH`, `SCHEME(HTTP)`, with an alias CSD transaction that runs `PROGRAM`; a program
-   issuing a server `WEB RECEIVE` / `WEB SEND` needs a scenario with requests; every request starts exactly one task, whose
+   issuing a server `WEB RECEIVE` / `WEB SEND` / `WEB EXTRACT` / `WEB READ HTTPHEADER` needs a scenario with requests; every request starts exactly one task, whose
    `at`, transid and program are the request's and the URIMAP's, with null `termid` / `eibaid`, and which sends one `WEB-SEND`
    equal to its peer's response (`WEB-RECEIVE` / `WEB-SEND` appear in no other task).
 

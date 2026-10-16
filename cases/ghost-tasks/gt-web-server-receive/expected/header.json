@@ -1,0 +1,99 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "gt-web-server-receive",
+  "scenario": "header",
+  "tasks": [
+    {
+      "seq": 1,
+      "transid": "GT82",
+      "program": "GTWRECV",
+      "termid": null,
+      "at": "2026-03-02T10:00:00",
+      "trigger": {
+        "kind": "http",
+        "request": 0
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-RECEIVE",
+          "program": "GTWRECV",
+          "resp": "NORMAL",
+          "length": 4,
+          "data": {
+            "length": 4,
+            "text": "PING"
+          }
+        },
+        {
+          "event": "WEB-SEND",
+          "program": "GTWRECV",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 107,
+            "text": "RCV=00/000 L=004 B=PING     M=POST   H=crucible.example     P=gt/recv    Q=k=1&n=22   T=00/000 V=alpha     "
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWRECV",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    },
+    {
+      "seq": 2,
+      "transid": "GT82",
+      "program": "GTWRECV",
+      "termid": null,
+      "at": "2026-03-02T10:00:05",
+      "trigger": {
+        "kind": "http",
+        "request": 1
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-RECEIVE",
+          "program": "GTWRECV",
+          "resp": "NORMAL",
+          "length": 4,
+          "data": {
+            "length": 4,
+            "text": "PING"
+          }
+        },
+        {
+          "event": "WEB-SEND",
+          "program": "GTWRECV",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 107,
+            "text": "RCV=00/000 L=004 B=PING     M=POST   H=crucible.example     P=gt/recv    Q=k=1&n=22   T=13/001 V=          "
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWRECV",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    }
+  ]
+}
