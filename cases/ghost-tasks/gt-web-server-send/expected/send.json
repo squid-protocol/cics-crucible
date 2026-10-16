@@ -1,0 +1,136 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "gt-web-server-send",
+  "scenario": "send",
+  "tasks": [
+    {
+      "seq": 1,
+      "transid": "GT83",
+      "program": "GTWSEND",
+      "termid": null,
+      "at": "2026-03-02T10:00:00",
+      "trigger": {
+        "kind": "http",
+        "request": 0
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-WRITE-HTTPHEADER",
+          "program": "GTWSEND",
+          "name": "X-Crucible-Reply",
+          "value": "reply-200",
+          "resp": "NORMAL"
+        },
+        {
+          "event": "WEB-SEND",
+          "program": "GTWSEND",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 20,
+            "text": "item=42             "
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWSEND",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    },
+    {
+      "seq": 2,
+      "transid": "GT83",
+      "program": "GTWSEND",
+      "termid": null,
+      "at": "2026-03-02T10:00:05",
+      "trigger": {
+        "kind": "http",
+        "request": 1
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-WRITE-HTTPHEADER",
+          "program": "GTWSEND",
+          "name": "X-Crucible-Reply",
+          "value": "reply-201",
+          "resp": "NORMAL"
+        },
+        {
+          "event": "WEB-SEND",
+          "program": "GTWSEND",
+          "status": 201,
+          "statustext": "Created",
+          "mediatype": "application/json",
+          "from": {
+            "length": 20,
+            "text": "id=7                "
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWSEND",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    },
+    {
+      "seq": 3,
+      "transid": "GT83",
+      "program": "GTWSEND",
+      "termid": null,
+      "at": "2026-03-02T10:00:10",
+      "trigger": {
+        "kind": "http",
+        "request": 2
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-WRITE-HTTPHEADER",
+          "program": "GTWSEND",
+          "name": "X-Crucible-Reply",
+          "value": "reply-404",
+          "resp": "NORMAL"
+        },
+        {
+          "event": "WEB-SEND",
+          "program": "GTWSEND",
+          "status": 404,
+          "statustext": "Not Found",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 20,
+            "text": "gone=9              "
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWSEND",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    }
+  ]
+}

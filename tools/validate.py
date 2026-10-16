@@ -773,7 +773,8 @@ class Case:
             for opts in exec_cics(code):
                 d = dict(opts)
                 if opts[0][0] == "WEB" and "SESSTOKEN" not in d \
-                        and ("RECEIVE" in d or "SEND" in d or "EXTRACT" in d or ("READ" in d and "HTTPHEADER" in d)):
+                        and ("RECEIVE" in d or "SEND" in d or "EXTRACT" in d or ("READ" in d and "HTTPHEADER" in d)
+                             or ("WRITE" in d and "HTTPHEADER" in d)):
                     out.append(d)
         return out
 
@@ -851,17 +852,17 @@ class Case:
                 self.err(f"{w}: the URIMAP routes this request to {u.get('TRANSACTION')} / {u.get('PROGRAM')}")
         peer = self.case.get("peers", {}).get(r["peer"])
         sends = [e for e in task["events"] if e["event"] == "WEB-SEND"]
-        if len(sends) != 1:
-            return self.err(f"{w}: an http task sends exactly one response (WEB SEND), has {len(sends)}")
+        # exactly one response reaches the peer; any further WEB SEND must fail (IBM: IMMEDIATE, then a second response)
+        delivered = [e for e in sends if e["resp"] == "NORMAL"]
+        if len(delivered) != 1:
+            return self.err(f"{w}: an http task sends exactly one response (a NORMAL WEB SEND), has {len(delivered)}")
         if peer is None:
             return
         nth = sum(1 for q in reqs[:trig["request"]] if q["peer"] == r["peer"])
         want = peer["responses"][nth] if nth < len(peer["responses"]) else None
         if want is None:
             return self.err(f"{w}: peer {r['peer']} states no response for this request")
-        e = sends[0]
-        if e["resp"] != "NORMAL":
-            return
+        e = delivered[0]
         if e["status"] != want["status"]:
             self.err(f"{w}: WEB-SEND status {e['status']}, the peer expects {want['status']}")
         if want.get("mediatype") != e.get("mediatype"):
@@ -871,6 +872,14 @@ class Case:
             self.err(f"{w}: WEB-SEND body {got!r}, the peer expects {want['body']!r}")
         if want.get("body") is None and e["from"] is not None:
             self.err(f"{w}: WEB-SEND sends a body the peer does not state")
+        # the headers that reach the peer: the NORMAL WEB WRITE HTTPHEADERs before the delivered WEB SEND (a later one
+        # is too late for an IMMEDIATE send, and no case relies on it)
+        before = task["events"][:task["events"].index(e)]
+        wrote = {h["name"]: h["value"] for h in before if h["event"] == "WEB-WRITE-HTTPHEADER" and h["resp"] == "NORMAL"}
+        if wrote != want.get("headers", {}):
+            self.err(f"{w}: response headers written {wrote}, the peer expects {want.get('headers', {})}")
+        if any(h["event"] == "WEB-WRITE-HTTPHEADER" for h in task["events"][task["events"].index(e) + 1:]):
+            self.err(f"{w}: a WEB WRITE HTTPHEADER after the response was sent is not modelled")
 
     # -- values
     def _value(self, where: str, v: Any, size: int | None, pic: str | None = None, usage: str = "DISPLAY") -> None:
@@ -1023,7 +1032,7 @@ class Case:
             self._area(f"{w} data", ev["data"])
         if k in ("WRITEQ-TS", "WRITEQ-TD", "WRITE-OPERATOR"):
             self._area(f"{w} data", ev["data"])
-        if k in ("WEB-RECEIVE", "WEB-SEND") and not self._in_http:
+        if k in ("WEB-RECEIVE", "WEB-SEND", "WEB-WRITE-HTTPHEADER") and not self._in_http:
             self.err(f"{w}: only a task started by an inbound request issues a server WEB command")
         if k == "WEB-RECEIVE":
             self._area(f"{w} data", ev["data"])
