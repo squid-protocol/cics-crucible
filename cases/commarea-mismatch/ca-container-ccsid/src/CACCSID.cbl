@@ -92,7 +92,7 @@
            PERFORM LOG-GET
       * THREE: DATATYPE(CHAR) and no CCSID: the region's CCSID.
            EXEC CICS PUT CONTAINER('THREE') CHANNEL(WS-CHAN)
-                     FROM(WS-SRC) DATATYPE(CHAR)
+                     FROM(WS-SRC) DATATYPE(DFHVALUE(CHAR))
                      RESP(WS-RESP) RESP2(WS-RESP2)
            END-EXEC
            MOVE 'PUT3' TO LG-TAG
