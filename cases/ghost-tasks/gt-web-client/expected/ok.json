@@ -1,0 +1,77 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "gt-web-client",
+  "scenario": "ok",
+  "tasks": [
+    {
+      "seq": 1,
+      "transid": "GT85",
+      "program": "GTWCLI",
+      "termid": "T001",
+      "at": "2026-03-02T10:00:00",
+      "trigger": {
+        "kind": "terminal",
+        "step": 0
+      },
+      "eibaid": "ENTER",
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "program": "GTWCLI",
+          "event": "RECEIVE",
+          "resp": "NORMAL",
+          "length": 6,
+          "data": {
+            "length": 6,
+            "text": "GT85 A"
+          }
+        },
+        {
+          "program": "GTWCLI",
+          "event": "WEB-OPEN",
+          "host": "orders.example",
+          "scheme": "HTTP",
+          "resp": "NORMAL"
+        },
+        {
+          "program": "GTWCLI",
+          "event": "WEB-CONVERSE",
+          "method": "GET",
+          "path": "/gt/item",
+          "status": 200,
+          "tolength": 7,
+          "into": {
+            "length": 7,
+            "text": "item=42"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "program": "GTWCLI",
+          "event": "WEB-CLOSE",
+          "resp": "NORMAL"
+        },
+        {
+          "program": "GTWCLI",
+          "event": "SEND-TEXT",
+          "text": "GT85 S=200 L=07 item=42",
+          "length": 48,
+          "options": [
+            "ERASE",
+            "FREEKB",
+            "WAIT"
+          ]
+        },
+        {
+          "program": "GTWCLI",
+          "event": "RETURN",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    }
+  ]
+}

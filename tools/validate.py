@@ -475,6 +475,10 @@ class Case:
                         self.err(f"expected/{p.name} {e}")
                     continue
                 self._expected(sc, log, p.name)
+        for n, p in case.get("peers", {}).items():
+            if "host" in p and len(p["responses"]) != getattr(self, "_conv", {}).get(n, 0):
+                self.err(f"peer {n}: {len(p['responses'])} responses stated, but it is sent "
+                         f"{getattr(self, '_conv', {}).get(n, 0)} conversations at most in a scenario")
         self._notes()
 
     # -- sources
@@ -778,11 +782,30 @@ class Case:
                     out.append(d)
         return out
 
+    def _web_client_cmds(self) -> list[dict[str, str | None]]:
+        """The client-role WEB OPEN / CONVERSE / CLOSE commands of the programs (they carry a SESSTOKEN)."""
+        out = []
+        for code in self._all_code():
+            for opts in exec_cics(code):
+                d = dict(opts)
+                if opts[0][0] == "WEB" and ("OPEN" in d or "CONVERSE" in d or "CLOSE" in d):
+                    out.append(d)
+        return out
+
     def _http(self) -> None:
         peers = self.case.get("peers", {})
+        origins = {n for n, p in peers.items() if "host" in p}  # server peers a client task talks to (SPEC section 2)
         reqs = [(sc, r) for sc in self.case["scenarios"] for r in sc.get("requests", [])]
+        self._conv: dict[str, int] = {}  # most WEB CONVERSEs one scenario sends each origin peer
+        hosts = [peers[n]["host"].lower() for n in sorted(origins)]
+        if len(set(hosts)) != len(hosts):
+            self.err("two origin peers share a host")
+        if origins and not self._web_client_cmds():
+            self.err("a peer states a host but no program issues a client WEB OPEN")
+        if self._web_client_cmds() and not origins:
+            self.err("a program issues a client WEB OPEN but no peer states a host (SPEC section 2)")
         servers = {n: a for n, a in self.csd.get("URIMAP", {}).items() if a.get("USAGE", "").upper() == "SERVER"}
-        if (reqs or peers) and not self._web_server_cmds():
+        if (reqs or set(peers) - origins) and not self._web_server_cmds():
             self.err("requests / peers but no program issues a server WEB RECEIVE / WEB SEND")
         if self._web_server_cmds() and not reqs:
             self.err("a program issues a server WEB RECEIVE / WEB SEND but no scenario has a request (SPEC section 2)")
@@ -806,6 +829,8 @@ class Case:
             w = f"scenario {sc['id']} request at {r['at']}"
             if r["peer"] not in peers:
                 self.err(f"{w}: peer {r['peer']!r} is not stated in case.json `peers` (an unstated peer is a defined failure)")
+            elif r["peer"] in origins:
+                self.err(f"{w}: peer {r['peer']!r} states a host: it is an origin server, it sends no request")
             if r["method"] in ("GET", "HEAD", "DELETE") and "body" in r:
                 self.err(f"{w}: {r['method']} carries no body here")
             hits = [n for n, a in servers.items() if urimap_matches(a, r)]
@@ -828,6 +853,8 @@ class Case:
         # a peer's script is replayed in every scenario: its nth request there gets responses[n]; the script is as long as
         # the most requests the peer sends in one scenario
         for n, p in peers.items():
+            if n in origins:
+                continue  # an origin peer's script is checked against the WEB CONVERSEs of the logs (_web_client_task)
             most = max((sum(1 for r in sc.get("requests", []) if r["peer"] == n) for sc in self.case["scenarios"]), default=0)
             if len(p["responses"]) != most:
                 self.err(f"peer {n}: {len(p['responses'])} responses stated, but it sends at most {most} requests in a scenario")
@@ -948,6 +975,7 @@ class Case:
         for ri in range(len(sc.get("requests", []))):
             if not any(t["trigger"] == {"kind": "http", "request": ri} for t in log["tasks"]):
                 self.err(f"expected/{fname}: request {ri} starts no task")
+        conv: dict[str, int] = {}  # WEB CONVERSEs sent so far in this scenario, per origin peer
         for ti, task in enumerate(log["tasks"]):
             w = f"expected/{fname} task {task['seq']}"
             if task["seq"] != ti + 1:
@@ -994,9 +1022,55 @@ class Case:
                 self.err(f"{w}: end normal but the last event is not a level-1 RETURN")
             if task["end"] == "abend" and not (last["event"] == "ABEND" and last["outcome"] == "terminated"):
                 self.err(f"{w}: end abend but the last event is not a terminating ABEND")
+            self._web_client_task(w, sc, task, conv)
             for ei, ev in enumerate(task["events"]):
                 self._in_http = task["trigger"]["kind"] == "http"
                 self._event(f"{w} event {ei} ({ev['event']})", ev, undefined, ev is last)
+
+    def _web_client_task(self, w: str, sc: dict[str, Any], task: dict[str, Any], conv: dict[str, int]) -> None:
+        """The client role (SPEC section 2, HTTP peer): WEB OPEN names a host that an origin peer states, each NORMAL WEB
+        CONVERSE gets that peer's next scripted response, and the session is closed before the task ends."""
+        peers = self.case.get("peers", {})
+        by_host = {p["host"].lower(): n for n, p in peers.items() if "host" in p}
+        sess: str | None = None  # the origin peer of the open session
+        for ev in task["events"]:
+            k = ev["event"]
+            if k == "WEB-OPEN":
+                if sess is not None:
+                    self.err(f"{w}: WEB OPEN with a session already open (one session at a time here)")
+                if ev["resp"] != "NORMAL":
+                    continue
+                sess = by_host.get(ev["host"].lower())
+                if sess is None:
+                    self.err(f"{w}: WEB OPEN host {ev['host']!r} is no stated peer's host (an unstated peer is a defined failure)")
+            elif k == "WEB-CLOSE":
+                if ev["resp"] == "NORMAL" and sess is None:
+                    self.err(f"{w}: WEB CLOSE with no session open")
+                if ev["resp"] == "NORMAL":
+                    sess = None
+            elif k == "WEB-CONVERSE":
+                if sess is None:
+                    self.err(f"{w}: WEB CONVERSE with no session open (after CLOSE it is not modelled, SPEC section 2)")
+                    continue
+                if ev["resp"] != "NORMAL":
+                    continue
+                n = conv.get(sess, 0)
+                conv[sess] = n + 1
+                self._conv[sess] = max(self._conv.get(sess, 0), n + 1)
+                script = peers[sess]["responses"]
+                if n >= len(script):
+                    self.err(f"{w}: peer {sess} states no response for conversation {n + 1}")
+                    continue
+                want = script[n]
+                if ev["status"] != want["status"]:
+                    self.err(f"{w}: WEB-CONVERSE status {ev['status']}, the peer sends {want['status']}")
+                got = ev["into"].get("text") if ev["into"] else None
+                if want.get("body") is None and got is not None:
+                    self.err(f"{w}: WEB-CONVERSE received a body the peer does not state")
+                elif want.get("body") is not None and (got is None or got.rstrip(" ") != want["body"].rstrip(" ")):
+                    self.err(f"{w}: WEB-CONVERSE body {got!r}, the peer sends {want['body']!r}")
+        if sess is not None:
+            self.err(f"{w}: the task ends with a WEB session open (close it: a left-open session is not modelled)")
 
     def _event(self, w: str, ev: dict[str, Any], undefined: set[str], is_last: bool) -> None:
         k = ev["event"]
@@ -1032,6 +1106,8 @@ class Case:
             self._area(f"{w} data", ev["data"])
         if k in ("WRITEQ-TS", "WRITEQ-TD", "WRITE-OPERATOR"):
             self._area(f"{w} data", ev["data"])
+        if k == "WEB-CONVERSE":
+            self._area(f"{w} into", ev["into"])
         if k in ("WEB-RECEIVE", "WEB-SEND", "WEB-WRITE-HTTPHEADER") and not self._in_http:
             self.err(f"{w}: only a task started by an inbound request issues a server WEB command")
         if k == "WEB-RECEIVE":
