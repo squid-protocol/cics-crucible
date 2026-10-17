@@ -1,0 +1,71 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-web-client",
+  "trap": "ghost-tasks",
+  "title": "Client-side WEB OPEN / WEB CONVERSE / WEB CLOSE against a stated origin peer: a 200 round trip and a 404 from the peer the host names",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/GTWCLI.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/gt-web-client.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "peers": {
+    "orders": {
+      "host": "orders.example",
+      "responses": [
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "item=42"
+        }
+      ]
+    },
+    "gone": {
+      "host": "gone.example",
+      "responses": [
+        {
+          "status": 404,
+          "mediatype": "text/plain",
+          "body": "no such item"
+        }
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "id": "ok",
+      "path": "happy",
+      "summary": "GT85 A: the task opens orders.example, GETs /gt/item and receives 200 with body item=42, closes the connection and shows what came back",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT85 A"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "notfound",
+      "path": "happy",
+      "summary": "GT85 B: the stated peer gone.example answers 404 with body 'no such item'; a 404 is a normal response (RESP NORMAL), not a condition",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT85 B"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
