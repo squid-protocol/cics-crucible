@@ -44,6 +44,7 @@
                      RESP(WS-RESP) RESP2(WS-RESP2)
            END-EXEC
            MOVE 'GET2' TO LG-TAG
+           MOVE WS-LEN TO LG-LEN
            PERFORM LOG-GET
       * BIT with FROMCCSID on a PUT is invalid.
            EXEC CICS PUT CONTAINER('BADB') CHANNEL(WS-CHAN)
