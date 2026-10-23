@@ -1,0 +1,108 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-file-unlock",
+ "scenario": "read-short",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC81",
+   "program": "HCUNLK",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCUNLK",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC81 S"
+     }
+    },
+    {
+     "event": "READ",
+     "program": "HCUNLK",
+     "file": "HCUF",
+     "ridfld": "K002",
+     "resp": "LENGERR",
+     "length": 16,
+     "data": null
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCUNLK",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "S1  R=22 S=000 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "READ",
+     "program": "HCUNLK",
+     "file": "HCUF",
+     "ridfld": "K002",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "K002BRAVO   0020"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCUNLK",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "S2  R=00 S=000 D=K002BRAVO   0020"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCUNLK",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCUNLK",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "S1  R=22 S=000 D=                ",
+    "S2  R=00 S=000 D=K002BRAVO   0020"
+   ]
+  },
+  "files": {
+   "HCUF": [
+    "K001ALPHA   0010",
+    "K002BRAVO   0020",
+    "K003CHARLIE 0030"
+   ]
+  }
+ }
+}

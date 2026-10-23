@@ -10,6 +10,8 @@
       *      READ it again                                            *
       *   N  UNLOCK with no READ UPDATE, REWRITE with no READ UPDATE, *
       *      READ of K001                                             *
+      *   S  READ of K002 with LENGTH 8 (the record is 16: LENGERR),  *
+      *      then READ of K002 with LENGTH 16                         *
       * Every result is a breadcrumb in TS queue HCLOG.               *
       *---------------------------------------------------------------*
        DATA DIVISION.
@@ -43,6 +45,8 @@
                    PERFORM UNLOCK-PARA
                WHEN 'N'
                    PERFORM NOTHING-PARA
+               WHEN 'S'
+                   PERFORM SHORT-PARA
            END-EVALUATE
            EXEC CICS SEND TEXT FROM(WS-DONE) LENGTH(8) ERASE
            END-EXEC
@@ -101,6 +105,27 @@
            MOVE 'K001' TO WS-KEY
            PERFORM READ-PARA
            MOVE 'N3 ' TO CLOG-TAG
+           PERFORM LOG-D.
+       SHORT-PARA.
+      * LENGTH 8 is below the 16-byte record: LENGERR. RESP2 and the
+      * truncated INTO are not logged (the case does not rely on them).
+           MOVE 'K002' TO WS-KEY
+           MOVE 8 TO WS-LEN
+           EXEC CICS READ FILE('HCUF') INTO(WS-REC) LENGTH(WS-LEN)
+                     RIDFLD(WS-KEY)
+                     RESP(WS-RESP) RESP2(WS-RESP2)
+           END-EXEC
+           MOVE 'S1 ' TO CLOG-TAG
+           MOVE SPACES TO CLOG-DATA
+           MOVE WS-RESP TO CLOG-RESP
+           MOVE 0 TO CLOG-RESP2
+           EXEC CICS WRITEQ TS QUEUE('HCLOG') FROM(WS-CLOG)
+                     LENGTH(33)
+           END-EXEC
+           MOVE 16 TO WS-LEN
+           MOVE SPACES TO WS-REC
+           PERFORM READ-PARA
+           MOVE 'S2 ' TO CLOG-TAG
            PERFORM LOG-D.
        READ-PARA.
            EXEC CICS READ FILE('HCUF') INTO(WS-REC) LENGTH(WS-LEN)

@@ -2,7 +2,7 @@
   "format": "cics-crucible/case/1",
   "id": "hc-file-unlock",
   "trap": "condition-handling",
-  "title": "File control: READ UPDATE / REWRITE / UNLOCK on a KSDS; REWRITE after UNLOCK is INVREQ RESP2 30, UNLOCK with nothing held is NORMAL",
+  "title": "File control: READ UPDATE / REWRITE / UNLOCK on a KSDS; REWRITE after UNLOCK is INVREQ RESP2 30, UNLOCK with nothing held is NORMAL; non-UPDATE READ INTO with LENGTH below the record length is LENGERR",
   "clock": "2026-03-02T10:00:00",
   "terminal": "T001",
   "sources": {
@@ -58,6 +58,19 @@
           "at": 0,
           "aid": "ENTER",
           "text": "HC81 N"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "read-short",
+      "path": "trap",
+      "summary": "READ INTO of K002 with LENGTH 8 on a 16-byte record: LENGERR; a READ with LENGTH 16 then returns the record",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC81 S"
         }
       ],
       "until": 60
