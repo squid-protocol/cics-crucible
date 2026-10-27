@@ -1,0 +1,51 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-channel-browse",
+ "scenario": "unhandled-channelerr",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA08",
+   "program": "CABRERR",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABRERR",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "PUTE00000000000"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "ABEND",
+     "program": "CABRERR",
+     "abcode": "AEZV",
+     "cause": "condition",
+     "condition": "CHANNELERR",
+     "outcome": "terminated",
+     "note": "DELETE CHANNEL of a channel that does not exist, with no RESP, no HANDLE CONDITION and no abend exit: the default action, abend AEZV [AEZV]"
+    }
+   ],
+   "end": "abend"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "CALOG": [
+    "PUTE00000000000"
+   ]
+  }
+ }
+}
