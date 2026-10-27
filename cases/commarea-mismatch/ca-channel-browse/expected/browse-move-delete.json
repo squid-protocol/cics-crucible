@@ -1,0 +1,384 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-channel-browse",
+ "scenario": "browse-move-delete",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA07",
+   "program": "CABROW",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "PUT100000000000"
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "CABROWSEME does not exist: PUT CONTAINER creates it [PUT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "PUT200000000000"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "PUT300000000000"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "QCH100000000003"
+     },
+     "resp": "NORMAL",
+     "item": 4,
+     "note": "QUERY CHANNEL: CONTAINERCNT is the number of containers in the channel, 3 [QUERY]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "SBR100000000000"
+     },
+     "resp": "NORMAL",
+     "item": 5,
+     "note": "STARTBROWSE CONTAINER of a channel the program created [START]; the token's value is not logged"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GNX100000000000"
+     },
+     "resp": "NORMAL",
+     "item": 6,
+     "note": "GETNEXT CONTAINER returns one container name per call; IBM calls the order undefined, so no name is logged [NEXT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GNX200000000000"
+     },
+     "resp": "NORMAL",
+     "item": 7
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GNX300000000000"
+     },
+     "resp": "NORMAL",
+     "item": 8
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "NAMS00000000003"
+     },
+     "resp": "NORMAL",
+     "item": 9,
+     "note": "the three names returned were ALPHA, BETA and GAMMA, each once, in whatever order [NEXT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GNX408300200000"
+     },
+     "resp": "NORMAL",
+     "item": 10,
+     "note": "no more containers: END RESP2 2 [NEXT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "EBR100000000000"
+     },
+     "resp": "NORMAL",
+     "item": 11,
+     "note": "ENDBROWSE CONTAINER ends the browse [END]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GNX511200300000"
+     },
+     "resp": "NORMAL",
+     "item": 12,
+     "note": "the browse has ended, so the token is not valid: TOKENERR RESP2 3 [NEXT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "EBR211200300000"
+     },
+     "resp": "NORMAL",
+     "item": 13,
+     "note": "ENDBROWSE with a token that is no longer valid: TOKENERR RESP2 3 [END]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "MOV100000000000"
+     },
+     "resp": "NORMAL",
+     "item": 14,
+     "note": "MOVE CONTAINER ALPHA AS ALPHA2 from CABROWSEME to CABMOVED, which does not exist: it is created [MOVE]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "QCH200000000002"
+     },
+     "resp": "NORMAL",
+     "item": 15,
+     "note": "the source channel lost the moved container: 2 left [MOVE] [QUERY]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "QCH300000000001"
+     },
+     "resp": "NORMAL",
+     "item": 16,
+     "note": "the target channel, created by the MOVE, holds the moved container: 1 [MOVE] [QUERY]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GET100000000005"
+     },
+     "resp": "NORMAL",
+     "item": 17,
+     "note": "ALPHA2 is in CABMOVED with its 5 bytes [MOVE] [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GET211001000000"
+     },
+     "resp": "NORMAL",
+     "item": 18,
+     "note": "ALPHA is no longer in CABROWSEME: CONTAINERERR RESP2 10 [MOVE] [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "MOV211001000000"
+     },
+     "resp": "NORMAL",
+     "item": 19,
+     "note": "MOVE of a container that is not in the source channel: CONTAINERERR RESP2 10 [MOVE]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "DCH100000000000"
+     },
+     "resp": "NORMAL",
+     "item": 20,
+     "note": "DELETE CHANNEL deletes the channel and every container it holds [DELETE]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "QCH412200200000"
+     },
+     "resp": "NORMAL",
+     "item": 21,
+     "note": "the channel is gone: QUERY CHANNEL CHANNELERR RESP2 2; CONTAINERCNT is not logged [QUERY]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GET312200200000"
+     },
+     "resp": "NORMAL",
+     "item": 22,
+     "note": "GET CONTAINER of a deleted channel: CHANNELERR RESP2 2 [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "DCH212200200000"
+     },
+     "resp": "NORMAL",
+     "item": 23,
+     "note": "DELETE CHANNEL of a channel that no longer exists: CHANNELERR RESP2 2 [DELETE]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "PUT400000000000"
+     },
+     "resp": "NORMAL",
+     "item": 24,
+     "note": "PUT CONTAINER names the deleted channel: \"If the channel does not exist, it is created\" [PUT]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "QCH500000000001"
+     },
+     "resp": "NORMAL",
+     "item": 25,
+     "note": "the re-created channel holds only BETA: the containers went with the old channel [DELETE] [QUERY]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "GET411001000000"
+     },
+     "resp": "NORMAL",
+     "item": 26,
+     "note": "ALPHA went with the old channel: CONTAINERERR RESP2 10 [DELETE] [GET]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CABROW",
+     "queue": "CALOG",
+     "data": {
+      "length": 31,
+      "text": "DCH300000000000"
+     },
+     "resp": "NORMAL",
+     "item": 27,
+     "note": "DELETE CHANNEL of the channel the MOVE created [DELETE]"
+    },
+    {
+     "event": "RETURN",
+     "program": "CABROW",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "CALOG": [
+    "PUT100000000000",
+    "PUT200000000000",
+    "PUT300000000000",
+    "QCH100000000003",
+    "SBR100000000000",
+    "GNX100000000000",
+    "GNX200000000000",
+    "GNX300000000000",
+    "NAMS00000000003",
+    "GNX408300200000",
+    "EBR100000000000",
+    "GNX511200300000",
+    "EBR211200300000",
+    "MOV100000000000",
+    "QCH200000000002",
+    "QCH300000000001",
+    "GET100000000005",
+    "GET211001000000",
+    "MOV211001000000",
+    "DCH100000000000",
+    "QCH412200200000",
+    "GET312200200000",
+    "DCH212200200000",
+    "PUT400000000000",
+    "QCH500000000001",
+    "GET411001000000",
+    "DCH300000000000"
+   ]
+  }
+ }
+}
