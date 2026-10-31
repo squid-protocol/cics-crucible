@@ -1,0 +1,56 @@
+{
+ "format": "cics-crucible/case/1",
+ "id": "ca-address-cwa",
+ "trap": "commarea-mismatch",
+ "title": "ADDRESS CWA: the common work area (SIT WRKAREA) is one area for the region, shared by the programs of a task and kept for the next task, of any transaction",
+ "clock": "2026-03-02T10:00:00",
+ "terminal": "T001",
+ "wrkarea": 32,
+ "sources": {
+  "cobol": [
+   "src/CACWAD.cbl",
+   "src/CACWSB.cbl"
+  ],
+  "bms": [],
+  "csd": [
+   "csd/ca-address-cwa.csd"
+  ],
+  "copy": [
+   "copy"
+  ],
+  "data": []
+ },
+ "layouts": {},
+ "maps": {},
+ "scenarios": [
+  {
+   "id": "cwa-shared",
+   "path": "happy",
+   "summary": "WRKAREA 32: the caller stamps the CWA through ADDRESS CWA, the LINKed callee (no COMMAREA) reads the stamp and writes a reply through its own ADDRESS CWA",
+   "steps": [
+    {
+     "at": 0,
+     "aid": "ENTER",
+     "text": "CA0K W"
+    }
+   ]
+  },
+  {
+   "id": "cwa-two-tasks",
+   "path": "trap",
+   "summary": "a stamp written through ADDRESS CWA by one task (CA0K) is read by the next task, of another transaction (CA0L)",
+   "steps": [
+    {
+     "at": 0,
+     "aid": "ENTER",
+     "text": "CA0K S"
+    },
+    {
+     "at": 1,
+     "aid": "ENTER",
+     "text": "CA0L R"
+    }
+   ]
+  }
+ ]
+}

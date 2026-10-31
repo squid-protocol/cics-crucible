@@ -1,0 +1,116 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-address-cwa",
+ "scenario": "cwa-two-tasks",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA0K",
+   "program": "CACWAD",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "CACWAD",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "CA0K S"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACWAD",
+     "queue": "CALOG",
+     "data": {
+      "length": 37,
+      "text": "S1  P=PRESENT V1=CWASTAMP V2=        "
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "CACWAD",
+     "text": "MODE=S P=PRESENT WROTE=CWASTAMP                                                 ",
+     "length": 80,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "CACWAD",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 2,
+   "transid": "CA0L",
+   "program": "CACWAD",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:01",
+   "trigger": {
+    "kind": "terminal",
+    "step": 1
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "CACWAD",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "CA0L R"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACWAD",
+     "queue": "CALOG",
+     "data": {
+      "length": 37,
+      "text": "R1  P=PRESENT V1=CWASTAMP V2=        "
+     },
+     "resp": "NORMAL",
+     "item": 2,
+     "note": "a different task of another transaction reads what the first wrote: the CWA is the region's"
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "CACWAD",
+     "text": "MODE=R P=PRESENT SEEN=CWASTAMP                                                  ",
+     "length": 80,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "CACWAD",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

@@ -1,0 +1,89 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-address-cwa",
+ "scenario": "cwa-shared",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA0K",
+   "program": "CACWAD",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "CACWAD",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "CA0K W"
+     }
+    },
+    {
+     "event": "LINK",
+     "program": "CACWAD",
+     "target": "CACWSB",
+     "length": 0,
+     "resp": "NORMAL",
+     "commarea": null,
+     "note": "no COMMAREA: the only shared storage is the CWA"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACWSB",
+     "queue": "CALOG",
+     "data": {
+      "length": 37,
+      "text": "W2  P=PRESENT V1=CWAMARK1 V2=        "
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "the callee's ADDRESS CWA reaches the CWA the caller stamped"
+    },
+    {
+     "event": "RETURN",
+     "program": "CACWSB",
+     "level": 2,
+     "caller_commarea": null
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "CACWAD",
+     "queue": "CALOG",
+     "data": {
+      "length": 37,
+      "text": "W1  P=PRESENT V1=CWAMARK1 V2=CWAECHO "
+     },
+     "resp": "NORMAL",
+     "item": 2,
+     "note": "the callee's write into the CWA is read back by the caller through its own view"
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "CACWAD",
+     "text": "MODE=W STAMP=CWAMARK1 REPLY=CWAECHO                                             ",
+     "length": 80,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "CACWAD",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

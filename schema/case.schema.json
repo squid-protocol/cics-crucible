@@ -24,6 +24,7 @@
     "title": {"type": "string", "minLength": 1},
     "clock": {"$ref": "#/$defs/timestamp"},
     "terminal": {"$ref": "#/$defs/name4"},
+    "wrkarea": {"type": "integer", "minimum": 1},
     "sources": {
       "type": "object",
       "required": ["cobol", "bms", "csd", "copy", "data"],
