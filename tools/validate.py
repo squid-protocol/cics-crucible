@@ -571,6 +571,12 @@ class Case:
             self.err("a program issues ADDRESS TWA but no CSD TRANSACTION states TWASIZE (SPEC section 2)")
         if "TCTUA" in addressed and not any("USERAREALEN" in a for a in types.values()):
             self.err("a program issues ADDRESS TCTUA but no CSD TYPETERM states USERAREALEN (SPEC section 2)")
+        # SPEC section 2 (CWA): the SIT WRKAREA is a case-level fact (not a CSD resource); ADDRESS CWA needs one
+        wrk = self.case.get("wrkarea")
+        if wrk is not None and not (isinstance(wrk, int) and not isinstance(wrk, bool) and wrk >= 1):
+            self.err(f"wrkarea {wrk!r} is not a positive integer (SPEC section 2)")
+        if "CWA" in addressed and wrk is None:
+            self.err("a program issues ADDRESS CWA but the case does not state wrkarea (SPEC section 2)")
 
         # SPEC section 2 (UCTRAN): the terminal's UCTRANST comes from its TYPETERM, so a case that asks for or sets it states
         # UCTRAN there; and with UCTRAN(YES) or TRANID the typed input is upper case (no input translation is modelled)
