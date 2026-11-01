@@ -52,6 +52,10 @@ def stub(source: str) -> str:
         out.append(" " * 11 + "CONTINUE" + suffix.rstrip())
         i = j + 1
     text = "\n".join(out) + "\n"
+    # OS/VS COBOL BLL idiom: not GnuCOBOL syntax. A statement of its own becomes CONTINUE, one trailing another
+    # statement is dropped.
+    text = re.sub(r"^(\s+)SERVICE\s+RELOAD\s+[A-Z0-9-]+", r"\1CONTINUE", text, flags=re.M)
+    text = re.sub(r"\s+SERVICE\s+RELOAD\s+[A-Z0-9-]+", "", text)
     text = re.sub(r"\bDFHRESP\s*\(\s*([A-Z0-9]+)\s*\)", lambda m: str(RESP[m.group(1).upper()]), text)
     text = re.sub(r"^(.{7}\s*WORKING-STORAGE\s+SECTION\.[^\n]*\n)", r"\1       COPY DFHEIBLK.\n", text,
                   count=1, flags=re.M)

@@ -1,0 +1,49 @@
+{
+ "format": "cics-crucible/case/1",
+ "id": "ca-bll-cells",
+ "trap": "commarea-mismatch",
+ "title": "OS/VS COBOL BLL cells: READQ TS SET(cell) with SERVICE RELOAD, and a 5400-byte GETMAIN record over two cells (the second = the first + 4096) with a cell moved to another cell",
+ "clock": "2026-03-02T10:00:00",
+ "terminal": "T001",
+ "sources": {
+  "cobol": [
+   "src/CABLL.cbl"
+  ],
+  "bms": [],
+  "csd": [
+   "csd/ca-bll-cells.csd"
+  ],
+  "copy": [
+   "copy"
+  ],
+  "data": []
+ },
+ "layouts": {},
+ "maps": {},
+ "scenarios": [
+  {
+   "id": "read-set-cell",
+   "path": "happy",
+   "summary": "WRITEQ TS then READQ TS SET(QPTR): after SERVICE RELOAD Q-REC the record holds the item (12 bytes) and LENGTH is 12",
+   "steps": [
+    {
+     "at": 0,
+     "aid": "ENTER",
+     "text": "CA0N R"
+    }
+   ]
+  },
+  {
+   "id": "long-record",
+   "path": "trap",
+   "summary": "GETMAIN SET(FRPTR) FLENGTH(5400), FRPTR1 = FRPTR + 4096: FIELD3 (byte 5001 on) is in the second cell's 4096-byte span; TS-REC addressed by a copy of FRPTR sees the head written through FILE-REC",
+   "steps": [
+    {
+     "at": 0,
+     "aid": "ENTER",
+     "text": "CA0N L"
+    }
+   ]
+  }
+ ]
+}

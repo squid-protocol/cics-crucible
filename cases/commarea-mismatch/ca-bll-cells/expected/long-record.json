@@ -1,0 +1,51 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "ca-bll-cells",
+ "scenario": "long-record",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "CA0N",
+   "program": "CABLL",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "CABLL",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "CA0N L"
+     }
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "CABLL",
+     "text": "MODE=L VIEW=HEAD****** TAIL=TAIL-BYTES  ",
+     "length": 40,
+     "options": [
+      "ERASE"
+     ],
+     "note": "GETMAIN INITIMG '*' fills 5400 bytes; 'HEAD' written through FIELD1(1:4), 'TAIL-BYTES' through FIELD3(1:10) at byte 5001 (in the second cell's span); TS-REC, addressed by a copy of the first cell, shows 'HEAD' + six '*' [BLL] [FIG3] [FIG5]"
+    },
+    {
+     "event": "RETURN",
+     "program": "CABLL",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}
