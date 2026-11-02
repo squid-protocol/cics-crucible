@@ -87,3 +87,7 @@ All CICS TS 6.x (IBM Documentation, SSJL4D_6.x, fetched 2026-10-15).
   https://www.ibm.com/docs/en/SSJL4D_6.x/reference-applications/commands-api/dfhp4_readprev.html
 * [ENDBR] EXEC CICS ENDBR, description, conditions:
   https://www.ibm.com/docs/en/SSJL4D_6.x/reference-applications/commands-api/dfhp4_endbr.html
+
+## Stated key
+
+`jcl/DEFVSAM.jcl` is the IDCAMS DEFINE CLUSTER for the CSD file's DSNAME: INDEXED, `KEYS(4 0)` (the key is the first 4 bytes, the length every `RIDFLD` of the case names), `RECORDSIZE(16 16)` (the seed record width). IBM (z/OS DFSMS Access Method Services, DEFINE CLUSTER): KEYS(length offset) "specifies the length and position of the key field of the records in a key-sequenced data set"; the offset is relative to the start of the record. A CICS file definition carries no key, so the case states it here instead of leaving a port to guess an offset. No expected log changes. 2026-11-02, gitgalaxy#6876.
