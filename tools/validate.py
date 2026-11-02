@@ -500,6 +500,7 @@ class Case:
         self.files_csd = set(self.csd.get("FILE", {}))
         self.tdq_csd = set(self.csd.get("TDQUEUE", {}))
         self._seeds()
+        self._clusters()
         self._region()
         for q, a in self.csd.get("TDQUEUE", {}).items():
             if a.get("TYPE", "").upper() != "INTRA":
@@ -743,6 +744,25 @@ class Case:
             if len(set(recs)) != len(recs):
                 self.err(f"{rel}: duplicate records")
             self.seed_width[f] = len(recs[0])
+
+    def _clusters(self) -> None:
+        """jcl/*.jcl: an in-stream IDCAMS DEFINE CLUSTER states a file's key (SPEC section 3). Its NAME is the DSNAME of a
+        CSD DEFINE FILE, and its RECORDSIZE is the seed's record width, so the key cannot drift from the data."""
+        dsnames = {str(v.get("DSNAME", "")).upper(): f for f, v in self.csd.get("FILE", {}).items()}
+        for p in sorted((self.dir / "jcl").glob("*.jcl")):
+            text = p.read_text(encoding="utf-8")
+            for m in re.finditer(r"DEFINE\s+CLUSTER\s*\(\s*NAME\(([^)]+)\)(.*?)\)\s*$", text, re.S | re.M):
+                name, body = m.group(1).strip().upper(), m.group(2)
+                f = dsnames.get(name)
+                if f is None:
+                    self.err(f"jcl/{p.name}: CLUSTER {name} is the DSNAME of no CSD DEFINE FILE")
+                    continue
+                keys = re.search(r"KEYS\((\d+)\s+(\d+)\)", body)
+                size = re.search(r"RECORDSIZE\((\d+)\s+(\d+)\)", body)
+                if not keys or not size or "INDEXED" not in body:
+                    self.err(f"jcl/{p.name}: CLUSTER {name} must be INDEXED with KEYS(len off) and RECORDSIZE(avg max)")
+                elif size.group(1) != size.group(2) or int(size.group(1)) != self.seed_width.get(f, int(size.group(1))):
+                    self.err(f"jcl/{p.name}: CLUSTER {name} RECORDSIZE must be the seed's fixed record width")
 
     def _scenarios(self) -> None:
         for sc in self.case["scenarios"]:

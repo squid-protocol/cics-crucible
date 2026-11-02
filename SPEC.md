@@ -55,6 +55,7 @@ cases/<trap>/<case-id>/
   bms/<MAPSET>.bms     BMS map source (DFHMSD/DFHMDI/DFHMDF), file stem = mapset name
   csd/<case>.csd       DFHCSDUP input: DEFINE PROGRAM / TRANSACTION / MAPSET / FILE / ...
   data/                seed data (VSAM records, as fixed-length text lines), when a case READs a file
+  jcl/<NAME>.jcl       IDCAMS DEFINE CLUSTER (in-stream SYSIN) stating a file's key: NAME is the CSD DEFINE FILE's DSNAME, INDEXED, KEYS(len off), RECORDSIZE(w w) with w the seed record width. Optional; additive (SPEC rule 5)
   expected/<scenario-id>.json   one expected log per scenario (section 6)
 ```
 
