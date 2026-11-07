@@ -1,0 +1,186 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hx-ext-precedence",
+ "scenario": "full-send",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HX04",
+   "program": "HXPRC",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "SEND-MAP",
+     "program": "HXPRC",
+     "map": "HXM4",
+     "mapset": "HXSET4",
+     "options": [
+      "ERASE"
+     ],
+     "fields": {
+      "FA": {
+       "attr": "F0",
+       "attr_from": "map",
+       "meaning": {
+        "protected": true,
+        "numeric": true,
+        "display": "normal",
+        "mdt": false
+       },
+       "data": "ALPHA",
+       "data_from": "program",
+       "color": "F2",
+       "color_from": "map",
+       "hilight": "F1",
+       "hilight_from": "map",
+       "note": "field COLOR=RED and HILIGHT=BLINK beat the map and mapset"
+      },
+      "FB": {
+       "attr": "F0",
+       "attr_from": "map",
+       "meaning": {
+        "protected": true,
+        "numeric": true,
+        "display": "normal",
+        "mdt": false
+       },
+       "data": "BETA",
+       "data_from": "program",
+       "color": "F1",
+       "color_from": "map",
+       "hilight": "F4",
+       "hilight_from": "map",
+       "note": "no field value: COLOR from the map (BLUE), HILIGHT from the mapset (UNDERLINE)"
+      },
+      "FC": {
+       "attr": "F0",
+       "attr_from": "map",
+       "meaning": {
+        "protected": true,
+        "numeric": true,
+        "display": "normal",
+        "mdt": false
+       },
+       "data": "GAMMA",
+       "data_from": "program",
+       "color": "F1",
+       "color_from": "map",
+       "hilight": "F2",
+       "hilight_from": "map",
+       "note": "field HILIGHT=REVERSE beats the mapset's UNDERLINE; COLOR from the map (BLUE)"
+      }
+     }
+    },
+    {
+     "event": "RETURN",
+     "program": "HXPRC",
+     "level": 1,
+     "transid": "HX04",
+     "commarea": {
+      "length": 1,
+      "text": "S"
+     }
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 2,
+   "transid": "HX04",
+   "program": "HXPRC",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:10",
+   "trigger": {
+    "kind": "terminal",
+    "step": 1
+   },
+   "eibaid": "PF1",
+   "eibcalen": 1,
+   "commarea": {
+    "length": 1,
+    "text": "S"
+   },
+   "events": [
+    {
+     "event": "SEND-MAP",
+     "program": "HXPRC",
+     "map": "HXM4",
+     "mapset": "HXSET4",
+     "options": [],
+     "fields": {
+      "FA": {
+       "attr": "F0",
+       "attr_from": "map",
+       "meaning": {
+        "protected": true,
+        "numeric": true,
+        "display": "normal",
+        "mdt": false
+       },
+       "data": "ALPHA",
+       "data_from": "program",
+       "color": "F6",
+       "color_from": "program",
+       "hilight": "F1",
+       "hilight_from": "map",
+       "note": "program colour DFHYELLOW beats RED; HILIGHT byte X'00' leaves the field's BLINK"
+      },
+      "FB": {
+       "attr": "F0",
+       "attr_from": "map",
+       "meaning": {
+        "protected": true,
+        "numeric": true,
+        "display": "normal",
+        "mdt": false
+       },
+       "data": "BETA",
+       "data_from": "program",
+       "color": "F1",
+       "color_from": "map",
+       "hilight": "F4",
+       "hilight_from": "map",
+       "note": "DFHDFCOL is X'00': not a colour, so the map's BLUE still applies"
+      },
+      "FC": {
+       "attr": "F0",
+       "attr_from": "map",
+       "meaning": {
+        "protected": true,
+        "numeric": true,
+        "display": "normal",
+        "mdt": false
+       },
+       "data": "GAMMA",
+       "data_from": "program",
+       "color": "F1",
+       "color_from": "map",
+       "hilight": "F1",
+       "hilight_from": "program",
+       "note": "program highlight DFHBLINK beats the field's REVERSE"
+      }
+     }
+    },
+    {
+     "event": "RETURN",
+     "program": "HXPRC",
+     "level": 1,
+     "transid": "HX04",
+     "commarea": {
+      "length": 1,
+      "text": "S"
+     }
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

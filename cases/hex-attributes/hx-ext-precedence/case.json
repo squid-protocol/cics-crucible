@@ -1,0 +1,66 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hx-ext-precedence",
+  "trap": "hex-attributes",
+  "title": "Colour and highlight precedence: program byte, field, map, mapset; X'00' is not a colour; DATAONLY applies no map default",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HXPRC.cbl"
+    ],
+    "bms": [
+      "bms/HXSET4.bms"
+    ],
+    "csd": [
+      "csd/hx-ext-precedence.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {
+    "HXM4": {
+      "mapset": "HXSET4",
+      "copybook": "copy/HXSET4.cpy"
+    }
+  },
+  "scenarios": [
+    {
+      "id": "full-send",
+      "path": "trap",
+      "summary": "ENTER sends every default; PF1 re-sends with program overrides and a X'00' colour that leaves the map's",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HX04"
+        },
+        {
+          "at": 10,
+          "aid": "PF1"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "dataonly",
+      "path": "trap",
+      "summary": "PF2 sends DATAONLY: the map's colours and highlights are not applied, a X'00' sends none",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HX04"
+        },
+        {
+          "at": 10,
+          "aid": "PF2"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
