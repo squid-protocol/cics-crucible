@@ -1,0 +1,121 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hx-mdt-reset",
+  "trap": "hex-attributes",
+  "title": "MDT bits across sends: a field sent with MDT on is transmitted untouched until FRSET or ERASEAUP resets it",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HXRST.cbl"
+    ],
+    "bms": [
+      "bms/HXSET3.bms"
+    ],
+    "csd": [
+      "csd/hx-mdt-reset.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {
+    "HXM3": {
+      "mapset": "HXSET3",
+      "copybook": "copy/HXSET3.cpy"
+    }
+  },
+  "scenarios": [
+    {
+      "id": "enter-no-frset",
+      "path": "trap",
+      "summary": "ENTER twice, no FRSET: NAME (typed) and NOTE (MDT set by the program) come back each time",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HX03"
+        },
+        {
+          "at": 10,
+          "aid": "ENTER",
+          "map": "HXM3",
+          "fields": {
+            "NAME": "ANN",
+            "NOTE": "KEEP    "
+          },
+          "note": "NAME was typed; NOTE is untouched but its MDT is on (the program sent DFHBMFSE), so the terminal transmits both"
+        },
+        {
+          "at": 20,
+          "aid": "ENTER",
+          "map": "HXM3",
+          "fields": {
+            "NAME": "ANN",
+            "NOTE": "KEEP    "
+          },
+          "note": "nothing typed; NAME and NOTE still have MDT on, so both are transmitted again"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "pf1-frset",
+      "path": "trap",
+      "summary": "PF1 echoes with FRSET: the next ENTER transmits nothing, so RECEIVE MAP is MAPFAIL",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HX03"
+        },
+        {
+          "at": 10,
+          "aid": "PF1",
+          "map": "HXM3",
+          "fields": {
+            "NAME": "ANN",
+            "NOTE": "KEEP    "
+          },
+          "note": "NAME was typed; NOTE is untouched but its MDT is on (the program sent DFHBMFSE), so the terminal transmits both"
+        },
+        {
+          "at": 20,
+          "aid": "ENTER",
+          "note": "nothing typed and no MDT on: no field is transmitted"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "pf2-eraseaup",
+      "path": "trap",
+      "summary": "PF2 sends with ERASEAUP: unprotected fields are erased and their MDT reset, so the next ENTER is MAPFAIL",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HX03"
+        },
+        {
+          "at": 10,
+          "aid": "PF2",
+          "map": "HXM3",
+          "fields": {
+            "NAME": "ANN",
+            "NOTE": "KEEP    "
+          },
+          "note": "NAME was typed; NOTE is untouched but its MDT is on (the program sent DFHBMFSE), so the terminal transmits both"
+        },
+        {
+          "at": 20,
+          "aid": "ENTER",
+          "note": "nothing typed and no MDT on: no field is transmitted"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
