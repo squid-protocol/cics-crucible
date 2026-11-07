@@ -1,0 +1,83 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hx-cursor-offset",
+  "trap": "hex-attributes",
+  "title": "SEND MAP CURSOR(n): a zero-based screen offset that beats the map's IC field and survives DATAONLY",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HXCUR.cbl"
+    ],
+    "bms": [
+      "bms/HXSET5.bms"
+    ],
+    "csd": [
+      "csd/hx-cursor-offset.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {
+    "HXM5": {
+      "mapset": "HXSET5",
+      "copybook": "copy/HXSET5.cpy"
+    }
+  },
+  "scenarios": [
+    {
+      "id": "dataonly-offset",
+      "path": "trap",
+      "summary": "PF1 re-sends DATAONLY with CURSOR(165): the cursor is at offset 165, not at the IC field",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HX05"
+        },
+        {
+          "at": 10,
+          "aid": "PF1"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "beats-ic",
+      "path": "trap",
+      "summary": "PF2 sends the whole map with CURSOR(81): the offset beats the IC field",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HX05"
+        },
+        {
+          "at": 10,
+          "aid": "PF2"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "computed-offset",
+      "path": "trap",
+      "summary": "ENTER computes row 6 column 8 as offset 407 (zero-based, 80 columns a row)",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HX05"
+        },
+        {
+          "at": 10,
+          "aid": "ENTER"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
