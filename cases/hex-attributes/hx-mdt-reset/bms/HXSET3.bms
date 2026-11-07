@@ -1,0 +1,20 @@
+***********************************************************************
+* cics-crucible  hex-attributes / hx-mdt-reset   (Apache-2.0)
+* Mapset HXSET3, map HXM3. Every INITIAL is exactly its field length.
+***********************************************************************
+HXSET3   DFHMSD TYPE=&SYSPARM,MODE=INOUT,LANG=COBOL,STORAGE=AUTO,      X
+               TIOAPFX=YES,CTRL=(FREEKB)
+HXM3     DFHMDI SIZE=(24,80),LINE=1,COLUMN=1
+         DFHMDF POS=(1,1),LENGTH=19,ATTRB=(ASKIP,BRT),                 X
+               INITIAL='HX03 MDT RESET TRAP'
+MSG      DFHMDF POS=(3,1),LENGTH=12,ATTRB=(ASKIP,NORM)
+         DFHMDF POS=(5,1),LENGTH=5,ATTRB=(ASKIP,NORM),INITIAL='NAME:'
+NAME     DFHMDF POS=(5,7),LENGTH=8,ATTRB=(UNPROT,NORM,IC),             X
+               JUSTIFY=(LEFT,BLANK)
+         DFHMDF POS=(5,16),LENGTH=1,ATTRB=(ASKIP,NORM)
+         DFHMDF POS=(6,1),LENGTH=5,ATTRB=(ASKIP,NORM),INITIAL='NOTE:'
+NOTE     DFHMDF POS=(6,7),LENGTH=8,ATTRB=(UNPROT,NORM),                X
+               JUSTIFY=(LEFT,BLANK)
+         DFHMDF POS=(6,16),LENGTH=1,ATTRB=(ASKIP,NORM)
+         DFHMSD TYPE=FINAL
+         END
