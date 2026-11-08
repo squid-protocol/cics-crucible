@@ -1,0 +1,126 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-file-delete",
+ "scenario": "delete-held",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC93",
+   "program": "HCDELE",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCDELE",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC93 U"
+     }
+    },
+    {
+     "event": "READ",
+     "program": "HCDELE",
+     "file": "HCDF",
+     "ridfld": "K002",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "K002BRAVO   0020"
+     },
+     "update": true
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDELE",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "U1  R=00 2=000 D=K002BRAVO   0020"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "DELETE",
+     "program": "HCDELE",
+     "file": "HCDF",
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDELE",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "U2  R=00 2=000 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "READ",
+     "program": "HCDELE",
+     "file": "HCDF",
+     "ridfld": "K002",
+     "resp": "NOTFND",
+     "data": null,
+     "resp2": 80
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDELE",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "U3  R=13 2=080 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCDELE",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCDELE",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "U1  R=00 2=000 D=K002BRAVO   0020",
+    "U2  R=00 2=000 D=                ",
+    "U3  R=13 2=080 D=                "
+   ]
+  },
+  "files": {
+   "HCDF": [
+    "K001ALPHA   0010",
+    "K003CHARLIE 0030"
+   ]
+  }
+ }
+}

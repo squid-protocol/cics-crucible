@@ -1,0 +1,106 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-file-delete",
+ "scenario": "delete-no-hold",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC93",
+   "program": "HCDELE",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCDELE",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC93 I"
+     }
+    },
+    {
+     "event": "DELETE",
+     "program": "HCDELE",
+     "file": "HCDF",
+     "resp": "INVREQ",
+     "resp2": 31
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDELE",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "I1  R=16 2=031 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "READ",
+     "program": "HCDELE",
+     "file": "HCDF",
+     "ridfld": "K001",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "K001ALPHA   0010"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDELE",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "I2  R=00 2=000 D=K001ALPHA   0010"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCDELE",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCDELE",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "I1  R=16 2=031 D=                ",
+    "I2  R=00 2=000 D=K001ALPHA   0010"
+   ]
+  },
+  "files": {
+   "HCDF": [
+    "K001ALPHA   0010",
+    "K002BRAVO   0020",
+    "K003CHARLIE 0030"
+   ]
+  }
+ }
+}

@@ -1,0 +1,92 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-file-delete",
+  "trap": "condition-handling",
+  "title": "File control: DELETE by key and of a held record, NOTFND and INVREQ, and WRITE of a deleted key",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCDELE.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-file-delete.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": [
+      "data/HCDF.dat"
+    ]
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "delete-key",
+      "path": "happy",
+      "summary": "DELETE by key removes the record: a READ of it is NOTFND, its neighbour is unchanged",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC93 K"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "delete-held",
+      "path": "trap",
+      "summary": "DELETE with no RIDFLD removes the record a READ UPDATE holds",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC93 U"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "delete-missing",
+      "path": "trap",
+      "summary": "DELETE of a key not in the file is NOTFND (RESP2 80) and changes nothing",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC93 M"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "delete-no-hold",
+      "path": "trap",
+      "summary": "DELETE with no RIDFLD and no READ UPDATE is INVREQ (RESP2 31) and changes nothing",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC93 I"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "delete-then-write",
+      "path": "trap",
+      "summary": "After DELETE the key is free: WRITE of it is NORMAL, not DUPREC",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC93 R"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}

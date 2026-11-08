@@ -1,0 +1,129 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-file-delete",
+ "scenario": "delete-then-write",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC93",
+   "program": "HCDELE",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCDELE",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC93 R"
+     }
+    },
+    {
+     "event": "DELETE",
+     "program": "HCDELE",
+     "file": "HCDF",
+     "resp": "NORMAL",
+     "ridfld": "K002"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDELE",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "R1  R=00 2=000 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITE",
+     "program": "HCDELE",
+     "file": "HCDF",
+     "ridfld": "K002",
+     "data": {
+      "length": 16,
+      "text": "K002NEWNAME 0099"
+     },
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDELE",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "R2  R=00 2=000 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "READ",
+     "program": "HCDELE",
+     "file": "HCDF",
+     "ridfld": "K002",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "K002NEWNAME 0099"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDELE",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "R3  R=00 2=000 D=K002NEWNAME 0099"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCDELE",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCDELE",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "R1  R=00 2=000 D=                ",
+    "R2  R=00 2=000 D=                ",
+    "R3  R=00 2=000 D=K002NEWNAME 0099"
+   ]
+  },
+  "files": {
+   "HCDF": [
+    "K001ALPHA   0010",
+    "K002NEWNAME 0099",
+    "K003CHARLIE 0030"
+   ]
+  }
+ }
+}
