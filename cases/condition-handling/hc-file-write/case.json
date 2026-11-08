@@ -1,0 +1,66 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-file-write",
+  "trap": "condition-handling",
+  "title": "File control: WRITE to a KSDS adds a record under a new key; a key already in the file is DUPREC and changes nothing",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCWRIT.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-file-write.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": [
+      "data/HCWF.dat"
+    ]
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "write-new",
+      "path": "happy",
+      "summary": "WRITE of a new key (K004) is NORMAL and a READ of it returns the record",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC92 N"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "write-duplicate",
+      "path": "trap",
+      "summary": "WRITE of a key already in the file is DUPREC and the stored record is unchanged",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC92 D"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "write-twice",
+      "path": "trap",
+      "summary": "WRITE of a new key twice: NORMAL, then DUPREC; one record stays",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC92 T"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}

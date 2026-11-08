@@ -1,0 +1,134 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-file-write",
+ "scenario": "write-twice",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC92",
+   "program": "HCWRIT",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCWRIT",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC92 T"
+     }
+    },
+    {
+     "event": "WRITE",
+     "program": "HCWRIT",
+     "file": "HCWF",
+     "ridfld": "K006",
+     "data": {
+      "length": 16,
+      "text": "K006FOXTROT 0060"
+     },
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCWRIT",
+     "queue": "HCLOG",
+     "data": {
+      "length": 27,
+      "text": "T1  R=00 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITE",
+     "program": "HCWRIT",
+     "file": "HCWF",
+     "ridfld": "K006",
+     "data": {
+      "length": 16,
+      "text": "K006FOXTROT 0060"
+     },
+     "resp": "DUPREC"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCWRIT",
+     "queue": "HCLOG",
+     "data": {
+      "length": 27,
+      "text": "T2  R=14 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "READ",
+     "program": "HCWRIT",
+     "file": "HCWF",
+     "ridfld": "K006",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "K006FOXTROT 0060"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCWRIT",
+     "queue": "HCLOG",
+     "data": {
+      "length": 27,
+      "text": "T3  R=00 D=K006FOXTROT 0060"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCWRIT",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCWRIT",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "T1  R=00 D=                ",
+    "T2  R=14 D=                ",
+    "T3  R=00 D=K006FOXTROT 0060"
+   ]
+  },
+  "files": {
+   "HCWF": [
+    "K001ALPHA   0010",
+    "K002BRAVO   0020",
+    "K003CHARLIE 0030",
+    "K006FOXTROT 0060"
+   ]
+  }
+ }
+}
