@@ -727,6 +727,7 @@ class Case:
     def _seeds(self) -> None:
         """data/<FILE>.dat: one fixed-width record per line, a file the CSD defines (SPEC section 2)."""
         self.seed_width: dict[str, int] = {}
+        self.seed_recs: dict[str, list[str]] = {}
         for rel in self.case["sources"]["data"]:
             p = self.dir / rel
             if not p.is_file():
@@ -744,6 +745,7 @@ class Case:
             if len(set(recs)) != len(recs):
                 self.err(f"{rel}: duplicate records")
             self.seed_width[f] = len(recs[0])
+            self.seed_recs[f] = recs
 
     def _clusters(self) -> None:
         """jcl/*.jcl: an in-stream IDCAMS DEFINE CLUSTER states a file's key (SPEC section 3). Its NAME is the DSNAME of a
@@ -998,6 +1000,27 @@ class Case:
                 self.err(f"expected/{fname}: final files names {f}, which has no CSD DEFINE FILE")
             elif f in self.seed_width and any(len(r) != self.seed_width[f] for r in recs):
                 self.err(f"expected/{fname}: final files {f}: a record is not {self.seed_width[f]} bytes")
+        # WRITE: DUPREC exactly when the key is already in the file (the seed's records, then each NORMAL WRITE; a DELETE
+        # of a key takes it out again). The key is the leading bytes RIDFLD names, so a seed record's key is its prefix.
+        held: dict[str, set[str]] = {}
+        for t in log["tasks"]:
+            for ev in t["events"]:
+                if ev["event"] not in ("WRITE", "DELETE") or "ridfld" not in ev or ev["file"] not in self.files_csd:
+                    continue
+                rid = ev["ridfld"] if isinstance(ev["ridfld"], str) else None
+                if rid is None:
+                    continue
+                keys = held.setdefault(ev["file"], set())
+                if ev["file"] in self.seed_recs and not keys:
+                    keys.update(r[:len(rid)] for r in self.seed_recs[ev["file"]])
+                if ev["event"] == "WRITE":
+                    if (ev["resp"] == "DUPREC") != (rid in keys) and ev["resp"] in ("NORMAL", "DUPREC"):
+                        self.err(f"expected/{fname}: WRITE {ev['file']} key {rid!r} is {ev['resp']}, but the key "
+                                 f"{'is' if rid in keys else 'is not'} in the file (IBM: DUPREC for a key already there)")
+                    if ev["resp"] == "NORMAL":
+                        keys.add(rid)
+                elif ev["resp"] == "NORMAL":
+                    keys.discard(rid)
         for ri in range(len(sc.get("requests", []))):
             if not any(t["trigger"] == {"kind": "http", "request": ri} for t in log["tasks"]):
                 self.err(f"expected/{fname}: request {ri} starts no task")
@@ -1147,12 +1170,19 @@ class Case:
                     self.err(f"{w}: QIDERR names queue {ev['queue']}, which the CSD defines")
             elif ev["queue"] not in self.tdq_csd:
                 self.err(f"{w}: queue {ev['queue']} has no CSD DEFINE TDQUEUE")
-        if k in ("READ", "REWRITE", "UNLOCK", "READNEXT", "READPREV", "STARTBR", "ENDBR") and ev["file"] not in self.files_csd:
+        if k in ("READ", "WRITE", "DELETE", "REWRITE", "UNLOCK", "READNEXT", "READPREV", "STARTBR", "ENDBR") \
+                and ev["file"] not in self.files_csd:
             self.err(f"{w}: file {ev['file']} not in the CSD")
+        for kind, attr in (("WRITE", "ADD"), ("DELETE", "DELETE")):
+            if k == kind and ev["file"] in self.files_csd and ev["resp"] == "NORMAL" \
+                    and self.csd["FILE"][ev["file"]].get(attr, "NO").upper() != "YES":
+                self.err(f"{w}: a NORMAL {kind} needs the CSD file {ev['file']} to say {attr}(YES)")
         if k in ("READ", "READNEXT", "READPREV") and ev.get("data") is not None:
             self._area(f"{w} data", ev["data"])
-        if k == "REWRITE":
+        if k in ("REWRITE", "WRITE"):
             self._area(f"{w} data", ev["data"])
+        if k == "WRITE" and ev["file"] in self.seed_width and ev["data"]["length"] != self.seed_width[ev["file"]]:
+            self.err(f"{w}: record length {ev['data']['length']} is not the file's {self.seed_width[ev['file']]}")
         if k in ("STARTBR", "READNEXT", "READPREV", "ENDBR") and ev["file"] in self.files_csd \
                 and self.csd["FILE"][ev["file"]].get("BROWSE", "NO").upper() != "YES":
             self.err(f"{w}: a browse needs the CSD file {ev['file']} to say BROWSE(YES)")
@@ -1297,6 +1327,9 @@ def self_test() -> None:
     opts = cics_options("READ FILE('HCUF') INTO(R) LENGTH(L) RIDFLD(K) UPDATE")
     assert opts[0][0] == "READ" and ("UPDATE", None) in opts and literal(dict(opts)["FILE"]) == "HCUF"
     assert cics_options("UNLOCK FILE('HCUF')")[0][0] == "UNLOCK"
+    opts = cics_options("WRITE FILE('HCWF') FROM(R) LENGTH(L) RIDFLD(K) RESP(X)")
+    assert opts[0][0] == "WRITE" and literal(dict(opts)["FILE"]) == "HCWF"
+    assert cics_options("DELETE FILE('HCWF') RIDFLD(K)")[0][0] == "DELETE"
     with tempfile.TemporaryDirectory() as td:
         f = Path(td) / "t.csd"
         f.write_text("DEFINE FILE(HCUF) GROUP(G) DSNAME(A.B)\n      READ(YES) UPDATE(YES)\n", encoding="utf-8")
