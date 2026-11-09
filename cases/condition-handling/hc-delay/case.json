@@ -1,0 +1,38 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-delay",
+  "trap": "condition-handling",
+  "title": "DELAY with RESP: no options, INTERVAL(0), INTERVAL(hhmmss), and FOR with SECONDS or MINUTES alone beyond 59 (NORMAL for every valid form)",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCDLAY.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-delay.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "valid-forms",
+      "path": "happy",
+      "summary": "six DELAY commands (default, INTERVAL(0), INTERVAL(2 s), FOR SECONDS(90), FOR MINUTES(75), FOR HOURS(1) MINUTES(2) SECONDS(3)), each RESP NORMAL, logged to TS queue HCLOG",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC93"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
