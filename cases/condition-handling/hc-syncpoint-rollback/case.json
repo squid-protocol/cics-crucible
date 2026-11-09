@@ -1,0 +1,67 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-syncpoint-rollback",
+  "trap": "condition-handling",
+  "title": "SYNCPOINT and SYNCPOINT ROLLBACK on a non-recoverable KSDS: ROLLBACK backs out nothing the file holds (also in a LINKed program), and a SYNCPOINT ends a READ UPDATE hold",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCSYNC.cbl",
+      "src/HCSYNB.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-syncpoint-rollback.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": [
+      "data/HCSF.dat"
+    ]
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "rollback-keeps",
+      "path": "trap",
+      "summary": "READ UPDATE, REWRITE to 0099, SYNCPOINT ROLLBACK, READ: HCSF is not recoverable, the record keeps 0099",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC91 R"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "commit-ends-hold",
+      "path": "trap",
+      "summary": "READ UPDATE, SYNCPOINT, REWRITE: the syncpoint ended the hold, so INVREQ RESP2 30 and the record is unchanged",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC91 C"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "link-rollback",
+      "path": "trap",
+      "summary": "REWRITE 0099, LINK to a program that issues SYNCPOINT ROLLBACK, READ in the caller: 0099 stays, the caller goes on",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC91 L"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
