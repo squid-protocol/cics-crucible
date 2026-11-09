@@ -1,0 +1,118 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-delay",
+ "scenario": "valid-forms",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC93",
+   "program": "HCDLAY",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLAY",
+     "queue": "HCLOG",
+     "data": {
+      "length": 7,
+      "text": "D1 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLAY",
+     "queue": "HCLOG",
+     "data": {
+      "length": 7,
+      "text": "D2 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLAY",
+     "queue": "HCLOG",
+     "data": {
+      "length": 7,
+      "text": "D3 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLAY",
+     "queue": "HCLOG",
+     "data": {
+      "length": 7,
+      "text": "D4 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLAY",
+     "queue": "HCLOG",
+     "data": {
+      "length": 7,
+      "text": "D5 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLAY",
+     "queue": "HCLOG",
+     "data": {
+      "length": 7,
+      "text": "D6 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCDLAY",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCDLAY",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "D1 R=00",
+    "D2 R=00",
+    "D3 R=00",
+    "D4 R=00",
+    "D5 R=00",
+    "D6 R=00"
+   ]
+  }
+ }
+}
