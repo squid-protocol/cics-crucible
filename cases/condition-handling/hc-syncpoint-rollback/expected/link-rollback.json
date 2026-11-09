@@ -1,0 +1,188 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-syncpoint-rollback",
+ "scenario": "link-rollback",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC91",
+   "program": "HCSYNC",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCSYNC",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC91 L"
+     }
+    },
+    {
+     "event": "READ",
+     "program": "HCSYNC",
+     "file": "HCSF",
+     "ridfld": "K002",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "K002BRAVO   0020"
+     },
+     "update": true
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCSYNC",
+     "queue": "HCLOG",
+     "data": {
+      "length": 27,
+      "text": "L1  R=00 D=K002BRAVO   0020"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "REWRITE",
+     "program": "HCSYNC",
+     "file": "HCSF",
+     "data": {
+      "length": 16,
+      "text": "K002BRAVO   0099"
+     },
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCSYNC",
+     "queue": "HCLOG",
+     "data": {
+      "length": 27,
+      "text": "L2  R=00 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "LINK",
+     "program": "HCSYNC",
+     "target": "HCSYNB",
+     "length": 0,
+     "commarea": null,
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCSYNB",
+     "queue": "HCLOG",
+     "data": {
+      "length": 27,
+      "text": "B1  R=00 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "SYNCPOINT-ROLLBACK",
+     "program": "HCSYNB",
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCSYNB",
+     "queue": "HCLOG",
+     "data": {
+      "length": 27,
+      "text": "B2  R=00 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "RETURN",
+     "program": "HCSYNB",
+     "level": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCSYNC",
+     "queue": "HCLOG",
+     "data": {
+      "length": 27,
+      "text": "L3  R=00 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "READ",
+     "program": "HCSYNC",
+     "file": "HCSF",
+     "ridfld": "K002",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "K002BRAVO   0099"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCSYNC",
+     "queue": "HCLOG",
+     "data": {
+      "length": 27,
+      "text": "L4  R=00 D=K002BRAVO   0099"
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCSYNC",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCSYNC",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "L1  R=00 D=K002BRAVO   0020",
+    "L2  R=00 D=                ",
+    "B1  R=00 D=                ",
+    "B2  R=00 D=                ",
+    "L3  R=00 D=                ",
+    "L4  R=00 D=K002BRAVO   0099"
+   ]
+  },
+  "files": {
+   "HCSF": [
+    "K001ALPHA   0010",
+    "K002BRAVO   0099",
+    "K003CHARLIE 0030"
+   ]
+  }
+ }
+}
