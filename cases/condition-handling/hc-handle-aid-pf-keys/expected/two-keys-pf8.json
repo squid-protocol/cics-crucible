@@ -1,0 +1,51 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-handle-aid-pf-keys",
+ "scenario": "two-keys-pf8",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HK01",
+   "program": "HCAIDK",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "PF8",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCAIDK",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HK01 A"
+     }
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCAIDK",
+     "text": "e06 HK01 A",
+     "length": 40,
+     "options": [
+      "ERASE"
+     ],
+     "note": "\"Control is passed after the input command is completed\" [AID]"
+    },
+    {
+     "event": "RETURN",
+     "program": "HCAIDK",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}
