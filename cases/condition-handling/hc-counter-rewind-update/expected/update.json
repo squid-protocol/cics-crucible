@@ -1,0 +1,200 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-counter-rewind-update",
+ "scenario": "update",
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "U1  R=16 S=201 V=0000000000000000",
+    "U2  R=00 S=000 V=0000000000000000",
+    "U3  R=00 S=000 V=0000000000000000",
+    "U4  R=00 S=000 V=000000000000000F",
+    "U5  R=00 S=000 V=000000000000000F",
+    "U6  R=16 S=406 V=0000000000000000",
+    "U7  R=16 S=406 V=0000000000000000",
+    "U8  R=00 S=000 V=0000000000000000",
+    "U9  R=00 S=000 V=0000000000000000",
+    "U10 R=00 S=000 V=000000000000000A",
+    "U11 R=16 S=403 V=0000000000000000",
+    "U12 R=16 S=404 V=0000000000000000"
+   ]
+  }
+ },
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC75",
+   "program": "HCCRWU",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCCRWU",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC75 U"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCRWU",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "U1  R=16 S=201 V=0000000000000000"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCRWU",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "U2  R=00 S=000 V=0000000000000000"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCRWU",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "U3  R=00 S=000 V=0000000000000000"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCRWU",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "U4  R=00 S=000 V=000000000000000F"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCRWU",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "U5  R=00 S=000 V=000000000000000F"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCRWU",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "U6  R=16 S=406 V=0000000000000000"
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCRWU",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "U7  R=16 S=406 V=0000000000000000"
+     },
+     "resp": "NORMAL",
+     "item": 7
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCRWU",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "U8  R=00 S=000 V=0000000000000000"
+     },
+     "resp": "NORMAL",
+     "item": 8
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCRWU",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "U9  R=00 S=000 V=0000000000000000"
+     },
+     "resp": "NORMAL",
+     "item": 9
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCRWU",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "U10 R=00 S=000 V=000000000000000A"
+     },
+     "resp": "NORMAL",
+     "item": 10
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCRWU",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "U11 R=16 S=403 V=0000000000000000"
+     },
+     "resp": "NORMAL",
+     "item": 11
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCCRWU",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "U12 R=16 S=404 V=0000000000000000"
+     },
+     "resp": "NORMAL",
+     "item": 12
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCCRWU",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCCRWU",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}
