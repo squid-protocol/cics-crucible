@@ -1,0 +1,134 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-file-into-browse",
+ "scenario": "read-into",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC84",
+   "program": "HCRDIN",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCRDIN",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC84 R"
+     }
+    },
+    {
+     "event": "READ",
+     "program": "HCRDIN",
+     "file": "HCRI",
+     "ridfld": "K130",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "K130HOTEL   0130"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRDIN",
+     "queue": "HCLOG",
+     "data": {
+      "length": 45,
+      "text": "R1  R=00 S=000 K=K130 L=16 D=K130HOTEL   0130"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "READ",
+     "program": "HCRDIN",
+     "file": "HCRI",
+     "ridfld": "K135",
+     "resp": "NOTFND",
+     "resp2": 80,
+     "data": null
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRDIN",
+     "queue": "HCLOG",
+     "data": {
+      "length": 45,
+      "text": "R2  R=13 S=080 K=     L=00 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "READ",
+     "program": "HCRDIN",
+     "file": "HCRI",
+     "ridfld": "K150",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "K150JULIET  0150"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRDIN",
+     "queue": "HCLOG",
+     "data": {
+      "length": 45,
+      "text": "R3  R=00 S=000 K=K150 L=16 D=K150JULIET  0150"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCRDIN",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCRDIN",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "R1  R=00 S=000 K=K130 L=16 D=K130HOTEL   0130",
+    "R2  R=13 S=080 K=     L=00 D=                ",
+    "R3  R=00 S=000 K=K150 L=16 D=K150JULIET  0150"
+   ]
+  },
+  "files": {
+   "HCRI": [
+    "K110FOXTROT 0110",
+    "K120GOLF    0120",
+    "K130HOTEL   0130",
+    "K140INDIA   0140",
+    "K150JULIET  0150"
+   ]
+  }
+ }
+}

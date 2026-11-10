@@ -1,0 +1,66 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-file-into-browse",
+  "trap": "condition-handling",
+  "title": "File control: READ, STARTBR, READNEXT and READPREV in the INTO form with DATASET, LENGTH and KEYLENGTH over a seeded KSDS; NOTFND (RESP2 80) and ENDFILE (RESP2 90)",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCRDIN.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-file-into-browse.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": [
+      "data/HCRI.dat"
+    ]
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "read-into",
+      "path": "happy",
+      "summary": "READ DATASET INTO LENGTH KEYLENGTH(4) of K130 (NORMAL, LENGTH 16), of the absent K135 (NOTFND RESP2 80) and of the last record K150",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC84 R"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "browse-fwd",
+      "path": "happy",
+      "summary": "STARTBR DATASET KEYLENGTH(4) GTEQ of the absent K115 positions on K120; READNEXT INTO returns K120..K150 with LENGTH 16 and RIDFLD updated each time, then ENDFILE RESP2 90; ENDBR DATASET",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC84 F"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "browse-back",
+      "path": "happy",
+      "summary": "STARTBR DATASET KEYLENGTH(4) GTEQ of K140; READPREV INTO returns K140..K110 with LENGTH 16 and RIDFLD updated each time, then ENDFILE RESP2 90; ENDBR DATASET",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC84 B"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
