@@ -1,0 +1,136 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-handle-mapfail",
+  "trap": "condition-handling",
+  "title": "RECEIVE MAP MAPFAIL three ways: HANDLE CONDITION label, RESP, and the default abend AEI9, with and without input",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCMAPF.cbl"
+    ],
+    "bms": [
+      "bms/HMSET.bms"
+    ],
+    "csd": [
+      "csd/hc-handle-mapfail.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {
+    "HMCA": {
+      "source": "src/HCMAPF.cbl",
+      "record": "WS-CA"
+    }
+  },
+  "maps": {
+    "HMAP": {
+      "mapset": "HMSET",
+      "copybook": "copy/HMSET.cpy"
+    }
+  },
+  "scenarios": [
+    {
+      "id": "handle-empty",
+      "path": "trap",
+      "summary": "HM01, HANDLE CONDITION MAPFAIL(NO-INPUT): an empty ENTER jumps to the label and the statement after the RECEIVE never runs",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HM01"
+        },
+        {
+          "at": 10,
+          "aid": "ENTER",
+          "map": "HMAP",
+          "fields": {}
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "handle-input",
+      "path": "happy",
+      "summary": "HM01 with OPT typed: no condition, the handler is not taken",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HM01"
+        },
+        {
+          "at": 10,
+          "aid": "ENTER",
+          "map": "HMAP",
+          "fields": {
+            "OPT": "A"
+          }
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "resp-empty",
+      "path": "trap",
+      "summary": "HM02, RESP: MAPFAIL comes back as a return code, no jump and no abend",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HM02"
+        },
+        {
+          "at": 10,
+          "aid": "ENTER",
+          "map": "HMAP",
+          "fields": {}
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "resp-input",
+      "path": "happy",
+      "summary": "HM02 with OPT typed: RESP is NORMAL",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HM02"
+        },
+        {
+          "at": 10,
+          "aid": "ENTER",
+          "map": "HMAP",
+          "fields": {
+            "OPT": "A"
+          }
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "unhandled-empty",
+      "path": "trap",
+      "summary": "HM03, no handler and no RESP: the default action of MAPFAIL, abend AEI9",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HM03"
+        },
+        {
+          "at": 10,
+          "aid": "ENTER",
+          "map": "HMAP",
+          "fields": {}
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
