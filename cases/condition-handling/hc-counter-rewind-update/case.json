@@ -1,0 +1,64 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-counter-rewind-update",
+  "trap": "condition-handling",
+  "title": "Named counters: REWIND COUNTER / DCOUNTER resets a counter only at its limit (SUPPRESSED RESP2 102 before it), UPDATE COUNTER / DCOUNTER sets the current value within minimum and maximum plus 1 (INVREQ 406 outside), missing counter 201, bad pool 403 / name 404",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCCRWU.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-counter-rewind-update.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "rewind",
+      "path": "happy",
+      "summary": "REWIND DCOUNTER (limits 1 and 3) of a missing counter (INVREQ 201), before the limit (SUPPRESSED RESP2 102), at the limit (NORMAL, the next GET returns the minimum), again before the limit, bad pool (403) and bad name (404)",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC75 R"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "update",
+      "path": "happy",
+      "summary": "UPDATE DCOUNTER VALUE (limits 10 and 20): of a missing counter (201), within the limits, below the minimum and above the maximum plus 1 (INVREQ 406), at the maximum plus 1 and at the minimum (NORMAL), bad pool (403) and bad name (404)",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC75 U"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "fullword",
+      "path": "happy",
+      "summary": "REWIND COUNTER and UPDATE COUNTER (fullword, default limits): missing counter (201), REWIND before the limit (SUPPRESSED 102), UPDATE VALUE read back by QUERY and GET, bad pool (403) and bad name (404)",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC75 C"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
