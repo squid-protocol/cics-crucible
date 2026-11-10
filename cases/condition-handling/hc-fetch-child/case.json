@@ -1,0 +1,92 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-fetch-child",
+  "trap": "condition-handling",
+  "title": "FETCH CHILD, FETCH ANY and FREE CHILD of RUN TRANSID children: COMPSTATUS, ABCODE, NOTFND and the invalid-token INVREQs",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCFPAR.cbl",
+      "src/HCFCHD.cbl",
+      "src/HCFCHA.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-fetch-child.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "child-normal",
+      "path": "happy",
+      "summary": "RUN TRANSID CHILD then FETCH CHILD: the parent waits, NORMAL with COMPSTATUS NORMAL and a blank ABCODE",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCFT N"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "child-abend",
+      "path": "trap",
+      "summary": "FETCH CHILD of a child that abended: the FETCH itself is NORMAL, COMPSTATUS is ABEND and ABCODE is the child's code",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCFT A"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "fetch-any",
+      "path": "happy",
+      "summary": "FETCH ANY returns the one child's token; a second FETCH ANY finds no unfetched child: NOTFND with RESP2 1",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCFT Y"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "bad-token",
+      "path": "trap",
+      "summary": "FETCH ANY with no children is INVREQ RESP2 52; FETCH CHILD of a token never issued is INVREQ RESP2 50",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCFT B"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "free-child",
+      "path": "trap",
+      "summary": "FREE CHILD of a completed child is NORMAL; FREE CHILD and FETCH CHILD of the freed token are INVREQ RESP2 50",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCFT F"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
