@@ -1,0 +1,114 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-send-map-freekb",
+  "trap": "condition-handling",
+  "title": "SEND MAP FREEKB is a send option: logged only when the program wrote it, never inferred from a map's CTRL=(FREEKB)",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCFKB.cbl"
+    ],
+    "bms": [
+      "bms/HCFSET.bms"
+    ],
+    "csd": [
+      "csd/hc-send-map-freekb.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {
+    "HCFA": {
+      "mapset": "HCFSET",
+      "copybook": "copy/HCFSET.cpy"
+    },
+    "HCFB": {
+      "mapset": "HCFSET",
+      "copybook": "copy/HCFSET.cpy"
+    }
+  },
+  "scenarios": [
+    {
+      "id": "mode-a",
+      "path": "happy",
+      "summary": "SEND MAP ERASE FREEKB: the log carries FREEKB (keyboard unlocked)",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC43 A"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "mode-b",
+      "path": "happy",
+      "summary": "SEND MAP ERASE ALARM FREEKB: FREEKB sorts among the other options",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC43 B"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "mode-c",
+      "path": "trap",
+      "summary": "SEND MAP DATAONLY FREEKB: FREEKB with DATAONLY, only program data sent",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC43 C"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "mode-d",
+      "path": "trap",
+      "summary": "SEND MAP MAPONLY ERASE FREEKB: FREEKB with MAPONLY, map defaults only",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC43 D"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "mode-e",
+      "path": "trap",
+      "summary": "SEND MAP ERASE, no FREEKB anywhere: the keyboard stays locked, options lack FREEKB",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC43 E"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "mode-f",
+      "path": "trap",
+      "summary": "SEND MAP ERASE of a map with CTRL=(FREEKB): the keyboard unlocks but the program wrote no FREEKB, so the options lack it",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC43 F"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}

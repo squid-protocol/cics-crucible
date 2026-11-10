@@ -1,0 +1,59 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-send-map-freekb",
+ "scenario": "mode-c",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC43",
+   "program": "HCFKB",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCFKB",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC43 C"
+     }
+    },
+    {
+     "event": "SEND-MAP",
+     "program": "HCFKB",
+     "map": "HCFA",
+     "mapset": "HCFSET",
+     "options": [
+      "DATAONLY",
+      "FREEKB"
+     ],
+     "fields": {
+      "AMSG": {
+       "attr": null,
+       "attr_from": "none",
+       "data": "MODE C",
+       "data_from": "program"
+      }
+     }
+    },
+    {
+     "event": "RETURN",
+     "program": "HCFKB",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

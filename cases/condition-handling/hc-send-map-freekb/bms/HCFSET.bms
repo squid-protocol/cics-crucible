@@ -1,0 +1,21 @@
+***********************************************************************
+* cics-crucible  condition-handling / hc-send-map-freekb  (Apache-2.0)
+* Mapset HCFSET: HCFA (no CTRL anywhere), HCFB (CTRL=(FREEKB) on the
+* map). Every INITIAL is exactly its field length.
+***********************************************************************
+HCFSET   DFHMSD TYPE=&SYSPARM,MODE=INOUT,LANG=COBOL,STORAGE=AUTO,      X
+               TIOAPFX=YES
+HCFA     DFHMDI SIZE=(24,80),LINE=1,COLUMN=1
+         DFHMDF POS=(1,1),LENGTH=10,ATTRB=(ASKIP,BRT),                 X
+               INITIAL='HC43 PLAIN'
+AMSG     DFHMDF POS=(3,1),LENGTH=12,ATTRB=(ASKIP,NORM)
+ANAME    DFHMDF POS=(5,1),LENGTH=8,ATTRB=(UNPROT,NORM,IC)
+         DFHMDF POS=(5,10),LENGTH=1,ATTRB=(ASKIP,NORM)
+HCFB     DFHMDI SIZE=(24,80),LINE=1,COLUMN=1,CTRL=(FREEKB)
+         DFHMDF POS=(1,1),LENGTH=9,ATTRB=(ASKIP,BRT),                  X
+               INITIAL='HC43 CTRL'
+BMSG     DFHMDF POS=(3,1),LENGTH=12,ATTRB=(ASKIP,NORM)
+BNAME    DFHMDF POS=(5,1),LENGTH=8,ATTRB=(UNPROT,NORM,IC)
+         DFHMDF POS=(5,10),LENGTH=1,ATTRB=(ASKIP,NORM)
+         DFHMSD TYPE=FINAL
+         END
