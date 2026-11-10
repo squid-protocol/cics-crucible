@@ -1,0 +1,115 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-fetch-child",
+ "scenario": "fetch-any",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HCFT",
+   "program": "HCFPAR",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCFPAR",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HCFT Y"
+     }
+    },
+    {
+     "event": "RUN",
+     "program": "HCFPAR",
+     "transid": "HCFD",
+     "resp": "NORMAL",
+     "note": "the child token is read by the FETCH or FREE that follows"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFPAR",
+     "queue": "HCFLOG",
+     "data": {
+      "length": 24,
+      "text": "R=000/000 C=N A=     T=Y"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFPAR",
+     "queue": "HCFLOG",
+     "data": {
+      "length": 24,
+      "text": "R=013/001 C=- A=     T=-"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCFPAR",
+     "text": "DONE",
+     "length": 4,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCFPAR",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 2,
+   "transid": "HCFD",
+   "program": "HCFCHD",
+   "termid": null,
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "run",
+    "task": 1,
+    "event": 1
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFCHD",
+     "queue": "HCFCLOG",
+     "data": {
+      "length": 9,
+      "text": "CHILD RAN"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "RETURN",
+     "program": "HCFCHD",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}
