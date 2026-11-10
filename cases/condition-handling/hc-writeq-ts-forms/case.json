@@ -1,0 +1,38 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-writeq-ts-forms",
+  "trap": "condition-handling",
+  "title": "WRITEQ TS with RESP: NOSUSPEND, MAIN, AUXILIARY, ITEM, NUMITEMS, REWRITE ITEM, and REWRITE answered ITEMERR / QIDERR",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCWQTS.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-writeq-ts-forms.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "forms",
+      "path": "happy",
+      "summary": "seven WRITEQ TS commands (NOSUSPEND write, ITEM + NUMITEMS, AUXILIARY, MAIN, REWRITE ITEM, REWRITE past the last item, REWRITE of an absent queue), each logged to HCLOG with ITEM, NUMITEMS and RESP",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC97"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
