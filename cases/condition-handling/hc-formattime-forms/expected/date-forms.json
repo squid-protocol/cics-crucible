@@ -1,0 +1,176 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-formattime-forms",
+ "scenario": "date-forms",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HCFT",
+   "program": "HCFMTF",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCFMTF",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HCFT D"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "D1 20260302  "
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "D2 03-02-2026"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "D3 02.03.2026"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "D4 26/03/02  "
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "D5 030226    "
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "D6 02-03-26  "
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "D7 26061     "
+     },
+     "resp": "NORMAL",
+     "item": 7
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "D8 2026-061  "
+     },
+     "resp": "NORMAL",
+     "item": 8
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "D9 26.02.03  "
+     },
+     "resp": "NORMAL",
+     "item": 9
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "DA 20260203  "
+     },
+     "resp": "NORMAL",
+     "item": 10
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCFMTF",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCFMTF",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "D1 20260302  ",
+    "D2 03-02-2026",
+    "D3 02.03.2026",
+    "D4 26/03/02  ",
+    "D5 030226    ",
+    "D6 02-03-26  ",
+    "D7 26061     ",
+    "D8 2026-061  ",
+    "D9 26.02.03  ",
+    "DA 20260203  "
+   ]
+  }
+ }
+}

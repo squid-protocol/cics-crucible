@@ -1,0 +1,64 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-formattime-forms",
+  "trap": "condition-handling",
+  "title": "FORMATTIME date forms (ten, with DATESEP value / default / none), TIME with TIMESEP, and the binary forms DAYCOUNT / DAYOFWEEK / DAYOFMONTH / MONTHOFYEAR / YEAR / MILLISECONDS, on the clock and on a leap-year ABSTIME",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCFMTF.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-formattime-forms.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "date-forms",
+      "path": "happy",
+      "summary": "ASKTIME, then FORMATTIME in each of the ten date forms with DATESEP('-'), DATESEP('.'), DATESEP alone ('/') or none",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCFT D"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "time-and-numbers",
+      "path": "happy",
+      "summary": "FORMATTIME TIME with TIMESEP('.'), TIMESEP alone (':') or none, and DAYCOUNT, DAYOFWEEK, DAYOFMONTH, MONTHOFYEAR, YEAR, MILLISECONDS",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCFT T"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "leap-year-end",
+      "path": "trap",
+      "summary": "a fixed ABSTIME, 31 Dec 2028 23:59:59.999 (leap year, a Sunday): MMDDYYYY, YYYYDDD day 366, YYDDD, TIME, and the six binary forms",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCFT L"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
