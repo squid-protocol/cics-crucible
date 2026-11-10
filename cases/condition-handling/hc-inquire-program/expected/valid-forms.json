@@ -1,0 +1,70 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-inquire-program",
+ "scenario": "valid-forms",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC96",
+   "program": "HCINQP",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCINQP",
+     "queue": "HCLOG",
+     "data": {
+      "length": 14,
+      "text": "P1 R=00 S=0023"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCINQP",
+     "queue": "HCLOG",
+     "data": {
+      "length": 14,
+      "text": "P2 R=27 S=0000"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCINQP",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCINQP",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "P1 R=00 S=0023",
+    "P2 R=27 S=0000"
+   ]
+  }
+ }
+}
