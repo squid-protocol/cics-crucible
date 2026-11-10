@@ -166,10 +166,10 @@ tasks it starts.
   RECEIVE MAP although no BMS source holds a map of that name (the ABM0 trap: the map is not in
   its mapset); the mapset named (or, with MAPSET omitted, the map name) must still be a mapset.
 * `peers` (optional, additive) states the client peers of a case's HTTP scenarios (section 2, HTTP peer):
-  `{"<peer id>": {"host"?, "responses": [{"status", "mediatype"?, "body"?}, ...]}}`. A peer's script is replayed in every scenario: the
+  `{"<peer id>": {"host"?, "responses": [{"status", "statustext"?, "mediatype"?, "body"?}, ...]}}`. A peer's script is replayed in every scenario: the
   nth request that peer sends in a scenario (in order of `at`) is answered by `responses[n]`, and the script is as long as the
   most requests the peer sends in one scenario. `body` is text (the characters, after any code-page conversion; trailing
-  blanks are not compared); a response with no `body` has none, and a `WEB SEND` that sends one fails the case. `host` (additive) makes the peer an origin server for the client role: its script is then as long as the most `WEB CONVERSE`s one scenario sends it, and hosts are unique across peers.
+  blanks are not compared); a response with no `body` has none, and a `WEB SEND` that sends one fails the case. `host` (additive) makes the peer an origin server for the client role: its script is then as long as the most `WEB CONVERSE`s one scenario sends it, and hosts are unique across peers. `statustext` (additive) is the reason phrase an origin server sends (what a `WEB CONVERSE` `STATUSTEXT` receives; IBM, WEB CONVERSE); it is stated only on a peer with a `host`, and a program shows it on the terminal, since the `WEB-CONVERSE` event does not carry it.
 * A scenario's `path` is `happy` or `trap` (which side of the trap it drives), `initial` seeds
   temporary storage queues (`ts_queues`: queue → list of items) and, optionally and additively, intrapartition
   transient data queues (`td_queues`: queue → items, oldest first; each queue must be a CSD `TDQUEUE`), and `steps` are the operator

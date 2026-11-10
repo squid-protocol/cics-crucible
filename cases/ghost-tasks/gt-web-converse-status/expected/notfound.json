@@ -1,0 +1,77 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "gt-web-converse-status",
+  "scenario": "notfound",
+  "tasks": [
+    {
+      "seq": 1,
+      "transid": "GT86",
+      "program": "GTWCVS",
+      "termid": "T001",
+      "at": "2026-03-02T10:00:00",
+      "trigger": {
+        "kind": "terminal",
+        "step": 0
+      },
+      "eibaid": "ENTER",
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "program": "GTWCVS",
+          "event": "RECEIVE",
+          "resp": "NORMAL",
+          "length": 6,
+          "data": {
+            "length": 6,
+            "text": "GT86 B"
+          }
+        },
+        {
+          "program": "GTWCVS",
+          "event": "WEB-OPEN",
+          "host": "missing.example",
+          "scheme": "HTTP",
+          "resp": "NORMAL"
+        },
+        {
+          "program": "GTWCVS",
+          "event": "WEB-CONVERSE",
+          "method": "GET",
+          "path": "/gt/status",
+          "status": 404,
+          "tolength": 12,
+          "into": {
+            "length": 12,
+            "text": "no such item"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "program": "GTWCVS",
+          "event": "WEB-CLOSE",
+          "resp": "NORMAL"
+        },
+        {
+          "program": "GTWCVS",
+          "event": "SEND-TEXT",
+          "text": "GT86 S=404 L=12 T=Not Found           M=text/plain",
+          "length": 96,
+          "options": [
+            "ERASE",
+            "FREEKB",
+            "WAIT"
+          ]
+        },
+        {
+          "program": "GTWCVS",
+          "event": "RETURN",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    }
+  ]
+}

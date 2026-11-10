@@ -1,0 +1,97 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-web-converse-status",
+  "trap": "ghost-tasks",
+  "title": "Client WEB CONVERSE reading STATUSTEXT / STATUSLEN and MEDIATYPE of the response: 200 OK, 404 Not Found, and a 19-character phrase that fills STATUSLEN",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/GTWCVS.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/gt-web-converse-status.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "peers": {
+    "ok": {
+      "host": "ok.example",
+      "responses": [
+        {
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "application/json",
+          "body": "{\"n\":1}"
+        }
+      ]
+    },
+    "notfound": {
+      "host": "missing.example",
+      "responses": [
+        {
+          "status": 404,
+          "statustext": "Not Found",
+          "mediatype": "text/plain",
+          "body": "no such item"
+        }
+      ]
+    },
+    "fullphrase": {
+      "host": "busy.example",
+      "responses": [
+        {
+          "status": 503,
+          "statustext": "Service Unavailable",
+          "mediatype": "text/html",
+          "body": "try later"
+        }
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "id": "ok",
+      "path": "happy",
+      "summary": "GT86 A: ok.example answers a 200 with reason phrase OK and media type application/json; the task shows the status, TOLENGTH, STATUSTEXT and MEDIATYPE",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT86 A"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "notfound",
+      "path": "happy",
+      "summary": "GT86 B: missing.example answers a 404 with reason phrase Not Found and media type text/plain; the task shows the status, TOLENGTH, STATUSTEXT and MEDIATYPE",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT86 B"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "fullphrase",
+      "path": "happy",
+      "summary": "GT86 C: busy.example answers a 503 whose reason phrase (19 characters) fills STATUSLEN exactly; the task shows the status, TOLENGTH, STATUSTEXT and MEDIATYPE",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT86 C"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
