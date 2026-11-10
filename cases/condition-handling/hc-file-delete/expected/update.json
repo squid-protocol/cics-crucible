@@ -28,6 +28,24 @@
      }
     },
     {
+     "event": "DELETE",
+     "program": "HCDELF",
+     "file": "HCDL",
+     "resp": "INVREQ",
+     "resp2": 31
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDELF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "U1  R=16 S=031 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
      "event": "READ",
      "program": "HCDELF",
      "file": "HCDL",
@@ -46,10 +64,10 @@
      "queue": "HCLOG",
      "data": {
       "length": 33,
-      "text": "U1  R=00 S=000 D=A300CHARLIE 0030"
+      "text": "U2  R=00 S=000 D=A300CHARLIE 0030"
      },
      "resp": "NORMAL",
-     "item": 1
+     "item": 2
     },
     {
      "event": "DELETE",
@@ -63,10 +81,10 @@
      "queue": "HCLOG",
      "data": {
       "length": 33,
-      "text": "U2  R=00 S=000 D=                "
+      "text": "U3  R=00 S=000 D=                "
      },
      "resp": "NORMAL",
-     "item": 2
+     "item": 3
     },
     {
      "event": "READ",
@@ -83,25 +101,7 @@
      "queue": "HCLOG",
      "data": {
       "length": 33,
-      "text": "U3  R=13 S=080 D=                "
-     },
-     "resp": "NORMAL",
-     "item": 3
-    },
-    {
-     "event": "DELETE",
-     "program": "HCDELF",
-     "file": "HCDL",
-     "resp": "INVREQ",
-     "resp2": 31
-    },
-    {
-     "event": "WRITEQ-TS",
-     "program": "HCDELF",
-     "queue": "HCLOG",
-     "data": {
-      "length": 33,
-      "text": "U4  R=16 S=031 D=                "
+      "text": "U4  R=13 S=080 D=                "
      },
      "resp": "NORMAL",
      "item": 4
@@ -129,10 +129,10 @@
  "final": {
   "ts_queues": {
    "HCLOG": [
-    "U1  R=00 S=000 D=A300CHARLIE 0030",
-    "U2  R=00 S=000 D=                ",
-    "U3  R=13 S=080 D=                ",
-    "U4  R=16 S=031 D=                "
+    "U1  R=16 S=031 D=                ",
+    "U2  R=00 S=000 D=A300CHARLIE 0030",
+    "U3  R=00 S=000 D=                ",
+    "U4  R=13 S=080 D=                "
    ]
   },
   "files": {

@@ -39,7 +39,7 @@
     {
       "id": "update",
       "path": "happy",
-      "summary": "READ UPDATE then DELETE with no RIDFLD removes the held record; a DELETE with no RIDFLD and nothing held is INVREQ RESP2 31",
+      "summary": "DELETE with no RIDFLD before any READ UPDATE is INVREQ RESP2 31; READ UPDATE then DELETE with no RIDFLD removes the held record",
       "steps": [
         {
           "at": 0,

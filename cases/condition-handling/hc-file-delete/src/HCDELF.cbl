@@ -7,8 +7,8 @@
       * of 16 bytes: key 4, name 8, quantity 4):                      *
       *   K  DELETE RIDFLD of K A200, READ it, DELETE it again,       *
       *      DELETE of an absent key, READ of a neighbour             *
-      *   U  READ UPDATE of A300 then DELETE with no RIDFLD, READ,    *
-      *      DELETE with no RIDFLD and no READ UPDATE                 *
+      *   U  DELETE with no RIDFLD and no READ UPDATE yet, then READ  *
+      *      UPDATE of A300, DELETE with no RIDFLD, READ of A300      *
       *   G  DELETE GENERIC KEYLENGTH 1 (A), READ, the same DELETE    *
       *      again, DELETE GENERIC KEYLENGTH 2 (B1), READ of B300     *
       * Every result is a breadcrumb in TS queue HCLOG.               *
@@ -70,26 +70,28 @@
            MOVE 'K5 ' TO CLOG-TAG
            PERFORM LOG-D.
        UPDATE-PARA.
+      * No READ UPDATE has been issued yet: DELETE with no RIDFLD is
+      * INVREQ RESP2 31. Then READ UPDATE of A300 and DELETE it.
+           EXEC CICS DELETE FILE('HCDL')
+                     RESP(WS-RESP) RESP2(WS-RESP2)
+           END-EXEC
+           MOVE 'U1 ' TO CLOG-TAG
+           PERFORM LOG-R
            MOVE 'A300' TO WS-KEY
            EXEC CICS READ FILE('HCDL') INTO(WS-REC) LENGTH(WS-LEN)
                      RIDFLD(WS-KEY) UPDATE
                      RESP(WS-RESP) RESP2(WS-RESP2)
            END-EXEC
-           MOVE 'U1 ' TO CLOG-TAG
+           MOVE 'U2 ' TO CLOG-TAG
            PERFORM LOG-D
            EXEC CICS DELETE FILE('HCDL')
                      RESP(WS-RESP) RESP2(WS-RESP2)
            END-EXEC
-           MOVE 'U2 ' TO CLOG-TAG
+           MOVE 'U3 ' TO CLOG-TAG
            PERFORM LOG-R
            PERFORM READ-PARA
-           MOVE 'U3 ' TO CLOG-TAG
-           PERFORM LOG-D
-           EXEC CICS DELETE FILE('HCDL')
-                     RESP(WS-RESP) RESP2(WS-RESP2)
-           END-EXEC
            MOVE 'U4 ' TO CLOG-TAG
-           PERFORM LOG-R.
+           PERFORM LOG-D.
        GENERIC-PARA.
            MOVE 'A' TO WS-KEY1
            PERFORM GDEL1-PARA
