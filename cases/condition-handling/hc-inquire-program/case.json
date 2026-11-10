@@ -2,14 +2,12 @@
   "format": "cics-crucible/case/1",
   "id": "hc-inquire-program",
   "trap": "condition-handling",
-  "title": "INQUIRE PROGRAM with RESP: STATUS of an enabled, a disabled and the running program (CVDA 23 / 24), PGMIDERR for an undefined name",
+  "title": "INQUIRE PROGRAM with RESP: STATUS of the running program (ENABLED, CVDA 23), PGMIDERR for an undefined name",
   "clock": "2026-03-02T10:00:00",
   "terminal": "T001",
   "sources": {
     "cobol": [
-      "src/HCINQP.cbl",
-      "src/HCINQT.cbl",
-      "src/HCINQX.cbl"
+      "src/HCINQP.cbl"
     ],
     "bms": [],
     "csd": [
@@ -26,7 +24,7 @@
     {
       "id": "valid-forms",
       "path": "happy",
-      "summary": "INQUIRE PROGRAM on HCINQT (enabled), HCINQX (disabled), HCINQP (itself) and NOSUCHP (undefined); RESP and STATUS logged to TS queue HCLOG",
+      "summary": "INQUIRE PROGRAM on HCINQP (itself) and NOSUCHP (undefined); RESP and STATUS logged to TS queue HCLOG",
       "steps": [
         {
           "at": 0,

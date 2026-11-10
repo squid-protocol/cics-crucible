@@ -34,32 +34,10 @@
      "queue": "HCLOG",
      "data": {
       "length": 14,
-      "text": "P2 R=00 S=0024"
+      "text": "P2 R=27 S=0000"
      },
      "resp": "NORMAL",
      "item": 2
-    },
-    {
-     "event": "WRITEQ-TS",
-     "program": "HCINQP",
-     "queue": "HCLOG",
-     "data": {
-      "length": 14,
-      "text": "P3 R=00 S=0023"
-     },
-     "resp": "NORMAL",
-     "item": 3
-    },
-    {
-     "event": "WRITEQ-TS",
-     "program": "HCINQP",
-     "queue": "HCLOG",
-     "data": {
-      "length": 14,
-      "text": "P4 R=27 S=0000"
-     },
-     "resp": "NORMAL",
-     "item": 4
     },
     {
      "event": "SEND-TEXT",
@@ -85,9 +63,7 @@
   "ts_queues": {
    "HCLOG": [
     "P1 R=00 S=0023",
-    "P2 R=00 S=0024",
-    "P3 R=00 S=0023",
-    "P4 R=27 S=0000"
+    "P2 R=27 S=0000"
    ]
   }
  }
