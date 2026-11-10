@@ -1,0 +1,38 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-document",
+  "trap": "condition-handling",
+  "title": "DOCUMENT CREATE / RETRIEVE with RESP: two documents from TEXT, each retrieved by its own token (NORMAL, LENGTH of the data returned)",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCDOCU.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-document.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "valid-forms",
+      "path": "happy",
+      "summary": "CREATE two documents (TEXT, one with DOCSIZE), RETRIEVE each by its token INTO an area with LENGTH / MAXLENGTH; RESP and data logged to TS queue HCLOG",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC95"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
