@@ -37,7 +37,7 @@ only with a documented reason recorded in the case's `NOTES.md` (see
 
 ## Status
 
-Format `cics-crucible/1` ([SPEC.md](SPEC.md)). 43 cases and 158 scenarios. No release tag
+Format `cics-crucible/1` ([SPEC.md](SPEC.md)). 44 cases and 161 scenarios. No release tag
 yet (see [RELEASING.md](RELEASING.md)).
 
 | Trap | Case | Scenarios | What it pins down |
@@ -69,6 +69,7 @@ yet (see [RELEASING.md](RELEASING.md)).
 | condition-handling | [`hc-fetch-child`](cases/condition-handling/hc-fetch-child) | 5 | `FETCH CHILD` / `FETCH ANY` / `FREE CHILD` of `RUN TRANSID` children: COMPSTATUS, ABCODE, NOTFND and INVREQ |
 | condition-handling | [`hc-send-map-freekb`](cases/condition-handling/hc-send-map-freekb) | 6 | `SEND MAP ... FREEKB` with ERASE / ALARM / DATAONLY / MAPONLY; a map-level `CTRL=(FREEKB)` is not a send option |
 | condition-handling | [`hc-file-delete`](cases/condition-handling/hc-file-delete) | 3 | file control `DELETE` on a KSDS: by `RIDFLD` (NOTFND RESP2 80 for an absent or already deleted key), after `READ UPDATE` with no RIDFLD (INVREQ RESP2 31 with nothing held), and `GENERIC` with `KEYLENGTH` removing every record with the prefix |
+| condition-handling | [`hc-file-dataset-synonym`](cases/condition-handling/hc-file-dataset-synonym) | 3 | file control `WRITE`, `REWRITE` and `DELETE` that name the file with `DATASET` (the older spelling of `FILE`): DUPREC for a key already there, INVREQ RESP2 30 for a `REWRITE` with no `READ UPDATE`, NOTFND RESP2 80 for an absent key |
 | condition-handling | [`hc-eoc-error`](cases/condition-handling/hc-eoc-error) | 2 | HANDLE CONDITION ERROR does not take EOC, whose default action is to ignore it; EOC's own label does |
 | condition-handling | [`hc-abend-cancel`](cases/condition-handling/hc-abend-cancel) | 4 | `HANDLE ABEND CANCEL` leaves no exit (the task terminates), `HANDLE ABEND RESET` reactivates it, `ABEND CANCEL` skips the active exit (the task terminates), `ABEND NODUMP` still drives the exit |
 | condition-handling | [`hc-abend-link`](cases/condition-handling/hc-abend-link) | 5 | handlers not inherited by a LINKed program and restored on return; the caller's abend exit catches the callee's AEYH; a callee's own exit recovering; PUSH/POP HANDLE suspends HANDLE ABEND too |
@@ -172,6 +173,7 @@ sentence states outright. They are the first places to look if a real CICS regio
 | hc-file-read-set / browse-notfnd | `STARTBR GTEQ` of a key above the last record is NOTFND RESP2 80, and `ENDBR` after an ENDFILE (browse-fwd, browse-back) is NORMAL. | STARTBR NOTFND: "An attempt to position on a record based on the search argument provided is unsuccessful"; ENDBR: INVREQ RESP2 35 only when no successful STARTBR matches; neither page ties these two cases to its sentence |
 | hc-file-delete / generic (G3) | A `DELETE GENERIC` whose prefix matches no record is NOTFND RESP2 80. | DELETE NOTFND RESP2 80: "An attempt to delete a record based on the search argument provided is unsuccessful."; the page does not name the generic case, and describes GENERIC as deleting a group of records |
 | hc-file-delete / update (U1) | A `DELETE` with no RIDFLD issued before any `READ UPDATE` is INVREQ RESP2 31; a second tokenless DELETE after a completed one is deliberately not asserted. | DELETE INVREQ RESP2 31: "A DELETE command without the RIDFLD option is issued ... for which no previous READ UPDATE command has been issued"; the page's NOTFND text covers a DELETE without RIDFLD after the record was already deleted with RIDFLD |
+| hc-file-dataset-synonym / all scenarios | `DATASET(name)` on `WRITE`, `REWRITE` and `DELETE` names the file exactly as `FILE(name)`. | No sentence on the extracted IBM pages states it: the syntax diagrams did not survive page extraction. Rests on IBM's command syntax (the option is documented for these commands) and on the reads in `hc-file-into-browse`; the logged outcomes (DUPREC, INVREQ RESP2 30, NOTFND RESP2 80) are the cited `FILE` conditions |
 
 ## Known gaps (future work)
 

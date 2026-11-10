@@ -1,0 +1,157 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-file-dataset-synonym",
+ "scenario": "rewrite",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC90",
+   "program": "HCDSET",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCDSET",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC90 R"
+     }
+    },
+    {
+     "event": "REWRITE",
+     "program": "HCDSET",
+     "file": "HCDS",
+     "data": {
+      "length": 16,
+      "text": "K002BRAVO   0099"
+     },
+     "resp": "INVREQ",
+     "resp2": 30
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDSET",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "R1  R=16 S=030 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "READ",
+     "program": "HCDSET",
+     "file": "HCDS",
+     "ridfld": "K002",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "K002BRAVO   0020"
+     },
+     "update": true
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDSET",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "R2  R=00 S=000 D=K002BRAVO   0020"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "REWRITE",
+     "program": "HCDSET",
+     "file": "HCDS",
+     "data": {
+      "length": 16,
+      "text": "K002BRAVO   0099"
+     },
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDSET",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "R3  R=00 S=000 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "READ",
+     "program": "HCDSET",
+     "file": "HCDS",
+     "ridfld": "K002",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "K002BRAVO   0099"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDSET",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "R4  R=00 S=000 D=K002BRAVO   0099"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCDSET",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCDSET",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "R1  R=16 S=030 D=                ",
+    "R2  R=00 S=000 D=K002BRAVO   0020",
+    "R3  R=00 S=000 D=                ",
+    "R4  R=00 S=000 D=K002BRAVO   0099"
+   ]
+  },
+  "files": {
+   "HCDS": [
+    "K001ALPHA   0010",
+    "K002BRAVO   0099",
+    "K003CHARLIE 0030"
+   ]
+  }
+ }
+}

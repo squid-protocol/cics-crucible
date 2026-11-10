@@ -1,0 +1,66 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-file-dataset-synonym",
+  "trap": "condition-handling",
+  "title": "File control: WRITE, REWRITE and DELETE that name the file with DATASET, the older spelling of FILE; DUPREC, INVREQ RESP2 30 and NOTFND RESP2 80",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCDSET.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-file-dataset-synonym.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": [
+      "data/HCDS.dat"
+    ]
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "write",
+      "path": "happy",
+      "summary": "WRITE DATASET of a new key is NORMAL and a READ DATASET of it returns the record; WRITE of a key already there is DUPREC and leaves the stored record unchanged",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC90 W"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "rewrite",
+      "path": "trap",
+      "summary": "REWRITE DATASET with no READ UPDATE is INVREQ RESP2 30; READ UPDATE DATASET then REWRITE DATASET replaces the record",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC90 R"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "delete",
+      "path": "trap",
+      "summary": "DELETE DATASET RIDFLD removes a record (a READ of it, and a second DELETE, are NOTFND RESP2 80); a neighbour is untouched",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC90 D"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
