@@ -1,0 +1,85 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-handle-aid-pf-keys",
+  "trap": "condition-handling",
+  "title": "HANDLE AID PF8 and PF12 labels, set in one command and in two: each key takes its own label, a later command does not cancel an earlier key",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCAIDK.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-handle-aid-pf-keys.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "two-keys-pf8",
+      "path": "happy",
+      "summary": "HK01, PF8 pressed: PF8's label of a two-key HANDLE AID",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "PF8",
+          "text": "HK01 A"
+        }
+      ]
+    },
+    {
+      "id": "two-keys-pf12",
+      "path": "happy",
+      "summary": "HK01, PF12 pressed: PF12's label of the same command",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "PF12",
+          "text": "HK01 B"
+        }
+      ]
+    },
+    {
+      "id": "two-keys-pf7-none",
+      "path": "trap",
+      "summary": "HK01, PF7 pressed: no label for PF7, control goes on after the RECEIVE",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "PF7",
+          "text": "HK01 C"
+        }
+      ]
+    },
+    {
+      "id": "separate-commands-pf12",
+      "path": "trap",
+      "summary": "HK02, PF12 pressed: the later HANDLE AID PF8 does not cancel PF12's label",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "PF12",
+          "text": "HK02 D"
+        }
+      ]
+    },
+    {
+      "id": "separate-commands-pf8",
+      "path": "happy",
+      "summary": "HK02, PF8 pressed: the later command's label",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "PF8",
+          "text": "HK02 E"
+        }
+      ]
+    }
+  ]
+}
