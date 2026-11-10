@@ -1,0 +1,251 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-file-read-gteq",
+ "scenario": "generic",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC85",
+   "program": "HCRGTQ",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCRGTQ",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC85 P"
+     }
+    },
+    {
+     "event": "READ",
+     "program": "HCRGTQ",
+     "file": "HCRG",
+     "ridfld": "A",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "A100ALPHA   0010"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRGTQ",
+     "queue": "HCLOG",
+     "data": {
+      "length": 38,
+      "text": "P1  R=00 S=000 L=16 D=A100ALPHA   0010"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "READ",
+     "program": "HCRGTQ",
+     "file": "HCRG",
+     "ridfld": "B",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "B100DELTA   0040"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRGTQ",
+     "queue": "HCLOG",
+     "data": {
+      "length": 38,
+      "text": "P2  R=00 S=000 L=16 D=B100DELTA   0040"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "READ",
+     "program": "HCRGTQ",
+     "file": "HCRG",
+     "ridfld": "C",
+     "resp": "NOTFND",
+     "data": null,
+     "resp2": 80
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRGTQ",
+     "queue": "HCLOG",
+     "data": {
+      "length": 38,
+      "text": "P3  R=13 S=080 L=00 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "READ",
+     "program": "HCRGTQ",
+     "file": "HCRG",
+     "ridfld": "A2",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "A200BRAVO   0020"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRGTQ",
+     "queue": "HCLOG",
+     "data": {
+      "length": 38,
+      "text": "P4  R=00 S=000 L=16 D=A200BRAVO   0020"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "READ",
+     "program": "HCRGTQ",
+     "file": "HCRG",
+     "ridfld": "A4",
+     "resp": "NOTFND",
+     "data": null,
+     "resp2": 80
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRGTQ",
+     "queue": "HCLOG",
+     "data": {
+      "length": 38,
+      "text": "P5  R=13 S=080 L=00 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "READ",
+     "program": "HCRGTQ",
+     "file": "HCRG",
+     "ridfld": "A4",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "B100DELTA   0040"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRGTQ",
+     "queue": "HCLOG",
+     "data": {
+      "length": 38,
+      "text": "P6  R=00 S=000 L=16 D=B100DELTA   0040"
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "READ",
+     "program": "HCRGTQ",
+     "file": "HCRG",
+     "ridfld": "B2",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "B300ECHO    0050"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRGTQ",
+     "queue": "HCLOG",
+     "data": {
+      "length": 38,
+      "text": "P7  R=00 S=000 L=16 D=B300ECHO    0050"
+     },
+     "resp": "NORMAL",
+     "item": 7
+    },
+    {
+     "event": "READ",
+     "program": "HCRGTQ",
+     "file": "HCRG",
+     "ridfld": "A20",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "A200BRAVO   0020"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRGTQ",
+     "queue": "HCLOG",
+     "data": {
+      "length": 38,
+      "text": "P8  R=00 S=000 L=16 D=A200BRAVO   0020"
+     },
+     "resp": "NORMAL",
+     "item": 8
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCRGTQ",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCRGTQ",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "P1  R=00 S=000 L=16 D=A100ALPHA   0010",
+    "P2  R=00 S=000 L=16 D=B100DELTA   0040",
+    "P3  R=13 S=080 L=00 D=                ",
+    "P4  R=00 S=000 L=16 D=A200BRAVO   0020",
+    "P5  R=13 S=080 L=00 D=                ",
+    "P6  R=00 S=000 L=16 D=B100DELTA   0040",
+    "P7  R=00 S=000 L=16 D=B300ECHO    0050",
+    "P8  R=00 S=000 L=16 D=A200BRAVO   0020"
+   ]
+  },
+  "files": {
+   "HCRG": [
+    "A100ALPHA   0010",
+    "A200BRAVO   0020",
+    "A300CHARLIE 0030",
+    "B100DELTA   0040",
+    "B300ECHO    0050"
+   ]
+  }
+ }
+}

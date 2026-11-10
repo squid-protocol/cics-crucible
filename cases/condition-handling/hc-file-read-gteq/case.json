@@ -1,0 +1,53 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-file-read-gteq",
+  "trap": "condition-handling",
+  "title": "File control: READ GTEQ and READ GENERIC (KEYLENGTH prefix, with and without GTEQ) over a seeded KSDS; NOTFND (RESP2 80)",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCRGTQ.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-file-read-gteq.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": [
+      "data/HCRG.dat"
+    ]
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "gteq",
+      "path": "happy",
+      "summary": "READ GTEQ KEYLENGTH(4): the absent A150 returns the next greater record A200, the exact B100 returns B100, B400 above the last key is NOTFND RESP2 80, A000 below the first returns A100",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC85 G"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "generic",
+      "path": "happy",
+      "summary": "READ GENERIC KEYLENGTH(1|2): the first record starting with the prefix (A, B), NOTFND RESP2 80 for a prefix no key has (C, A4); with GTEQ an absent prefix returns the first greater key (A4 -> B100, B2 -> B300); KEYLENGTH(3) is a valid prefix (A20 -> A200)",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC85 P"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
