@@ -1,0 +1,164 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-file-delete",
+ "scenario": "generic",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC98",
+   "program": "HCDELF",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCDELF",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC98 G"
+     }
+    },
+    {
+     "event": "DELETE",
+     "program": "HCDELF",
+     "file": "HCDL",
+     "ridfld": "A",
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDELF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "G1  R=00 S=000 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "READ",
+     "program": "HCDELF",
+     "file": "HCDL",
+     "ridfld": "A100",
+     "resp": "NOTFND",
+     "data": null,
+     "resp2": 80
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDELF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "G2  R=13 S=080 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "DELETE",
+     "program": "HCDELF",
+     "file": "HCDL",
+     "ridfld": "A",
+     "resp": "NOTFND",
+     "resp2": 80
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDELF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "G3  R=13 S=080 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "DELETE",
+     "program": "HCDELF",
+     "file": "HCDL",
+     "ridfld": "B1",
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDELF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "G4  R=00 S=000 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "READ",
+     "program": "HCDELF",
+     "file": "HCDL",
+     "ridfld": "B300",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "B300ECHO    0050"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDELF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "G5  R=00 S=000 D=B300ECHO    0050"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCDELF",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCDELF",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "G1  R=00 S=000 D=                ",
+    "G2  R=13 S=080 D=                ",
+    "G3  R=13 S=080 D=                ",
+    "G4  R=00 S=000 D=                ",
+    "G5  R=00 S=000 D=B300ECHO    0050"
+   ]
+  },
+  "files": {
+   "HCDL": [
+    "B300ECHO    0050"
+   ]
+  }
+ }
+}

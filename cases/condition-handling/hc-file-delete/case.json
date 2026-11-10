@@ -1,0 +1,66 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-file-delete",
+  "trap": "condition-handling",
+  "title": "File control: DELETE of a record by RIDFLD, after READ UPDATE with no RIDFLD, and GENERIC with KEYLENGTH; NOTFND RESP2 80 and INVREQ RESP2 31",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCDELF.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-file-delete.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": [
+      "data/HCDL.dat"
+    ]
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "keyed",
+      "path": "happy",
+      "summary": "DELETE RIDFLD removes a record (a READ of it is NOTFND); deleting it again or an absent key is NOTFND RESP2 80; a neighbour is untouched",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC98 K"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "update",
+      "path": "happy",
+      "summary": "READ UPDATE then DELETE with no RIDFLD removes the held record; a DELETE with no RIDFLD and nothing held is INVREQ RESP2 31",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC98 U"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "generic",
+      "path": "trap",
+      "summary": "DELETE GENERIC KEYLENGTH removes every record with the key prefix and no others; a generic delete matching nothing is NOTFND RESP2 80",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC98 G"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
