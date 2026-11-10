@@ -1,0 +1,217 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-writeq-ts-forms",
+ "scenario": "forms",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC97",
+   "program": "HCWQTS",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCWQTS",
+     "queue": "HCQA",
+     "data": {
+      "length": 5,
+      "text": "AAAAA"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCWQTS",
+     "queue": "HCLOG",
+     "data": {
+      "length": 17,
+      "text": "W1 I=01 N=00 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCWQTS",
+     "queue": "HCQA",
+     "data": {
+      "length": 5,
+      "text": "BBBBB"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCWQTS",
+     "queue": "HCLOG",
+     "data": {
+      "length": 17,
+      "text": "W2 I=02 N=02 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCWQTS",
+     "queue": "HCQB",
+     "data": {
+      "length": 5,
+      "text": "CCCCC"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCWQTS",
+     "queue": "HCLOG",
+     "data": {
+      "length": 17,
+      "text": "W3 I=01 N=01 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCWQTS",
+     "queue": "HCQC",
+     "data": {
+      "length": 5,
+      "text": "CCCCC"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCWQTS",
+     "queue": "HCLOG",
+     "data": {
+      "length": 17,
+      "text": "W4 I=01 N=00 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCWQTS",
+     "queue": "HCQA",
+     "data": {
+      "length": 5,
+      "text": "RRRRR"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCWQTS",
+     "queue": "HCLOG",
+     "data": {
+      "length": 17,
+      "text": "W5 I=02 N=00 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCWQTS",
+     "queue": "HCQA",
+     "data": {
+      "length": 5,
+      "text": "RRRRR"
+     },
+     "resp": "ITEMERR",
+     "item": null
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCWQTS",
+     "queue": "HCLOG",
+     "data": {
+      "length": 17,
+      "text": "W6 I=07 N=00 R=26"
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCWQTS",
+     "queue": "HCNOQ",
+     "data": {
+      "length": 5,
+      "text": "RRRRR"
+     },
+     "resp": "QIDERR",
+     "item": null
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCWQTS",
+     "queue": "HCLOG",
+     "data": {
+      "length": 17,
+      "text": "W7 I=01 N=00 R=44"
+     },
+     "resp": "NORMAL",
+     "item": 7
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCWQTS",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCWQTS",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCQA": [
+    "AAAAA",
+    "RRRRR"
+   ],
+   "HCQB": [
+    "CCCCC"
+   ],
+   "HCQC": [
+    "CCCCC"
+   ],
+   "HCLOG": [
+    "W1 I=01 N=00 R=00",
+    "W2 I=02 N=02 R=00",
+    "W3 I=01 N=01 R=00",
+    "W4 I=01 N=00 R=00",
+    "W5 I=02 N=00 R=00",
+    "W6 I=07 N=00 R=26",
+    "W7 I=01 N=00 R=44"
+   ]
+  }
+ }
+}
