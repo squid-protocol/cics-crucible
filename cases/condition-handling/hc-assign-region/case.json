@@ -1,0 +1,39 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-assign-region",
+  "trap": "condition-handling",
+  "title": "ASSIGN PROGRAM and INVOKINGPROG across a LINK: INVOKINGPROG is blank at the highest level and the linker in the LINKed program",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCASGA.cbl",
+      "src/HCASGB.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-assign-region.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "link-chain",
+      "path": "happy",
+      "summary": "HCASGA ASSIGNs, LINKs HCASGB (no COMMAREA), ASSIGNs again; RESP, PROGRAM and INVOKINGPROG logged to TS queue HCLOG",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC97"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
