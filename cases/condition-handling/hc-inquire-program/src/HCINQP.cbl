@@ -4,7 +4,7 @@
       * cics-crucible  condition-handling / hc-inquire-program        *
       * Original program (Apache-2.0).                                *
       * HC96 inquires on four program names and logs RESP and the     *
-      * ENABLESTATUS value to TS queue HCLOG (INQUIRE is not an       *
+      * STATUS value to TS queue HCLOG (INQUIRE is not an       *
       * event):                                                       *
       *   P1 HCINQT  defined, STATUS(ENABLED)                         *
       *   P2 HCINQX  defined, STATUS(DISABLED)                        *
@@ -47,7 +47,7 @@
        INQ-PARA.
            MOVE 0 TO WS-STAT
            EXEC CICS INQUIRE PROGRAM(WS-NAME)
-                     ENABLESTATUS(WS-STAT)
+                     STATUS(WS-STAT)
                      RESP(WS-RESP)
            END-EXEC
            IF WS-RESP NOT = 0
