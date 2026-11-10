@@ -1,0 +1,176 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-formattime-forms",
+ "scenario": "leap-year-end",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HCFT",
+   "program": "HCFMTF",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCFMTF",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HCFT L"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "L1 12/31/2028"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "L2 2028366   "
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "L3 28-366    "
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "L4 23:59:59  "
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "N1 00047117  "
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "N2 00000000  "
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "N3 00000031  "
+     },
+     "resp": "NORMAL",
+     "item": 7
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "N4 00000012  "
+     },
+     "resp": "NORMAL",
+     "item": 8
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "N5 00002028  "
+     },
+     "resp": "NORMAL",
+     "item": 9
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMTF",
+     "queue": "HCLOG",
+     "data": {
+      "length": 13,
+      "text": "N6 00000999  "
+     },
+     "resp": "NORMAL",
+     "item": 10
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCFMTF",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCFMTF",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "L1 12/31/2028",
+    "L2 2028366   ",
+    "L3 28-366    ",
+    "L4 23:59:59  ",
+    "N1 00047117  ",
+    "N2 00000000  ",
+    "N3 00000031  ",
+    "N4 00000012  ",
+    "N5 00002028  ",
+    "N6 00000999  "
+   ]
+  }
+ }
+}
