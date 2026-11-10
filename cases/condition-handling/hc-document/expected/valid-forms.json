@@ -1,0 +1,118 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-document",
+ "scenario": "valid-forms",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC95",
+   "program": "HCDOCU",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDOCU",
+     "queue": "HCLOG",
+     "data": {
+      "length": 7,
+      "text": "C1 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDOCU",
+     "queue": "HCLOG",
+     "data": {
+      "length": 7,
+      "text": "C2 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDOCU",
+     "queue": "HCLOG",
+     "data": {
+      "length": 7,
+      "text": "R1 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDOCU",
+     "queue": "HCLOG",
+     "data": {
+      "length": 22,
+      "text": "R1 L=0012 ORDER 000417"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDOCU",
+     "queue": "HCLOG",
+     "data": {
+      "length": 7,
+      "text": "R2 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDOCU",
+     "queue": "HCLOG",
+     "data": {
+      "length": 22,
+      "text": "R2 L=0009 SHIPPED 9   "
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCDOCU",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCDOCU",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "C1 R=00",
+    "C2 R=00",
+    "R1 R=00",
+    "R1 L=0012 ORDER 000417",
+    "R2 R=00",
+    "R2 L=0009 SHIPPED 9   "
+   ]
+  }
+ }
+}
