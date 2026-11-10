@@ -1,0 +1,115 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "gt-web-query-form",
+  "scenario": "queryparm",
+  "tasks": [
+    {
+      "seq": 1,
+      "transid": "GT83",
+      "program": "GTWQRY",
+      "termid": null,
+      "at": "2026-03-02T10:00:00",
+      "trigger": {
+        "kind": "http",
+        "request": 0
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-SEND",
+          "program": "GTWQRY",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 118,
+            "text": "K=00/000 7        U=00/000 AlAn     Z=13/001 S=22/005 AlA N=16/004 T=00 C=3 F=20 B=k=7;name=AlAn;x=y;             E=00"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWQRY",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    },
+    {
+      "seq": 2,
+      "transid": "GT83",
+      "program": "GTWQRY",
+      "termid": null,
+      "at": "2026-03-02T10:00:05",
+      "trigger": {
+        "kind": "http",
+        "request": 1
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-SEND",
+          "program": "GTWQRY",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 118,
+            "text": "K=00/000 9        U=00/000 Bo       Z=13/001 S=00/000 Bo  N=16/004 T=00 C=2 F=20 B=k=9;name=Bo;                   E=00"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWQRY",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    },
+    {
+      "seq": 3,
+      "transid": "GT83",
+      "program": "GTWQRY",
+      "termid": null,
+      "at": "2026-03-02T10:00:10",
+      "trigger": {
+        "kind": "http",
+        "request": 2
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-SEND",
+          "program": "GTWQRY",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 118,
+            "text": "K=00/000 3        U=00/000 Cy/d     Z=13/001 S=22/005 Cy/ N=16/004 T=00 C=2 F=20 B=NAME=Cy/d;K=3;                 E=00"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWQRY",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    }
+  ]
+}
