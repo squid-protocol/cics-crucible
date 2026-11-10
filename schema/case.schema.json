@@ -92,6 +92,7 @@
       "properties": {
         "status": {"type": "integer", "minimum": 100, "maximum": 599},
         "mediatype": {"type": "string", "minLength": 1},
+        "statustext": {"type": "string", "minLength": 1, "pattern": "^[^\\r\\n]+$"},
         "body": {"type": "string"},
         "headers": {"type": "object", "minProperties": 1,
                     "propertyNames": {"pattern": "^[A-Za-z0-9-]{1,64}$"},

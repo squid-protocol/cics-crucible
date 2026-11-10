@@ -476,6 +476,8 @@ class Case:
                     continue
                 self._expected(sc, log, p.name)
         for n, p in case.get("peers", {}).items():
+            if "host" not in p and any("statustext" in r for r in p["responses"]):
+                self.err(f"peer {n}: statustext is stated only on an origin peer (one with a host)")
             if "host" in p and len(p["responses"]) != getattr(self, "_conv", {}).get(n, 0):
                 self.err(f"peer {n}: {len(p['responses'])} responses stated, but it is sent "
                          f"{getattr(self, '_conv', {}).get(n, 0)} conversations at most in a scenario")
