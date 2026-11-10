@@ -1,0 +1,52 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-freemain-datapointer",
+  "trap": "condition-handling",
+  "title": "FREEMAIN DATAPOINTER(ptr): releases the block GETMAIN returned and leaves a second block usable (NORMAL); the address of a WORKING-STORAGE item is INVREQ RESP2 1",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCFMRL.cbl",
+      "src/HCFMIV.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-freemain-datapointer.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "release",
+      "path": "happy",
+      "summary": "HCFMRL GETMAINs two 8-byte blocks, writes through the first view, FREEMAIN DATAPOINTER of the first, then writes the second and FREEMAIN DATAPOINTER of it: NORMAL each time",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCFM"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "invreq",
+      "path": "trap",
+      "summary": "HCFMIV FREEMAIN DATAPOINTER of the address of one of its own WORKING-STORAGE items: INVREQ RESP2 1, the item unchanged, a later GETMAIN and FREEMAIN NORMAL",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCFN"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}

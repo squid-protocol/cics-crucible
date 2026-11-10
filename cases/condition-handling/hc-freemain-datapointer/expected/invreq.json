@@ -1,0 +1,102 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-freemain-datapointer",
+ "scenario": "invreq",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HCFN",
+   "program": "HCFMIV",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMIV",
+     "queue": "FMLOG",
+     "data": {
+      "length": 26,
+      "text": "IV01016001"
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "FREEMAIN DATAPOINTER of the address of WS-KEEP, which no GETMAIN returned: INVREQ (16), RESP2 1 [FREEMAIN] [RESP-CODES] [SET5]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMIV",
+     "queue": "FMLOG",
+     "data": {
+      "length": 26,
+      "text": "IV02000000KEEPME!!"
+     },
+     "resp": "NORMAL",
+     "item": 2,
+     "note": "the refused FREEMAIN left WS-KEEP as it was [FREEMAIN]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMIV",
+     "queue": "FMLOG",
+     "data": {
+      "length": 26,
+      "text": "GM01000000"
+     },
+     "resp": "NORMAL",
+     "item": 3,
+     "note": "a GETMAIN after the failure: NORMAL [GETMAIN]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMIV",
+     "queue": "FMLOG",
+     "data": {
+      "length": 26,
+      "text": "VW01000000QQQQQQQQ"
+     },
+     "resp": "NORMAL",
+     "item": 4,
+     "note": "SET ADDRESS OF LS-AREA TO WS-PGM: eight INITIMG bytes [GETMAIN] [SET5]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMIV",
+     "queue": "FMLOG",
+     "data": {
+      "length": 26,
+      "text": "FR01000000"
+     },
+     "resp": "NORMAL",
+     "item": 5,
+     "note": "FREEMAIN DATAPOINTER(WS-PGM): NORMAL, the failure did not disturb later storage commands [FREEMAIN]"
+    },
+    {
+     "event": "RETURN",
+     "program": "HCFMIV",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "FMLOG": [
+    "IV01016001                ",
+    "IV02000000KEEPME!!        ",
+    "GM01000000                ",
+    "VW01000000QQQQQQQQ        ",
+    "FR01000000                "
+   ]
+  }
+ }
+}

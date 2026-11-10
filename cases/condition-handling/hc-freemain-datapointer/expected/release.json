@@ -1,0 +1,128 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-freemain-datapointer",
+ "scenario": "release",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HCFM",
+   "program": "HCFMRL",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMRL",
+     "queue": "FMLOG",
+     "data": {
+      "length": 26,
+      "text": "GM01000000"
+     },
+     "resp": "NORMAL",
+     "item": 1,
+     "note": "first GETMAIN SET FLENGTH(8) INITIMG(A): NORMAL; GETMAIN and FREEMAIN are not events [GETMAIN]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMRL",
+     "queue": "FMLOG",
+     "data": {
+      "length": 26,
+      "text": "GM02000000"
+     },
+     "resp": "NORMAL",
+     "item": 2,
+     "note": "second GETMAIN, 8 bytes of 'B': NORMAL [GETMAIN]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMRL",
+     "queue": "FMLOG",
+     "data": {
+      "length": 26,
+      "text": "VW01000000FIRST-01"
+     },
+     "resp": "NORMAL",
+     "item": 3,
+     "note": "SET ADDRESS OF LS-FIRST TO WS-P1, written through: the first block holds FIRST-01 [SET5]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMRL",
+     "queue": "FMLOG",
+     "data": {
+      "length": 26,
+      "text": "VW02000000BBBBBBBB"
+     },
+     "resp": "NORMAL",
+     "item": 4,
+     "note": "the second block, viewed by LS-SECOND, still holds its INITIMG byte: blocks are separate [GETMAIN]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMRL",
+     "queue": "FMLOG",
+     "data": {
+      "length": 26,
+      "text": "FR01000000"
+     },
+     "resp": "NORMAL",
+     "item": 5,
+     "note": "FREEMAIN DATAPOINTER(WS-P1): storage that GETMAIN acquired and WS-P1 addresses: NORMAL [FREEMAIN]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMRL",
+     "queue": "FMLOG",
+     "data": {
+      "length": 26,
+      "text": "VW03000000LATER-02"
+     },
+     "resp": "NORMAL",
+     "item": 6,
+     "note": "the freed block was not the second's: LS-SECOND is still writable and reads back LATER-02 [FREEMAIN]"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCFMRL",
+     "queue": "FMLOG",
+     "data": {
+      "length": 26,
+      "text": "FR02000000"
+     },
+     "resp": "NORMAL",
+     "item": 7,
+     "note": "FREEMAIN DATAPOINTER(WS-P2): the second GETMAIN's storage: NORMAL [FREEMAIN]"
+    },
+    {
+     "event": "RETURN",
+     "program": "HCFMRL",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "FMLOG": [
+    "GM01000000                ",
+    "GM02000000                ",
+    "VW01000000FIRST-01        ",
+    "VW02000000BBBBBBBB        ",
+    "FR01000000                ",
+    "VW03000000LATER-02        ",
+    "FR02000000                "
+   ]
+  }
+ }
+}
