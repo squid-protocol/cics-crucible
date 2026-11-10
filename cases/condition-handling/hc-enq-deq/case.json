@@ -1,0 +1,38 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-enq-deq",
+  "trap": "condition-handling",
+  "title": "ENQ / DEQ with RESP: RESOURCE, LENGTH, NOSUSPEND on a free resource, MAXLIFETIME UOW and TASK (NORMAL for every form)",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCENQD.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-enq-deq.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "valid-forms",
+      "path": "happy",
+      "summary": "five ENQ / DEQ pairs (RESOURCE; LENGTH(8); NOSUSPEND; MAXLIFETIME UOW; MAXLIFETIME TASK), each RESP NORMAL, logged to TS queue HCLOG",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC94"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
