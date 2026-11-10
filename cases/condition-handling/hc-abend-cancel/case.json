@@ -1,0 +1,77 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-abend-cancel",
+  "trap": "condition-handling",
+  "title": "HANDLE ABEND CANCEL and RESET, ABEND CANCEL (the exit is skipped), ABEND NODUMP (the exit still runs)",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCABCN.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-abend-cancel.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "handle-cancel",
+      "path": "trap",
+      "summary": "HANDLE ABEND LABEL then HANDLE ABEND CANCEL then ABEND: no exit is active, the task terminates with the program's code",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCAB C"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "handle-reset",
+      "path": "happy",
+      "summary": "HANDLE ABEND LABEL, CANCEL, then RESET: the exit is active again, gets control with the ABCODE and RETURNs",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCAB R"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "abend-cancel",
+      "path": "trap",
+      "summary": "ABEND CANCEL with an active HANDLE ABEND exit: the exit is not given control, the task terminates",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCAB K"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "abend-nodump",
+      "path": "happy",
+      "summary": "ABEND NODUMP with an active exit: the exit still gets control and sees the ABCODE",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCAB N"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-abend-cancel",
+ "scenario": "handle-reset",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HCAB",
+   "program": "HCABCN",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCABCN",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HCAB R"
+     }
+    },
+    {
+     "event": "ABEND",
+     "program": "HCABCN",
+     "abcode": "HCR1",
+     "cause": "command",
+     "outcome": "exit",
+     "exit": {
+      "program": "HCABCN",
+      "label": "MAIN-EXIT"
+     },
+     "note": "HANDLE ABEND RESET reactivated the cancelled exit"
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCABCN",
+     "text": "X HCR1",
+     "length": 6,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCABCN",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}
