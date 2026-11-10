@@ -1,0 +1,14 @@
+***********************************************************************
+* cics-crucible  condition-handling / hc-handle-mapfail  (Apache-2.0)
+* Mapset HMSET: map HMAP. The one input field is NOT FSET, so an
+* unmodified field is not transmitted and RECEIVE MAP raises MAPFAIL.
+***********************************************************************
+HMSET    DFHMSD TYPE=&SYSPARM,MODE=INOUT,LANG=COBOL,STORAGE=AUTO,      X
+               TIOAPFX=YES,CTRL=(FREEKB)
+HMAP     DFHMDI SIZE=(24,80),LINE=1,COLUMN=1
+         DFHMDF POS=(1,1),LENGTH=8,ATTRB=(ASKIP,BRT),INITIAL='MAPFAIL?'
+         DFHMDF POS=(3,1),LENGTH=7,ATTRB=(ASKIP,NORM),INITIAL='OPTION:'
+OPT      DFHMDF POS=(3,10),LENGTH=1,ATTRB=(UNPROT,NORM,IC)
+         DFHMDF POS=(3,12),LENGTH=1,ATTRB=(ASKIP,NORM)
+         DFHMSD TYPE=FINAL
+         END
