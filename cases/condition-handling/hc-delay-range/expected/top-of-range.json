@@ -1,0 +1,140 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-delay-range",
+ "scenario": "top-of-range",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HCDR",
+   "program": "HCDLRG",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCDLRG",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HCDR G"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLRG",
+     "queue": "HCLOG",
+     "data": {
+      "length": 7,
+      "text": "G1 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLRG",
+     "queue": "HCLOG",
+     "data": {
+      "length": 7,
+      "text": "G2 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLRG",
+     "queue": "HCLOG",
+     "data": {
+      "length": 7,
+      "text": "G3 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLRG",
+     "queue": "HCLOG",
+     "data": {
+      "length": 7,
+      "text": "G4 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLRG",
+     "queue": "HCLOG",
+     "data": {
+      "length": 7,
+      "text": "G5 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLRG",
+     "queue": "HCLOG",
+     "data": {
+      "length": 7,
+      "text": "G6 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLRG",
+     "queue": "HCLOG",
+     "data": {
+      "length": 7,
+      "text": "G7 R=00"
+     },
+     "resp": "NORMAL",
+     "item": 7
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCDLRG",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCDLRG",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "G1 R=00",
+    "G2 R=00",
+    "G3 R=00",
+    "G4 R=00",
+    "G5 R=00",
+    "G6 R=00",
+    "G7 R=00"
+   ]
+  }
+ }
+}

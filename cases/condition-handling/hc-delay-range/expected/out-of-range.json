@@ -1,0 +1,152 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-delay-range",
+ "scenario": "out-of-range",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HCDR",
+   "program": "HCDLRG",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCDLRG",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HCDR B"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLRG",
+     "queue": "HCLOG",
+     "data": {
+      "length": 12,
+      "text": "B1 R=16 2=04"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLRG",
+     "queue": "HCLOG",
+     "data": {
+      "length": 12,
+      "text": "B2 R=16 2=05"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLRG",
+     "queue": "HCLOG",
+     "data": {
+      "length": 12,
+      "text": "B3 R=16 2=06"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLRG",
+     "queue": "HCLOG",
+     "data": {
+      "length": 12,
+      "text": "B4 R=16 2=22"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLRG",
+     "queue": "HCLOG",
+     "data": {
+      "length": 12,
+      "text": "B5 R=16 2=05"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLRG",
+     "queue": "HCLOG",
+     "data": {
+      "length": 12,
+      "text": "B6 R=16 2=06"
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLRG",
+     "queue": "HCLOG",
+     "data": {
+      "length": 12,
+      "text": "B7 R=16 2=05"
+     },
+     "resp": "NORMAL",
+     "item": 7
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDLRG",
+     "queue": "HCLOG",
+     "data": {
+      "length": 12,
+      "text": "B8 R=16 2=06"
+     },
+     "resp": "NORMAL",
+     "item": 8
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCDLRG",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCDLRG",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "B1 R=16 2=04",
+    "B2 R=16 2=05",
+    "B3 R=16 2=06",
+    "B4 R=16 2=22",
+    "B5 R=16 2=05",
+    "B6 R=16 2=06",
+    "B7 R=16 2=05",
+    "B8 R=16 2=06"
+   ]
+  }
+ }
+}
