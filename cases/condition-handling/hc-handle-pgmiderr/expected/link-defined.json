@@ -1,0 +1,54 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-handle-pgmiderr",
+ "scenario": "link-defined",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HP04",
+   "program": "HCPGMI",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "LINK",
+     "program": "HCPGMI",
+     "target": "HCPGMT",
+     "length": 0,
+     "commarea": null,
+     "resp": "NORMAL"
+    },
+    {
+     "event": "RETURN",
+     "program": "HCPGMT",
+     "level": 2,
+     "note": "HCPGMT returns to HCPGMI"
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCPGMI",
+     "text": "LINK RETURNED",
+     "length": 16,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCPGMI",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}
