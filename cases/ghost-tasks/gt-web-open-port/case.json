@@ -1,0 +1,61 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-web-open-port",
+  "trap": "ghost-tasks",
+  "title": "WEB OPEN PORTNUMBER: port 80, the HTTP default, connects as with no port; a port above 65535 is INVREQ RESP2 138",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/GTWPRT.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/gt-web-open-port.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "peers": {
+    "orders": {
+      "host": "orders.example",
+      "responses": [
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "item=42"
+        }
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "id": "default-port",
+      "path": "happy",
+      "summary": "GT8P A: WEB OPEN orders.example with PORTNUMBER(80), the HTTP default, is NORMAL; the peer answers 200 item=42",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT8P A"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "port-too-high",
+      "path": "trap",
+      "summary": "GT8P B: PORTNUMBER(65536) is INVREQ RESP2 138; no connection is opened, so the program issues no CONVERSE or CLOSE",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "GT8P B"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
