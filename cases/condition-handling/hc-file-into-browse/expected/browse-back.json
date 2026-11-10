@@ -1,0 +1,220 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-file-into-browse",
+ "scenario": "browse-back",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC84",
+   "program": "HCRDIN",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCRDIN",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC84 B"
+     }
+    },
+    {
+     "event": "STARTBR",
+     "program": "HCRDIN",
+     "file": "HCRI",
+     "ridfld": "K140",
+     "mode": "GTEQ",
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRDIN",
+     "queue": "HCLOG",
+     "data": {
+      "length": 45,
+      "text": "B0  R=00 S=000 K=     L=00 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "READPREV",
+     "program": "HCRDIN",
+     "file": "HCRI",
+     "ridfld": "K140",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "K140INDIA   0140"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRDIN",
+     "queue": "HCLOG",
+     "data": {
+      "length": 45,
+      "text": "B1  R=00 S=000 K=K140 L=00 D=K140INDIA   0140"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "READPREV",
+     "program": "HCRDIN",
+     "file": "HCRI",
+     "ridfld": "K140",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "K130HOTEL   0130"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRDIN",
+     "queue": "HCLOG",
+     "data": {
+      "length": 45,
+      "text": "B2  R=00 S=000 K=K130 L=00 D=K130HOTEL   0130"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "READPREV",
+     "program": "HCRDIN",
+     "file": "HCRI",
+     "ridfld": "K130",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "K120GOLF    0120"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRDIN",
+     "queue": "HCLOG",
+     "data": {
+      "length": 45,
+      "text": "B3  R=00 S=000 K=K120 L=00 D=K120GOLF    0120"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "READPREV",
+     "program": "HCRDIN",
+     "file": "HCRI",
+     "ridfld": "K120",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "K110FOXTROT 0110"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRDIN",
+     "queue": "HCLOG",
+     "data": {
+      "length": 45,
+      "text": "B4  R=00 S=000 K=K110 L=00 D=K110FOXTROT 0110"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "READPREV",
+     "program": "HCRDIN",
+     "file": "HCRI",
+     "ridfld": "K110",
+     "resp": "ENDFILE",
+     "resp2": 90,
+     "data": null
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRDIN",
+     "queue": "HCLOG",
+     "data": {
+      "length": 45,
+      "text": "B5  R=20 S=090 K=     L=00 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "ENDBR",
+     "program": "HCRDIN",
+     "file": "HCRI",
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRDIN",
+     "queue": "HCLOG",
+     "data": {
+      "length": 45,
+      "text": "B6  R=00 S=000 K=     L=00 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 7
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCRDIN",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCRDIN",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "B0  R=00 S=000 K=     L=00 D=                ",
+    "B1  R=00 S=000 K=K140 L=00 D=K140INDIA   0140",
+    "B2  R=00 S=000 K=K130 L=00 D=K130HOTEL   0130",
+    "B3  R=00 S=000 K=K120 L=00 D=K120GOLF    0120",
+    "B4  R=00 S=000 K=K110 L=00 D=K110FOXTROT 0110",
+    "B5  R=20 S=090 K=     L=00 D=                ",
+    "B6  R=00 S=000 K=     L=00 D=                "
+   ]
+  },
+  "files": {
+   "HCRI": [
+    "K110FOXTROT 0110",
+    "K120GOLF    0120",
+    "K130HOTEL   0130",
+    "K140INDIA   0140",
+    "K150JULIET  0150"
+   ]
+  }
+ }
+}
