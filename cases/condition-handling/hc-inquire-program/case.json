@@ -1,0 +1,40 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-inquire-program",
+  "trap": "condition-handling",
+  "title": "INQUIRE PROGRAM with RESP: ENABLESTATUS of an enabled, a disabled and the running program (CVDA 23 / 24), PGMIDERR for an undefined name",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCINQP.cbl",
+      "src/HCINQT.cbl",
+      "src/HCINQX.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-inquire-program.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "valid-forms",
+      "path": "happy",
+      "summary": "INQUIRE PROGRAM on HCINQT (enabled), HCINQX (disabled), HCINQP (itself) and NOSUCHP (undefined); RESP and ENABLESTATUS logged to TS queue HCLOG",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC96"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
