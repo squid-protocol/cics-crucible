@@ -1,0 +1,159 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-web-query-form",
+  "trap": "ghost-tasks",
+  "title": "Server-side WEB READ QUERYPARM / FORMFIELD (name match, unescaping, NOTFND RESP2 1, LENGERR RESP2 5, READNEXT before STARTBROWSE INVREQ RESP2 4) and WEB STARTBROWSE / READNEXT / ENDBROWSE to ENDFILE, each result echoed in the WEB SEND response",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/GTWQRY.cbl",
+      "src/GTWFRM.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/gt-web-query-form.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "peers": {
+    "client-q": {
+      "responses": [
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "K=00/000 7        U=00/000 AlAn     Z=13/001 S=22/005 AlA N=16/004 T=00 C=3 F=20 B=k=7;name=AlAn;x=y;             E=00"
+        },
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "K=00/000 9        U=00/000 Bo       Z=13/001 S=00/000 Bo  N=16/004 T=00 C=2 F=20 B=k=9;name=Bo;                   E=00"
+        },
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "K=00/000 3        U=00/000 Cy/d     Z=13/001 S=22/005 Cy/ N=16/004 T=00 C=2 F=20 B=NAME=Cy/d;K=3;                 E=00"
+        }
+      ]
+    },
+    "client-f": {
+      "responses": [
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "K=00/000 7        U=00/000 AlAn     Z=13/001 S=22/005 AlA N=16/004 T=00 C=3 F=20 B=k=7;name=AlAn;x=y;             E=00"
+        },
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "K=00/000 3        U=00/000 Cy/d     Z=13/001 S=22/005 Cy/ N=16/004 T=00 C=2 F=20 B=NAME=Cy/d;K=3;                 E=00"
+        },
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "K=00/000 9        U=00/000 Bo       Z=13/001 S=00/000 Bo  N=16/004 T=00 C=2 F=20 B=k=9;name=Bo;                   E=00"
+        }
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "id": "queryparm",
+      "path": "happy",
+      "summary": "WEB READ QUERYPARM (present, case-insensitive name, unescaped value, NOTFND RESP2 1, truncated into 3 bytes LENGERR RESP2 5), READNEXT before a browse (INVREQ RESP2 4), STARTBROWSE / READNEXT to ENDFILE / ENDBROWSE, for a GET and a POST",
+      "steps": [],
+      "requests": [
+        {
+          "at": 0,
+          "peer": "client-q",
+          "method": "GET",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/qry",
+          "query": "k=7&name=Al%41n&x=y",
+          "headers": {
+            "X-Crucible-Tag": "t"
+          }
+        },
+        {
+          "at": 5,
+          "peer": "client-q",
+          "method": "POST",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/qry",
+          "query": "k=9&name=Bo",
+          "mediatype": "text/plain",
+          "body": "hi",
+          "headers": {
+            "X-Crucible-Tag": "t"
+          }
+        },
+        {
+          "at": 10,
+          "peer": "client-q",
+          "method": "GET",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/qry",
+          "query": "NAME=Cy%2Fd&K=3",
+          "headers": {
+            "X-Crucible-Tag": "t"
+          }
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "formfield",
+      "path": "happy",
+      "summary": "The same reads and browse with WEB READ / STARTBROWSE / READNEXT / ENDBROWSE FORMFIELD on three POSTed application/x-www-form-urlencoded bodies",
+      "steps": [],
+      "requests": [
+        {
+          "at": 0,
+          "peer": "client-f",
+          "method": "POST",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/frm",
+          "mediatype": "application/x-www-form-urlencoded",
+          "body": "k=7&name=Al%41n&x=y",
+          "headers": {
+            "X-Crucible-Tag": "t"
+          }
+        },
+        {
+          "at": 5,
+          "peer": "client-f",
+          "method": "POST",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/frm",
+          "mediatype": "application/x-www-form-urlencoded",
+          "body": "NAME=Cy%2Fd&K=3",
+          "headers": {
+            "X-Crucible-Tag": "t"
+          }
+        },
+        {
+          "at": 10,
+          "peer": "client-f",
+          "method": "POST",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/frm",
+          "mediatype": "application/x-www-form-urlencoded",
+          "body": "k=9&name=Bo",
+          "headers": {
+            "X-Crucible-Tag": "t"
+          }
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
