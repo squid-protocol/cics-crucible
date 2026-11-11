@@ -1,0 +1,159 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-file-token",
+ "scenario": "rewrite",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC70",
+   "program": "HCTOKN",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCTOKN",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HC70 R"
+     }
+    },
+    {
+     "event": "REWRITE",
+     "program": "HCTOKN",
+     "file": "HCTK",
+     "data": {
+      "length": 16,
+      "text": "A200BRAVO   0099"
+     },
+     "resp": "INVREQ",
+     "resp2": 47
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCTOKN",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "R1  R=16 S=047 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "READ",
+     "program": "HCTOKN",
+     "file": "HCTK",
+     "ridfld": "A200",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "A200BRAVO   0020"
+     },
+     "update": true
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCTOKN",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "R2  R=00 S=000 D=A200BRAVO   0020"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "REWRITE",
+     "program": "HCTOKN",
+     "file": "HCTK",
+     "data": {
+      "length": 16,
+      "text": "A200BRAVO   0099"
+     },
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCTOKN",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "R3  R=00 S=000 D=                "
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "READ",
+     "program": "HCTOKN",
+     "file": "HCTK",
+     "ridfld": "A200",
+     "resp": "NORMAL",
+     "length": 16,
+     "data": {
+      "length": 16,
+      "text": "A200BRAVO   0099"
+     }
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCTOKN",
+     "queue": "HCLOG",
+     "data": {
+      "length": 33,
+      "text": "R4  R=00 S=000 D=A200BRAVO   0099"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCTOKN",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCTOKN",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "R1  R=16 S=047 D=                ",
+    "R2  R=00 S=000 D=A200BRAVO   0020",
+    "R3  R=00 S=000 D=                ",
+    "R4  R=00 S=000 D=A200BRAVO   0099"
+   ]
+  },
+  "files": {
+   "HCTK": [
+    "A100ALPHA   0010",
+    "A200BRAVO   0099",
+    "A300CHARLIE 0030",
+    "B100DELTA   0040",
+    "B300ECHO    0050"
+   ]
+  }
+ }
+}
