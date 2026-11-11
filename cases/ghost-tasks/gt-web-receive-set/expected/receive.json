@@ -1,0 +1,145 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "gt-web-receive-set",
+ "scenario": "receive",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "GT87",
+   "program": "GTWRSET",
+   "termid": null,
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "http",
+    "request": 0
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WEB-RECEIVE",
+     "program": "GTWRSET",
+     "resp": "NORMAL",
+     "length": 5,
+     "data": {
+      "length": 5,
+      "text": "HELLO"
+     }
+    },
+    {
+     "event": "WEB-SEND",
+     "program": "GTWRSET",
+     "status": 200,
+     "statustext": "OK",
+     "mediatype": "text/plain",
+     "from": {
+      "length": 37,
+      "text": "RCV=00 L=005 B=HELLO    MT=text/plain"
+     },
+     "resp": "NORMAL"
+    },
+    {
+     "event": "RETURN",
+     "program": "GTWRSET",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 2,
+   "transid": "GT87",
+   "program": "GTWRSET",
+   "termid": null,
+   "at": "2026-03-02T10:00:05",
+   "trigger": {
+    "kind": "http",
+    "request": 1
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WEB-RECEIVE",
+     "program": "GTWRSET",
+     "resp": "NORMAL",
+     "length": 7,
+     "data": {
+      "length": 7,
+      "text": "{\"a\":1}"
+     }
+    },
+    {
+     "event": "WEB-SEND",
+     "program": "GTWRSET",
+     "status": 200,
+     "statustext": "OK",
+     "mediatype": "text/plain",
+     "from": {
+      "length": 37,
+      "text": "RCV=00 L=007 B={\"a\":1}  MT=applicatio"
+     },
+     "resp": "NORMAL"
+    },
+    {
+     "event": "RETURN",
+     "program": "GTWRSET",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 3,
+   "transid": "GT87",
+   "program": "GTWRSET",
+   "termid": null,
+   "at": "2026-03-02T10:00:10",
+   "trigger": {
+    "kind": "http",
+    "request": 2
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WEB-RECEIVE",
+     "program": "GTWRSET",
+     "resp": "NORMAL",
+     "length": 12,
+     "data": {
+      "length": 12,
+      "text": "ABCDEFGHIJKL"
+     }
+    },
+    {
+     "event": "WEB-SEND",
+     "program": "GTWRSET",
+     "status": 200,
+     "statustext": "OK",
+     "mediatype": "text/plain",
+     "from": {
+      "length": 37,
+      "text": "RCV=00 L=012 B=ABCDEFGH MT=image/jpeg"
+     },
+     "resp": "NORMAL"
+    },
+    {
+     "event": "RETURN",
+     "program": "GTWRSET",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

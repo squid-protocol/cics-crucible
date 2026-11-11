@@ -1,0 +1,77 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "gt-web-open-port",
+ "scenario": "default-port",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "GT8P",
+   "program": "GTWPRT",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "GTWPRT",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "GT8P A"
+     }
+    },
+    {
+     "event": "WEB-OPEN",
+     "program": "GTWPRT",
+     "host": "orders.example",
+     "scheme": "HTTP",
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WEB-CONVERSE",
+     "program": "GTWPRT",
+     "method": "GET",
+     "path": "/gt/item",
+     "status": 200,
+     "tolength": 7,
+     "into": {
+      "length": 7,
+      "text": "item=42"
+     },
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WEB-CLOSE",
+     "program": "GTWPRT",
+     "resp": "NORMAL"
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "GTWPRT",
+     "text": "GT8P O=00 W=000 S=200 item=42",
+     "length": 54,
+     "options": [
+      "ERASE",
+      "FREEKB",
+      "WAIT"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "GTWPRT",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

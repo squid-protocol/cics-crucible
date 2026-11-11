@@ -1,0 +1,114 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-fetch-nosuspend",
+ "scenario": "child-nosuspend",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HCNS",
+   "program": "HCNSPR",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCNSPR",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HCNS C"
+     }
+    },
+    {
+     "event": "RUN",
+     "program": "HCNSPR",
+     "transid": "HCNC",
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCNSPR",
+     "queue": "HCNLOG",
+     "data": {
+      "length": 24,
+      "text": "R=113/052 C=- A=     T=-"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCNSPR",
+     "queue": "HCNLOG",
+     "data": {
+      "length": 24,
+      "text": "R=000/000 C=N A=     T=-"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCNSPR",
+     "text": "DONE",
+     "length": 4,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCNSPR",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  },
+  {
+   "seq": 2,
+   "transid": "HCNC",
+   "program": "HCNSCH",
+   "termid": null,
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "run",
+    "task": 1,
+    "event": 1
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCNSCH",
+     "queue": "HCNCLOG",
+     "data": {
+      "length": 9,
+      "text": "CHILD RAN"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "RETURN",
+     "program": "HCNSCH",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

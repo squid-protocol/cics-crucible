@@ -57,6 +57,7 @@ generated Java and the COBOL on its stub runtime against these logs.
 
 gitgalaxy will pin this repo to a **release tag**, the way it pins language-crucible
 (`LANGUAGE_CRUCIBLE_REF` + `tests/_crucible_pin.py`). The pin variable and runner are phase 2
-of gitgalaxy#3989 and do not exist yet. No tag has been cut. Tagging is a deliberate,
+of gitgalaxy#3989 and do not exist yet. Tags are cut: see the table in
+[`RELEASING.md`](RELEASING.md) for the releases to date. Tagging is a deliberate,
 coordinated step: see [`RELEASING.md`](RELEASING.md). Never create tags or releases as a
 side effect of other work.

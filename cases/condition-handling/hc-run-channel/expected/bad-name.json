@@ -1,0 +1,68 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-run-channel",
+ "scenario": "bad-name",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HCRP",
+   "program": "HCRPAR",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "RECEIVE",
+     "program": "HCRPAR",
+     "resp": "NORMAL",
+     "length": 6,
+     "data": {
+      "length": 6,
+      "text": "HCRP B"
+     }
+    },
+    {
+     "event": "RUN",
+     "program": "HCRPAR",
+     "transid": "HCRD",
+     "resp": "CHANNELERR",
+     "resp2": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCRPAR",
+     "queue": "HCRLOG",
+     "data": {
+      "length": 45,
+      "text": "P BAD*NAME        12200100000"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCRPAR",
+     "text": "DONE",
+     "length": 4,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCRPAR",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}

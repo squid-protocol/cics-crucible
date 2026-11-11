@@ -1,0 +1,65 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-run-channel",
+  "trap": "condition-handling",
+  "title": "RUN TRANSID CHANNEL: the child gets a copy of the channel made at the RUN, a new channel is created empty, an unacceptable name is CHANNELERR",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCRPAR.cbl",
+      "src/HCRCHD.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-run-channel.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "copy-at-run",
+      "path": "trap",
+      "summary": "PUT CONTAINER, RUN TRANSID CHANNEL, PUT again: the child reads the value from the RUN, the parent its own newer one",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCRP C"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "new-channel",
+      "path": "trap",
+      "summary": "RUN TRANSID CHANNEL of a channel that does not exist: created empty, the child sees its name and no container",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCRP N"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "bad-name",
+      "path": "trap",
+      "summary": "RUN TRANSID CHANNEL with a character IBM does not accept: CHANNELERR RESP2 1, no child task",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCRP B"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
