@@ -19,6 +19,15 @@
         "faciltype": {"enum": ["APPC", "ASRUNTRAN", "BRIDGE", "EVENT", "IIOP", "IPECI", "IPIC", "JVMSERVER", "LU61", "MRO", "NODEJSAPP", "NONE", "RRSUR", "RZINSTOR", "SCHEDULER", "SOCKET", "START", "STARTTERM", "TERMINAL", "TRANDATA", "WEB", "XMRUNTRAN"]}
       }
     },
+    "region": {
+      "type": "object",
+      "required": ["applid", "sysid"],
+      "additionalProperties": false,
+      "properties": {
+        "applid": {"type": "string", "pattern": "^[A-Z0-9#@$]{8}$"},
+        "sysid": {"type": "string", "pattern": "^[A-Z0-9#@$]{4}$"}
+      }
+    },
     "id": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"},
     "trap": {"enum": ["condition-handling", "hex-attributes", "commarea-mismatch", "ghost-tasks", "pseudo-conversational"]},
     "title": {"type": "string", "minLength": 1},

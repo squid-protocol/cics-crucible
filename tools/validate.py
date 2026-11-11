@@ -454,6 +454,7 @@ class Case:
         self._maps()
         self._programs()
         self._origin()
+        self._region()
         self._scenarios()
         self._http()
         ids = [s["id"] for s in case["scenarios"]]
@@ -609,6 +610,19 @@ class Case:
                 self.err(f"INQUIRE ASSOCIATION({c['ASSOCIATION']}): only EIBTASKN, the task's own number (SPEC section 2)")
             if not any(o in c for o in ("ODAPPLID", "ODUSERID", "ODFACILNAME", "ODNETWORKID", "ODFACILTYPE")):
                 self.err("INQUIRE ASSOCIATION without an origin option (IBM's INVREQ RESP2 2 is not used by a case)")
+
+    def _region(self) -> None:
+        """SPEC section 2 (Region identity): a program that ASSIGNs APPLID or SYSID says so with `region` in case.json
+        (`applid`, `sysid`), and a case that states `region` uses one of them."""
+        uses = any(o in ("APPLID", "SYSID") for code in self._all_code() for opts in exec_cics(code)
+                   if opts[0][0] == "ASSIGN" for o, _ in opts[1:])  # fmt: skip
+        if uses and "region" not in self.case:
+            self.err("a program ASSIGNs APPLID or SYSID but case.json states no `region` (SPEC section 2)")
+        if "region" in self.case and not uses:
+            self.err("case.json states `region` but no program ASSIGNs APPLID or SYSID")
+        reg = self.case.get("region") or {}
+        if reg and (len(reg.get("applid", "")) != 8 or len(reg.get("sysid", "")) != 4):
+            self.err("region.applid is 8 characters and region.sysid 4: no blank padding is relied on (SPEC section 2)")
 
     def _all_code(self) -> list[list[str]]:
         return [cobol_code(self.dir / rel) for rel in self.case["sources"]["cobol"] if (self.dir / rel).is_file()]
