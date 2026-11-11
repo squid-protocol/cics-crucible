@@ -1,0 +1,38 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-document-dataonly",
+  "trap": "condition-handling",
+  "title": "DOCUMENT RETRIEVE DATAONLY with RESP / RESP2: whole document, a too-short INTO (LENGERR 2), the MAXLENGTH(0) size probe, and a second document by its token",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCDOCD.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-document-dataonly.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "dataonly",
+      "path": "happy",
+      "summary": "CREATE two TEXT documents; RETRIEVE DATAONLY four ways (whole, INTO too short, MAXLENGTH 0, the other document); RESP, RESP2, LENGTH and bytes logged to TS queue HCLOG",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC89"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-document-dataonly",
+ "scenario": "dataonly",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HC89",
+   "program": "HCDOCD",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDOCD",
+     "queue": "HCLOG",
+     "data": {
+      "length": 19,
+      "text": "D1 R=00 E=00 L=0012"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDOCD",
+     "queue": "HCLOG",
+     "data": {
+      "length": 17,
+      "text": "D1 D=ORDER 000417"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDOCD",
+     "queue": "HCLOG",
+     "data": {
+      "length": 19,
+      "text": "D2 R=22 E=02 L=0012"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDOCD",
+     "queue": "HCLOG",
+     "data": {
+      "length": 19,
+      "text": "D3 R=22 E=02 L=0012"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDOCD",
+     "queue": "HCLOG",
+     "data": {
+      "length": 19,
+      "text": "D4 R=00 E=00 L=0009"
+     },
+     "resp": "NORMAL",
+     "item": 5
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCDOCD",
+     "queue": "HCLOG",
+     "data": {
+      "length": 17,
+      "text": "D4 D=SHIPPED 9   "
+     },
+     "resp": "NORMAL",
+     "item": 6
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCDOCD",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCDOCD",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ],
+ "final": {
+  "ts_queues": {
+   "HCLOG": [
+    "D1 R=00 E=00 L=0012",
+    "D1 D=ORDER 000417",
+    "D2 R=22 E=02 L=0012",
+    "D3 R=22 E=02 L=0012",
+    "D4 R=00 E=00 L=0009",
+    "D4 D=SHIPPED 9   "
+   ]
+  }
+ }
+}
