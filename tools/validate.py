@@ -922,9 +922,14 @@ class Case:
             if task["transid"] != u.get("TRANSACTION", "").upper() or task["program"] != u.get("PROGRAM", "").upper():
                 self.err(f"{w}: the URIMAP routes this request to {u.get('TRANSACTION')} / {u.get('PROGRAM')}")
         peer = self.case.get("peers", {}).get(r["peer"])
-        sends = [e for e in task["events"] if e["event"] == "WEB-SEND"]
+        allsends = [e for e in task["events"] if e["event"] == "WEB-SEND"]
+        for f in allsends:
+            if f["resp"] != "NORMAL" and "resp2" not in f:
+                self.err(f"{w}: a failed WEB-SEND ({f['resp']}) states its RESP2 (SPEC section 6)")
+        # a failed WEB SEND delivers nothing to the peer (SPEC section 2): the response is the one NORMAL send
+        sends = [e for e in allsends if e["resp"] == "NORMAL"]
         if len(sends) != 1:
-            return self.err(f"{w}: an http task sends exactly one response (WEB SEND), has {len(sends)}")
+            return self.err(f"{w}: an http task delivers exactly one response (a NORMAL WEB SEND), has {len(sends)}")
         if peer is None:
             return
         nth = sum(1 for q in reqs[:trig["request"]] if q["peer"] == r["peer"])
@@ -932,8 +937,6 @@ class Case:
         if want is None:
             return self.err(f"{w}: peer {r['peer']} states no response for this request")
         e = sends[0]
-        if e["resp"] != "NORMAL":
-            return
         if e["status"] != want["status"]:
             self.err(f"{w}: WEB-SEND status {e['status']}, the peer expects {want['status']}")
         if want.get("mediatype") != e.get("mediatype"):

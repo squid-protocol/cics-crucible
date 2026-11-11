@@ -1,0 +1,100 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "gt-web-send-notfnd",
+  "scenario": "send",
+  "tasks": [
+    {
+      "seq": 1,
+      "transid": "GT89",
+      "program": "GTWNFS",
+      "termid": null,
+      "at": "2026-03-02T10:00:00",
+      "trigger": {
+        "kind": "http",
+        "request": 0
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-SEND",
+          "program": "GTWNFS",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 9,
+            "text": "alpha=111"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWNFS",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    },
+    {
+      "seq": 2,
+      "transid": "GT89",
+      "program": "GTWNFS",
+      "termid": null,
+      "at": "2026-03-02T10:00:05",
+      "trigger": {
+        "kind": "http",
+        "request": 1
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-SEND",
+          "program": "GTWNFS",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": null,
+          "resp": "NOTFND",
+          "resp2": 1
+        },
+        {
+          "event": "WRITEQ-TS",
+          "program": "GTWNFS",
+          "queue": "GTNFLOG",
+          "data": {
+            "length": 14,
+            "text": "M2 R=13 E=0001"
+          },
+          "resp": "NORMAL",
+          "item": 1
+        },
+        {
+          "event": "WEB-SEND",
+          "program": "GTWNFS",
+          "status": 404,
+          "statustext": "Not Found",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 4,
+            "text": "gone"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWNFS",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    }
+  ]
+}
