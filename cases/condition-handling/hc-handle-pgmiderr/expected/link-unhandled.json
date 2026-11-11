@@ -1,0 +1,42 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-handle-pgmiderr",
+ "scenario": "link-unhandled",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HP03",
+   "program": "HCPGMI",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "LINK",
+     "program": "HCPGMI",
+     "target": "HCGONE",
+     "length": 0,
+     "commarea": null,
+     "resp": "PGMIDERR",
+     "resp2": 1,
+     "note": "no installed definition and program autoinstall off (SPEC section 2): PGMIDERR, RESP2 1"
+    },
+    {
+     "event": "ABEND",
+     "program": "HCPGMI",
+     "abcode": "AEI0",
+     "cause": "condition",
+     "outcome": "terminated",
+     "condition": "PGMIDERR"
+    }
+   ],
+   "end": "abend"
+  }
+ ]
+}

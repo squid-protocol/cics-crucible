@@ -1,0 +1,81 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-handle-pgmiderr",
+  "trap": "condition-handling",
+  "title": "HANDLE CONDITION PGMIDERR on LINK and XCTL to a program with no definition: the label, the default abend AEI0, and a LINK that works",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCPGMI.cbl",
+      "src/HCPGMT.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-handle-pgmiderr.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "undefined_programs": [
+    "HCGONE"
+  ],
+  "scenarios": [
+    {
+      "id": "link-handler",
+      "path": "trap",
+      "summary": "HP01, HANDLE CONDITION PGMIDERR(NO-PROG), LINK to an undefined program: control goes to the label and the statement after the LINK never runs",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HP01"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "xctl-handler",
+      "path": "trap",
+      "summary": "HP02, the same with XCTL: the failed XCTL leaves control in HCPGMI, which goes to the label",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HP02"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "link-unhandled",
+      "path": "trap",
+      "summary": "HP03, no handler and no RESP: the default action, task abend AEI0",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HP03"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "link-defined",
+      "path": "happy",
+      "summary": "HP04, the handler is set but the LINK target is defined: no condition, the handler is not taken",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HP04"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
