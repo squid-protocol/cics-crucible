@@ -1,0 +1,38 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-enq-scope",
+  "trap": "condition-handling",
+  "title": "ENQ / DEQ with the TASK and UOW scope options, RESP NORMAL, a TASK enqueue kept across a SYNCPOINT",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCENQS.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-enq-scope.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "valid-scopes",
+      "path": "happy",
+      "summary": "five ENQ / DEQ pairs (TASK; UOW; LENGTH(8) TASK; TASK NOSUSPEND; TASK across a SYNCPOINT), each RESP NORMAL, logged to TS queue HCLOG",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCES"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
