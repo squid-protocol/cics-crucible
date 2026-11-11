@@ -1,0 +1,83 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-web-receive-set",
+  "trap": "ghost-tasks",
+  "title": "WEB RECEIVE SET(ptr) with MEDIATYPE and NOSRVCONVERT: CICS acquires the storage, LENGTH is output only, the media type comes back in a 56-byte area",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/GTWRSET.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/gt-web-receive-set.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "peers": {
+    "client-a": {
+      "responses": [
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "RCV=00 L=005 B=HELLO    MT=text/plain"
+        },
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "RCV=00 L=007 B={\"a\":1}  MT=applicatio"
+        },
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "RCV=00 L=012 B=ABCDEFGH MT=image/jpeg"
+        }
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "id": "receive",
+      "path": "happy",
+      "summary": "client-a POSTs three bodies of three media types (5, 7 and 12 bytes) to /gt/rset: each is its own GT87 task whose SET pointer addresses the whole body",
+      "steps": [],
+      "requests": [
+        {
+          "at": 0,
+          "peer": "client-a",
+          "method": "POST",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/rset",
+          "mediatype": "text/plain",
+          "body": "HELLO"
+        },
+        {
+          "at": 5,
+          "peer": "client-a",
+          "method": "POST",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/rset",
+          "mediatype": "application/json",
+          "body": "{\"a\":1}"
+        },
+        {
+          "at": 10,
+          "peer": "client-a",
+          "method": "POST",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/rset",
+          "mediatype": "image/jpeg",
+          "body": "ABCDEFGHIJKL"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
