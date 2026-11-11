@@ -37,7 +37,7 @@ only with a documented reason recorded in the case's `NOTES.md` (see
 
 ## Status
 
-Format `cics-crucible/1` ([SPEC.md](SPEC.md)). 93 cases and 278 scenarios. The latest
+Format `cics-crucible/1` ([SPEC.md](SPEC.md)). 94 cases and 280 scenarios. The latest
 release tag is `v0.18.0` (see [RELEASING.md](RELEASING.md) for the full table).
 
 | Trap | Case | Scenarios | What it pins down |
