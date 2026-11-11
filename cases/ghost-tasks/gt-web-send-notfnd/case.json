@@ -1,0 +1,70 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-web-send-notfnd",
+  "trap": "ghost-tasks",
+  "title": "Server WEB SEND DOCTOKEN of a document that was never created: NOTFND RESP2 1 on the send itself, nothing delivered, then a 404 answer; a valid token is the control",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/GTWNFS.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/gt-web-send-notfnd.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "peers": {
+    "client-a": {
+      "responses": [
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "alpha=111"
+        },
+        {
+          "status": 404,
+          "mediatype": "text/plain",
+          "body": "gone"
+        }
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "id": "send",
+      "path": "trap",
+      "summary": "Two GETs: mode 1 sends a created document (200); mode 2 sends a never-created DOCTOKEN, which is NOTFND RESP2 1 and delivers nothing, then answers 404 with FROM",
+      "steps": [],
+      "requests": [
+        {
+          "at": 0,
+          "peer": "client-a",
+          "method": "GET",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/nf",
+          "headers": {
+            "X-Crucible-Mode": "1"
+          }
+        },
+        {
+          "at": 5,
+          "peer": "client-a",
+          "method": "GET",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/nf",
+          "headers": {
+            "X-Crucible-Mode": "2"
+          }
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
