@@ -1,0 +1,53 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-file-token",
+  "trap": "condition-handling",
+  "title": "File control: READ UPDATE TOKEN, then REWRITE TOKEN or DELETE TOKEN with the token it returned; INVREQ RESP2 47 for a token no READ UPDATE returned",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCTOKN.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-file-token.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": [
+      "data/HCTK.dat"
+    ]
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "rewrite",
+      "path": "trap",
+      "summary": "REWRITE TOKEN with a token no READ UPDATE returned is INVREQ RESP2 47; READ UPDATE TOKEN then REWRITE TOKEN of its token changes the record",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC70 R"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "delete",
+      "path": "trap",
+      "summary": "DELETE TOKEN with a token no READ UPDATE returned is INVREQ RESP2 47; READ UPDATE TOKEN then DELETE TOKEN of its token removes the record",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HC70 D"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
