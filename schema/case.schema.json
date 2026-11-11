@@ -24,8 +24,8 @@
       "required": ["applid", "sysid"],
       "additionalProperties": false,
       "properties": {
-        "applid": {"$ref": "#/$defs/name8"},
-        "sysid": {"$ref": "#/$defs/name4"}
+        "applid": {"type": "string", "pattern": "^[A-Z0-9#@$]{8}$"},
+        "sysid": {"type": "string", "pattern": "^[A-Z0-9#@$]{4}$"}
       }
     },
     "id": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"},

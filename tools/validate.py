@@ -621,10 +621,8 @@ class Case:
         if "region" in self.case and not uses:
             self.err("case.json states `region` but no program ASSIGNs APPLID or SYSID")
         reg = self.case.get("region") or {}
-        if reg.get("applid") is not None and reg["applid"] != reg["applid"].strip():
-            self.err("region.applid has leading or trailing blanks")
-        if reg.get("sysid") is not None and reg["sysid"] != reg["sysid"].strip():
-            self.err("region.sysid has leading or trailing blanks")
+        if reg and (len(reg.get("applid", "")) != 8 or len(reg.get("sysid", "")) != 4):
+            self.err("region.applid is 8 characters and region.sysid 4: no blank padding is relied on (SPEC section 2)")
 
     def _all_code(self) -> list[list[str]]:
         return [cobol_code(self.dir / rel) for rel in self.case["sources"]["cobol"] if (self.dir / rel).is_file()]
