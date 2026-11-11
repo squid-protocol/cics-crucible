@@ -1,0 +1,43 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-assign-identity",
+  "trap": "condition-handling",
+  "title": "ASSIGN APPLID and SYSID: the region identity the case states, both options in one command, each alone, either order, across a LINK",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCIDA.cbl",
+      "src/HCIDB.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-assign-identity.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "identity",
+      "path": "happy",
+      "summary": "HCIDA ASSIGNs APPLID and SYSID, LINKs HCIDB (each option alone), ASSIGNs again in the other order; the values and RESP go to TS queue HCLOG",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCID"
+        }
+      ],
+      "until": 60
+    }
+  ],
+  "region": {
+    "applid": "CRUCAPP1",
+    "sysid": "CRU1"
+  }
+}
