@@ -1,0 +1,70 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-web-extract-scheme-type",
+  "trap": "ghost-tasks",
+  "title": "Server WEB EXTRACT of SCHEME and REQUESTTYPE (CVDAs HTTP / HTTPYES) and the zero-length LENGERRs of HTTPVERSION / VERSIONLEN (RESP2 7), PATH / PATHLENGTH (RESP2 5) and HOST / HOSTLENGTH (RESP2 21), the same for a GET and a POST",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/GTWEXT.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/gt-web-extract-scheme-type.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "peers": {
+    "client-a": {
+      "responses": [
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "S=Y R=Y E=00/000 V0=22/007 P0=22/005 H0=22/021 VN=00/000"
+        }
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "id": "get",
+      "path": "happy",
+      "summary": "GET with no body: SCHEME is HTTP, REQUESTTYPE is HTTPYES, and the three zero lengths raise LENGERR RESP2 7, 5 and 21",
+      "steps": [],
+      "requests": [
+        {
+          "at": 0,
+          "peer": "client-a",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/ext",
+          "method": "GET"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "post",
+      "path": "happy",
+      "summary": "POST with a body the program never receives: the same line, so no EXTRACT result depends on the method or the body",
+      "steps": [],
+      "requests": [
+        {
+          "at": 0,
+          "peer": "client-a",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/ext",
+          "method": "POST",
+          "mediatype": "text/plain",
+          "body": "PING"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
