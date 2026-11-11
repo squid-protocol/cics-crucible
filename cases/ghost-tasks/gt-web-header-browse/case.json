@@ -1,0 +1,118 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-web-header-browse",
+  "trap": "ghost-tasks",
+  "title": "Server WEB STARTBROWSE / READNEXT / ENDBROWSE HTTPHEADER: INVREQ RESP2 4 outside a browse, ILLOGIC RESP2 10 for a second start, the browse ends with ENDFILE, LENGERR RESP2 4 (name truncated) and RESP2 1 (a buffer length of zero or less)",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/GTWHBR.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/gt-web-header-browse.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "peers": {
+    "client-a": {
+      "responses": [
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "M=1 P=16/004 Q=16/004 T=00 S=21/010 R=00/000 F=20 E=00/000 X=16/004"
+        },
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "M=2 P=16/004 Q=16/004 T=00 S=21/010 R=22/004 F=00 E=00/000 X=16/004"
+        },
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "M=3 P=16/004 Q=16/004 T=00 S=21/010 R=22/001 F=00 E=00/000 X=16/004"
+        },
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "M=4 P=16/004 Q=16/004 T=00 S=21/010 R=22/001 F=00 E=00/000 X=16/004"
+        },
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "M=5 P=16/004 Q=16/004 T=00 S=21/010 R=22/001 F=00 E=00/000 X=16/004"
+        }
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "id": "browse",
+      "path": "trap",
+      "summary": "Five GETs: mode 1 browses the request's HTTP headers to ENDFILE; modes 2-5 make the first READNEXT LENGERR (RESP2 4 name truncated, RESP2 1 for a NAMELENGTH of 0 / -1 or a VALUELENGTH of 0); every task shows the INVREQ / ILLOGIC answers around the browse",
+      "steps": [],
+      "requests": [
+        {
+          "at": 0,
+          "peer": "client-a",
+          "method": "GET",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/hb",
+          "headers": {
+            "X-Crucible-Mode": "1"
+          }
+        },
+        {
+          "at": 5,
+          "peer": "client-a",
+          "method": "GET",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/hb",
+          "headers": {
+            "X-Crucible-Mode": "2"
+          }
+        },
+        {
+          "at": 10,
+          "peer": "client-a",
+          "method": "GET",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/hb",
+          "headers": {
+            "X-Crucible-Mode": "3"
+          }
+        },
+        {
+          "at": 15,
+          "peer": "client-a",
+          "method": "GET",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/hb",
+          "headers": {
+            "X-Crucible-Mode": "4"
+          }
+        },
+        {
+          "at": 20,
+          "peer": "client-a",
+          "method": "GET",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/hb",
+          "headers": {
+            "X-Crucible-Mode": "5"
+          }
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
