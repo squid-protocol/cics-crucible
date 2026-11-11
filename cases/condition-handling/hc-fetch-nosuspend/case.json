@@ -1,0 +1,65 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-fetch-nosuspend",
+  "trap": "condition-handling",
+  "title": "FETCH CHILD and FETCH ANY with NOSUSPEND: NOTFINISHED RESP2 52 while the child runs, NORMAL once it has completed, NOTFND once all are fetched, INVREQ RESP2 52 with no children",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCNSPR.cbl",
+      "src/HCNSCH.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-fetch-nosuspend.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "child-nosuspend",
+      "path": "trap",
+      "summary": "FETCH CHILD NOSUSPEND right after RUN: NOTFINISHED with RESP2 52, the parent is not suspended; after the parent waits 10 s (the child takes 5) the same FETCH is NORMAL",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCNS C"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "any-nosuspend",
+      "path": "trap",
+      "summary": "FETCH ANY NOSUSPEND: NOTFINISHED 52 while the child runs, NORMAL with the child token after it, then NOTFND RESP2 1 as no unfetched child is left",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCNS A"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "no-children",
+      "path": "happy",
+      "summary": "FETCH ANY NOSUSPEND by a task that has run no child: INVREQ with RESP2 52, not NOTFINISHED",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCNS N"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
