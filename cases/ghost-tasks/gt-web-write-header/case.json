@@ -1,0 +1,121 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "gt-web-write-header",
+  "trap": "ghost-tasks",
+  "title": "Server WEB WRITE HTTPHEADER with NAMELENGTH or VALUELENGTH zero or negative: LENGERR RESP2 35 / 55, no header written, the 200 answer still delivered; a valid write is the control",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/GTWWHL.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/gt-web-write-header.csd"
+    ],
+    "copy": [],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "peers": {
+    "client-a": {
+      "responses": [
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "done",
+          "headers": {
+            "X-Crucible-Note": "ok"
+          }
+        },
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "done"
+        },
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "done"
+        },
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "done"
+        },
+        {
+          "status": 200,
+          "mediatype": "text/plain",
+          "body": "done"
+        }
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "id": "send",
+      "path": "trap",
+      "summary": "Five GETs: mode 1 writes a valid header (NORMAL); modes 2-3 NAMELENGTH 0 / -1 are LENGERR RESP2 35; modes 4-5 VALUELENGTH 0 / -1 are LENGERR RESP2 55; every task then answers 200 and only mode 1's response carries the header",
+      "steps": [],
+      "requests": [
+        {
+          "at": 0,
+          "peer": "client-a",
+          "method": "GET",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/wh",
+          "headers": {
+            "X-Crucible-Mode": "1"
+          }
+        },
+        {
+          "at": 5,
+          "peer": "client-a",
+          "method": "GET",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/wh",
+          "headers": {
+            "X-Crucible-Mode": "2"
+          }
+        },
+        {
+          "at": 10,
+          "peer": "client-a",
+          "method": "GET",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/wh",
+          "headers": {
+            "X-Crucible-Mode": "3"
+          }
+        },
+        {
+          "at": 15,
+          "peer": "client-a",
+          "method": "GET",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/wh",
+          "headers": {
+            "X-Crucible-Mode": "4"
+          }
+        },
+        {
+          "at": 20,
+          "peer": "client-a",
+          "method": "GET",
+          "scheme": "HTTP",
+          "host": "crucible.example",
+          "path": "/gt/wh",
+          "headers": {
+            "X-Crucible-Mode": "5"
+          }
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
