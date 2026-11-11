@@ -8,8 +8,9 @@
       * WEB EXTRACTs, none of which reads a piece of the request that *
       * the case does not state:                                      *
       *   1. SCHEME and REQUESTTYPE together: each CVDA is compared   *
-      *      with DFHVALUE(HTTP) / DFHVALUE(HTTPYES) and shown as Y   *
-      *      or N, never as a number,                                 *
+      *      with the 88-levels for HTTP (1096) / HTTPYES (1033)     *
+      *      (DFHVALUE is not stubbed outside a command) and shown   *
+      *      as Y or N, never as a number,                           *
       *   2. HTTPVERSION with VERSIONLEN 0,                           *
       *   3. PATH with PATHLENGTH 0,                                  *
       *   4. HOST with HOSTLENGTH 0,                                  *
@@ -22,7 +23,9 @@
        DATA DIVISION.
        WORKING-STORAGE SECTION.
        01  WS-SCH                  PIC S9(8) COMP VALUE 0.
+           88  SCH-HTTP            VALUE 1096.
        01  WS-RTY                  PIC S9(8) COMP VALUE 0.
+           88  RTY-HTTPYES         VALUE 1033.
        01  WS-VER                  PIC X(10) VALUE SPACES.
        01  WS-VLEN                 PIC S9(8) COMP VALUE 0.
        01  WS-PATH                 PIC X(256) VALUE SPACES.
@@ -65,10 +68,10 @@
            MOVE WS-RESP TO OUT-E1
            MOVE WS-RESP2 TO OUT-E2
            IF WS-RESP = 0
-               IF WS-SCH = DFHVALUE(HTTP)
+               IF SCH-HTTP
                    MOVE 'Y' TO OUT-S
                END-IF
-               IF WS-RTY = DFHVALUE(HTTPYES)
+               IF RTY-HTTPYES
                    MOVE 'Y' TO OUT-R
                END-IF
            END-IF
