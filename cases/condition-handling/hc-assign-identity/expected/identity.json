@@ -1,0 +1,97 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "hc-assign-identity",
+ "scenario": "identity",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "HCID",
+   "program": "HCIDA",
+   "termid": "T001",
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "terminal",
+    "step": 0
+   },
+   "eibaid": "ENTER",
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCIDA",
+     "queue": "HCLOG",
+     "data": {
+      "length": 29,
+      "text": "A1 A=[CRUCAPP1] S=[CRU1] R=00"
+     },
+     "resp": "NORMAL",
+     "item": 1
+    },
+    {
+     "event": "LINK",
+     "program": "HCIDA",
+     "target": "HCIDB",
+     "length": 0,
+     "commarea": null,
+     "resp": "NORMAL"
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCIDB",
+     "queue": "HCLOG",
+     "data": {
+      "length": 29,
+      "text": "B1 A=[XXXXXXXX] S=[CRU1] R=00"
+     },
+     "resp": "NORMAL",
+     "item": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCIDB",
+     "queue": "HCLOG",
+     "data": {
+      "length": 29,
+      "text": "B2 A=[CRUCAPP1] S=[XXXX] R=00"
+     },
+     "resp": "NORMAL",
+     "item": 3
+    },
+    {
+     "event": "RETURN",
+     "program": "HCIDB",
+     "level": 2
+    },
+    {
+     "event": "WRITEQ-TS",
+     "program": "HCIDA",
+     "queue": "HCLOG",
+     "data": {
+      "length": 29,
+      "text": "A2 A=[CRUCAPP1] S=[CRU1] R=00"
+     },
+     "resp": "NORMAL",
+     "item": 4
+    },
+    {
+     "event": "SEND-TEXT",
+     "program": "HCIDA",
+     "text": "DONE OK",
+     "length": 8,
+     "options": [
+      "ERASE"
+     ]
+    },
+    {
+     "event": "RETURN",
+     "program": "HCIDA",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}
