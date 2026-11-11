@@ -1,0 +1,148 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "gt-web-send-doctoken",
+  "scenario": "send",
+  "tasks": [
+    {
+      "seq": 1,
+      "transid": "GT88",
+      "program": "GTWDOCS",
+      "termid": null,
+      "at": "2026-03-02T10:00:00",
+      "trigger": {
+        "kind": "http",
+        "request": 0
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-SEND",
+          "program": "GTWDOCS",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 9,
+            "text": "alpha=111"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "WRITEQ-TS",
+          "program": "GTWDOCS",
+          "queue": "GTDOCLOG",
+          "data": {
+            "length": 7,
+            "text": "M1 R=00"
+          },
+          "resp": "NORMAL",
+          "item": 1
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWDOCS",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    },
+    {
+      "seq": 2,
+      "transid": "GT88",
+      "program": "GTWDOCS",
+      "termid": null,
+      "at": "2026-03-02T10:00:05",
+      "trigger": {
+        "kind": "http",
+        "request": 1
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-SEND",
+          "program": "GTWDOCS",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/xml",
+          "from": {
+            "length": 12,
+            "text": "<b>bravo</b>"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "WRITEQ-TS",
+          "program": "GTWDOCS",
+          "queue": "GTDOCLOG",
+          "data": {
+            "length": 7,
+            "text": "M2 R=13"
+          },
+          "resp": "NORMAL",
+          "item": 2
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWDOCS",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    },
+    {
+      "seq": 3,
+      "transid": "GT88",
+      "program": "GTWDOCS",
+      "termid": null,
+      "at": "2026-03-02T10:00:10",
+      "trigger": {
+        "kind": "http",
+        "request": 2
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-SEND",
+          "program": "GTWDOCS",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 3,
+            "text": "c=3"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "WRITEQ-TS",
+          "program": "GTWDOCS",
+          "queue": "GTDOCLOG",
+          "data": {
+            "length": 7,
+            "text": "M3 R=00"
+          },
+          "resp": "NORMAL",
+          "item": 3
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWDOCS",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    }
+  ]
+}
