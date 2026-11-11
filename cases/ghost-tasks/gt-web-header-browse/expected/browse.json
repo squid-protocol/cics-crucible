@@ -1,0 +1,187 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "gt-web-header-browse",
+  "scenario": "browse",
+  "tasks": [
+    {
+      "seq": 1,
+      "transid": "GT91",
+      "program": "GTWHBR",
+      "termid": null,
+      "at": "2026-03-02T10:00:00",
+      "trigger": {
+        "kind": "http",
+        "request": 0
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-SEND",
+          "program": "GTWHBR",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 67,
+            "text": "M=1 P=16/004 Q=16/004 T=00 S=21/010 R=00/000 F=20 E=00/000 X=16/004"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWHBR",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    },
+    {
+      "seq": 2,
+      "transid": "GT91",
+      "program": "GTWHBR",
+      "termid": null,
+      "at": "2026-03-02T10:00:05",
+      "trigger": {
+        "kind": "http",
+        "request": 1
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-SEND",
+          "program": "GTWHBR",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 67,
+            "text": "M=2 P=16/004 Q=16/004 T=00 S=21/010 R=22/004 F=00 E=00/000 X=16/004"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWHBR",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    },
+    {
+      "seq": 3,
+      "transid": "GT91",
+      "program": "GTWHBR",
+      "termid": null,
+      "at": "2026-03-02T10:00:10",
+      "trigger": {
+        "kind": "http",
+        "request": 2
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-SEND",
+          "program": "GTWHBR",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 67,
+            "text": "M=3 P=16/004 Q=16/004 T=00 S=21/010 R=22/001 F=00 E=00/000 X=16/004"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWHBR",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    },
+    {
+      "seq": 4,
+      "transid": "GT91",
+      "program": "GTWHBR",
+      "termid": null,
+      "at": "2026-03-02T10:00:15",
+      "trigger": {
+        "kind": "http",
+        "request": 3
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-SEND",
+          "program": "GTWHBR",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 67,
+            "text": "M=4 P=16/004 Q=16/004 T=00 S=21/010 R=22/001 F=00 E=00/000 X=16/004"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWHBR",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    },
+    {
+      "seq": 5,
+      "transid": "GT91",
+      "program": "GTWHBR",
+      "termid": null,
+      "at": "2026-03-02T10:00:20",
+      "trigger": {
+        "kind": "http",
+        "request": 4
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-SEND",
+          "program": "GTWHBR",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 67,
+            "text": "M=5 P=16/004 Q=16/004 T=00 S=21/010 R=22/001 F=00 E=00/000 X=16/004"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWHBR",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    }
+  ]
+}
