@@ -52,6 +52,7 @@ change (with a "Cross-repo" PR note), not something to do unilaterally from this
 | `v0.11.0` | 2026-11-01 | Format unchanged (additive SPEC: optional case key `wrkarea`, the CWA size). 51 cases, 177 scenarios. Adds `ca-channel-browse`, `ca-address-cwa` and `ca-bll-cells` (commarea-mismatch) for gitgalaxy#5005, #5079 and #5119. No log corrected. Tagged at `df992a3`. |
 | `v0.12.0` | 2026-11-02 | Format unchanged (additive SPEC: optional `jcl/<NAME>.jcl` IDCAMS DEFINE CLUSTER stating a file's key). 51 cases, 177 scenarios. Adds no case: `hc-file-read-set` and `hc-file-unlock` (condition-handling) state their file key for gitgalaxy#6876 / #7498. No log corrected. Tagged at `904e987`. |
 | `v0.16.0` | 2026-11-10 | Format unchanged. 74 cases, 241 scenarios. Adds `hc-counter-rewind-update`, `hc-file-write-keylength`, `hc-handle-aid-pf-keys`, `hc-handle-mapfail`, `hc-send-map-freekb` (condition-handling) and `gt-web-query-form` (ghost-tasks) for gitgalaxy#7956. No log corrected. Tagged at `fa7cdf1`. |
+| `v0.17.0` | 2026-11-11 | Format unchanged (additive SPEC: case-stated region identity for `ASSIGN APPLID` / `SYSID`). 80 cases, 255 scenarios. Adds `gt-web-converse-status` (ghost-tasks), `hc-file-dataset-synonym`, `hc-freemain-datapointer`, `hc-handle-pgmiderr`, `hc-assign-identity` and `hc-document-dataonly` (condition-handling) for gitgalaxy#7956. No log corrected. Tagged at `9ea4ce5`. |
 
-The latest tag is `v0.16.0`; `main` may carry unreleased commits beyond it. Full notes for each tag are on its
+The latest tag is `v0.17.0`; `main` may carry unreleased commits beyond it. Full notes for each tag are on its
 [GitHub release](https://github.com/squid-protocol/cics-crucible/releases).
