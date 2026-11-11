@@ -1,0 +1,77 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-tdqueue-enable",
+  "trap": "condition-handling",
+  "title": "INQUIRE / SET TDQUEUE ENABLESTATUS: INQUIRE reports an intrapartition queue's type, enable and recovery status, SET ENABLED / DISABLED changes what INQUIRE reads back, QIDERR on an undefined queue, INVREQ RESP2 10 on a value ENABLESTATUS does not take",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCTDEN.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-tdqueue-enable.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "inquire",
+      "path": "happy",
+      "summary": "INQUIRE TDQUEUE of the defined queue HCQ1: TYPE INTRA (222), ENABLESTATUS ENABLED (23), RECOVSTATUS NOTRECOVABLE (30); INQUIRE of the undefined HCNQ: QIDERR, RESP2 1",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCTD I"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "toggle",
+      "path": "happy",
+      "summary": "SET TDQUEUE ENABLESTATUS(DISABLED) then INQUIRE reads DISABLED (24); SET ENABLED then INQUIRE reads ENABLED (23)",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCTD S"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "undefined",
+      "path": "trap",
+      "summary": "SET TDQUEUE ENABLESTATUS(ENABLED) of HCNQ, a queue the CSD does not define: QIDERR, RESP2 1",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCTD U"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "badcvda",
+      "path": "trap",
+      "summary": "SET TDQUEUE ENABLESTATUS(OPEN), a value ENABLESTATUS does not take: INVREQ, RESP2 10, and the queue stays ENABLED",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCTD V"
+        }
+      ],
+      "until": 60
+    }
+  ]
+}
