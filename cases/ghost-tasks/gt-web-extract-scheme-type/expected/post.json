@@ -1,0 +1,43 @@
+{
+ "format": "cics-crucible/expected/1",
+ "case": "gt-web-extract-scheme-type",
+ "scenario": "post",
+ "tasks": [
+  {
+   "seq": 1,
+   "transid": "GT87",
+   "program": "GTWEXT",
+   "termid": null,
+   "at": "2026-03-02T10:00:00",
+   "trigger": {
+    "kind": "http",
+    "request": 0
+   },
+   "eibaid": null,
+   "eibcalen": 0,
+   "commarea": null,
+   "events": [
+    {
+     "event": "WEB-SEND",
+     "program": "GTWEXT",
+     "status": 200,
+     "from": {
+      "length": 56,
+      "text": "S=Y R=Y E=00/000 V0=22/007 P0=22/005 H0=22/021 VN=00/000"
+     },
+     "resp": "NORMAL",
+     "statustext": "OK",
+     "mediatype": "text/plain"
+    },
+    {
+     "event": "RETURN",
+     "program": "GTWEXT",
+     "level": 1,
+     "transid": null,
+     "commarea": null
+    }
+   ],
+   "end": "normal"
+  }
+ ]
+}
