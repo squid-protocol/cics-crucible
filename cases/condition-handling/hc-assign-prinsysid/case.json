@@ -1,0 +1,43 @@
+{
+  "format": "cics-crucible/case/1",
+  "id": "hc-assign-prinsysid",
+  "trap": "condition-handling",
+  "title": "ASSIGN PRINSYSID on a terminal task: INVREQ RESP2 5 under RESP, in the task and in a LINKed program, and a later ASSIGN SYSID still NORMAL",
+  "clock": "2026-03-02T10:00:00",
+  "terminal": "T001",
+  "sources": {
+    "cobol": [
+      "src/HCPSA.cbl",
+      "src/HCPSB.cbl"
+    ],
+    "bms": [],
+    "csd": [
+      "csd/hc-assign-prinsysid.csd"
+    ],
+    "copy": [
+      "copy"
+    ],
+    "data": []
+  },
+  "layouts": {},
+  "maps": {},
+  "scenarios": [
+    {
+      "id": "principal",
+      "path": "happy",
+      "summary": "HCPSA ASSIGNs PRINSYSID (INVREQ 5), LINKs HCPSB (same, then ASSIGN SYSID NORMAL), ASSIGNs SYSID; RESP / RESP2 go to TS queue HCLOG",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "HCPS"
+        }
+      ],
+      "until": 60
+    }
+  ],
+  "region": {
+    "applid": "CRUCAPP1",
+    "sysid": "CRU1"
+  }
+}
