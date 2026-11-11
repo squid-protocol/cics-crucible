@@ -1,0 +1,270 @@
+{
+  "format": "cics-crucible/expected/1",
+  "case": "gt-web-write-header",
+  "scenario": "send",
+  "tasks": [
+    {
+      "seq": 1,
+      "transid": "GT90",
+      "program": "GTWWHL",
+      "termid": null,
+      "at": "2026-03-02T10:00:00",
+      "trigger": {
+        "kind": "http",
+        "request": 0
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-WRITE-HTTPHEADER",
+          "program": "GTWWHL",
+          "name": "X-Crucible-Note",
+          "value": "ok",
+          "resp": "NORMAL"
+        },
+        {
+          "event": "WEB-SEND",
+          "program": "GTWWHL",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 4,
+            "text": "done"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWWHL",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    },
+    {
+      "seq": 2,
+      "transid": "GT90",
+      "program": "GTWWHL",
+      "termid": null,
+      "at": "2026-03-02T10:00:05",
+      "trigger": {
+        "kind": "http",
+        "request": 1
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-WRITE-HTTPHEADER",
+          "program": "GTWWHL",
+          "name": "X-Crucible-Note",
+          "value": "ok",
+          "resp": "LENGERR",
+          "resp2": 35
+        },
+        {
+          "event": "WRITEQ-TS",
+          "program": "GTWWHL",
+          "queue": "GTWHLOG",
+          "data": {
+            "length": 14,
+            "text": "M2 R=22 E=0035"
+          },
+          "resp": "NORMAL",
+          "item": 1
+        },
+        {
+          "event": "WEB-SEND",
+          "program": "GTWWHL",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 4,
+            "text": "done"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWWHL",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    },
+    {
+      "seq": 3,
+      "transid": "GT90",
+      "program": "GTWWHL",
+      "termid": null,
+      "at": "2026-03-02T10:00:10",
+      "trigger": {
+        "kind": "http",
+        "request": 2
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-WRITE-HTTPHEADER",
+          "program": "GTWWHL",
+          "name": "X-Crucible-Note",
+          "value": "ok",
+          "resp": "LENGERR",
+          "resp2": 35
+        },
+        {
+          "event": "WRITEQ-TS",
+          "program": "GTWWHL",
+          "queue": "GTWHLOG",
+          "data": {
+            "length": 14,
+            "text": "M3 R=22 E=0035"
+          },
+          "resp": "NORMAL",
+          "item": 2
+        },
+        {
+          "event": "WEB-SEND",
+          "program": "GTWWHL",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 4,
+            "text": "done"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWWHL",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    },
+    {
+      "seq": 4,
+      "transid": "GT90",
+      "program": "GTWWHL",
+      "termid": null,
+      "at": "2026-03-02T10:00:15",
+      "trigger": {
+        "kind": "http",
+        "request": 3
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-WRITE-HTTPHEADER",
+          "program": "GTWWHL",
+          "name": "X-Crucible-Note",
+          "value": "ok",
+          "resp": "LENGERR",
+          "resp2": 55
+        },
+        {
+          "event": "WRITEQ-TS",
+          "program": "GTWWHL",
+          "queue": "GTWHLOG",
+          "data": {
+            "length": 14,
+            "text": "M4 R=22 E=0055"
+          },
+          "resp": "NORMAL",
+          "item": 3
+        },
+        {
+          "event": "WEB-SEND",
+          "program": "GTWWHL",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 4,
+            "text": "done"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWWHL",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    },
+    {
+      "seq": 5,
+      "transid": "GT90",
+      "program": "GTWWHL",
+      "termid": null,
+      "at": "2026-03-02T10:00:20",
+      "trigger": {
+        "kind": "http",
+        "request": 4
+      },
+      "eibaid": null,
+      "eibcalen": 0,
+      "commarea": null,
+      "events": [
+        {
+          "event": "WEB-WRITE-HTTPHEADER",
+          "program": "GTWWHL",
+          "name": "X-Crucible-Note",
+          "value": "ok",
+          "resp": "LENGERR",
+          "resp2": 55
+        },
+        {
+          "event": "WRITEQ-TS",
+          "program": "GTWWHL",
+          "queue": "GTWHLOG",
+          "data": {
+            "length": 14,
+            "text": "M5 R=22 E=0055"
+          },
+          "resp": "NORMAL",
+          "item": 4
+        },
+        {
+          "event": "WEB-SEND",
+          "program": "GTWWHL",
+          "status": 200,
+          "statustext": "OK",
+          "mediatype": "text/plain",
+          "from": {
+            "length": 4,
+            "text": "done"
+          },
+          "resp": "NORMAL"
+        },
+        {
+          "event": "RETURN",
+          "program": "GTWWHL",
+          "level": 1,
+          "transid": null,
+          "commarea": null
+        }
+      ],
+      "end": "normal"
+    }
+  ]
+}
