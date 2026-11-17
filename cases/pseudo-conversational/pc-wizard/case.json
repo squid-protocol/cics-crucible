@@ -57,6 +57,15 @@
     {"id": "cancel-first-screen", "path": "happy",
      "summary": "PF3 on the name screen: PC02 runs PCWIZ, which cancels before any RECEIVE MAP",
      "steps": [{"at": 0, "aid": "ENTER", "text": "PC01"},
-               {"at": 10, "aid": "PF3"}]}
+               {"at": 10, "aid": "PF3"}]},
+    {"id": "name-erased", "path": "trap",
+     "summary": "the operator erases the name with ERASE EOF and presses ENTER: the field arrives with length 0 and an SBA, so RECEIVE MAP is NORMAL (not MAPFAIL) and NAMEL = 0 counts an error",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "PC01"},
+               {"at": 10, "aid": "ENTER", "map": "PCM1", "fields": {"NAME": ""}}]},
+    {"id": "amount-erased", "path": "trap",
+     "summary": "name ALAN, then the amount is erased with ERASE EOF and ENTER pressed: RECEIVE MAP is NORMAL, AMTL = 0 counts an error and PCM2 is redisplayed",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "PC01"},
+               {"at": 10, "aid": "ENTER", "map": "PCM1", "fields": {"NAME": "ALAN"}},
+               {"at": 20, "aid": "ENTER", "map": "PCM2", "fields": {"AMT": ""}}]}
   ]
 }

@@ -127,6 +127,17 @@ Common facts:
   PC02 → PCWIZ with EIBCALEN = 30 [RETURN], so the first-entry IF is skipped. The EVALUATE's
   first arm (PF3) performs CANCEL-WIZARD: SEND TEXT `WIZARD CANCELLED` and RETURN without
   TRANSID, before any RECEIVE MAP.
+* **`name-erased`**: task 1 as in `happy-post`. Task 2: the operator erases the name with ERASE
+  EOF and presses ENTER. The erased field is still transmitted (its MDT is on [3270-ATTR]) as
+  an SBA followed by no data, so the inbound data does contain an SBA and RECEIVE MAP is
+  NORMAL, not MAPFAIL [RECEIVE-MAP: MAPFAIL only when the data has zero length or no SBA]; the
+  field's length NAMEL is 0 (SPEC section 4, `""`). `NAMEL = 0` takes the error arm: errors =
+  1, PCM1 redisplayed with `NAME IS REQUIRED`, RETURN TRANSID('PC02'). This separates "RESP
+  not NORMAL" from "NAMEL = 0" in the program's IF: the two conditions are not interchangeable.
+* **`amount-erased`**: name `ALAN` as in `clear-and-bad-amount`. Task 3 (PC03 → PCCONF, step 2):
+  the amount is erased and ENTER pressed. RECEIVE MAP is NORMAL for the same reason; AMTL = 0
+  takes the error arm: errors = 1, PCM2 redisplayed with the name and `AMOUNT MUST BE DIGITS`
+  (PC-AMOUNT is still 0, so AMT carries no data), RETURN TRANSID('PC03') with step still 2.
 
 ## What a correct port must do
 
@@ -144,6 +155,9 @@ Common facts:
 * CLEAR also erases the physical screen. Here the program immediately redraws with ERASE,
   so the case does not depend on what the terminal shows after CLEAR.
 * RETURN IMMEDIATE, and ATI requests competing with the pending TRANSID, are not used.
+* An amount of letters (`ABC`, which BMS would justify to `0000ABC`) is not used for the same
+  reason: a NUM field's keyboard lock makes it untypable, and IBM does not say what a
+  non-keyboard source sends. `amount-erased` reaches the same error arm with a documented input.
 * A typed amount that is not all digits (for example `12.5`, which a NUM field accepts) is
   not used: the bad-amount path is driven by MAPFAIL, which IBM states outright.
 
