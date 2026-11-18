@@ -79,6 +79,41 @@
         }
       ],
       "until": 60
+    },
+    {
+      "id": "restart",
+      "path": "happy",
+      "summary": "After PC52's stage 2 ends the conversation with a plain RETURN, a fresh PC51 I starts clean (EIBCALEN 0, the old COMMAREA gone) and its RETURN IMMEDIATE again attaches PC52 stage 1 at once",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "PC51 I"
+        },
+        {
+          "at": 10,
+          "aid": "ENTER"
+        },
+        {
+          "at": 20,
+          "aid": "ENTER",
+          "text": "PC51 I"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "unknown-mode",
+      "path": "happy",
+      "summary": "A mode letter PC51 does not know (X): RECEIVE and a plain RETURN, nothing else",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "PC51 X"
+        }
+      ],
+      "until": 60
     }
   ]
 }

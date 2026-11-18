@@ -14,6 +14,7 @@ reads it with no channel name at all.
 * **M** the same with `1MODIFY0` (a stage byte and 7 bytes of text). `PCRCB` acts on the stage: stage 1 replaces `STATE`
   (`2CHANGED`), creates `EXTRA` and RETURNs `TRANSID('PC62') CHANNEL(<ASSIGN CHANNEL's name>)`; stage 2 reads `EXTRA`,
   deletes it, replaces `STATE` (`3AGAIN-2`) and RETURNs the channel again; stage 3 reads `STATE` and tries `EXTRA`.
+* **D** the same PUT, then `RETURN TRANSID('PC62')` with no CHANNEL: `PC62` is started with no current channel.
 * **L** `LINK PROGRAM('PCRCL')` without a channel or COMMAREA. `PCRCL` puts a container in `PCCHAN` and issues
   `RETURN TRANSID('PC62') CHANNEL('PCCHAN') RESP(..) RESP2(..)` in a program below the highest logical level.
 
@@ -59,6 +60,16 @@ Model (SPEC sections 2 and 4): T001 is the one terminal; every program is local.
   goes back to `PCRCA` (level 2, `caller_commarea` null), which logs `LNK1` (NORMAL) and ends the task with a plain
   RETURN: no next transaction, so there is no second step. The failed RETURN is an event with `channel`, `transid`,
   `resp` and `resp2` and no area.
+* **`drop-channel`** (D, steps at 0 and 10): task 1 PUTs `STATE` as in `carry` (`PUT1`, NORMAL) but its RETURN gives
+  TRANSID only. CHANNEL is the option that makes a channel "available to the next program that receives control"
+  [RETURN]; without it nothing is passed, so task 2 (`PC62`, `PCRCB`, EIBCALEN 0) has no current channel: `ASSIGN CHANNEL`
+  returns "blanks" [ASSIGN] (`ASGB`, no data) and `GET CONTAINER('STATE')` with no CHANNEL is INVREQ (016) RESP2 4 [GET]
+  (`GETB` with RESP 016, RESP2 004, no length and no data: nothing is read after a failure). The stage byte stays blank
+  (`WS-STATE` has VALUE SPACES), so `PCRCB` matches no stage and RETURNs.
+* **`no-channel`** (steps: `PC62` typed at 0): the same task with nothing before it: no task ever named a channel, so
+  the log is the same `ASGB` / `GETB` pair. It separates "the channel was not passed" from "the channel went away".
+* **`unknown-mode`** (`PC61 X`): `EVALUATE` has no matching WHEN; the program RECEIVEs and issues a plain RETURN. No
+  TS queue is written.
 
 ## What a correct port must do
 
@@ -67,6 +78,8 @@ Model (SPEC sections 2 and 4): T001 is the one terminal; every program is local.
 * Carry the containers as they were when the RETURN was issued, so a channel the next task changes and RETURNs again is
   seen changed (replaced, created and deleted containers alike) by the task after it.
 * Not turn the channel into a COMMAREA: the next task's EIBCALEN is 0 (no COMMAREA was given).
+* Give a task started without a RETURN CHANNEL (or typed at the terminal) no current channel: blanks from ASSIGN CHANNEL,
+  INVREQ RESP2 4 from GET CONTAINER with no CHANNEL, never the channel of an earlier conversation.
 * Raise INVREQ RESP2 2 for CHANNEL below the highest logical level, and let the program go on.
 
 ## Avoided ambiguities
@@ -79,8 +92,9 @@ Model (SPEC sections 2 and 4): T001 is the one terminal; every program is local.
 * **What a channel RETURN does if the next input is not for TRANSID** (a different transaction typed, CLEAR): every
   step after a RETURN CHANNEL is a bare ENTER, which starts the RETURN's transaction.
 * **When the channel's storage is freed** after the last task of the conversation, and a channel that outlives the task
-  that RETURNed it by more than one turn without being RETURNed again: no scenario runs a task that is not given the
-  channel by the RETURN before it.
+  that RETURNed it by more than one turn without being RETURNed again: `drop-channel` and `no-channel` run a task that is
+  not given the channel, but they only read through the current channel (none), so they do not depend on whether
+  `PCCHAN` still exists after the RETURN.
 * **Order of checks** in a failed RETURN CHANNEL (INVREQ against CHANNELERR for the name): the channel name is a valid
   one (`PCCHAN`), so only INVREQ RESP2 2 applies. Remote regions (INVREQ RESP2 203) and first-stage PLT programs are not
   modelled.

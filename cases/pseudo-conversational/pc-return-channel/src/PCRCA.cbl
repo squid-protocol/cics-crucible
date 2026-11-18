@@ -6,6 +6,7 @@
       * PC61, a mode typed after the transid:                         *
       *   C  PUT a container, RETURN TRANSID(PC62) CHANNEL            *
       *   M  the same, with a container that PC62 changes each turn   *
+      *   D  PUT a container, RETURN TRANSID(PC62) with no CHANNEL    *
       *   L  LINK PCRCL, which tries RETURN CHANNEL below level 1     *
       * Every result is a breadcrumb in TS queue PCRLOG.              *
       *---------------------------------------------------------------*
@@ -31,6 +32,8 @@
                    PERFORM CARRY-PARA
                WHEN 'M'
                    PERFORM MODIFY-PARA
+               WHEN 'D'
+                   PERFORM DROP-PARA
                WHEN 'L'
                    PERFORM LINK-PARA
            END-EVALUATE
@@ -52,6 +55,15 @@
            MOVE 'PUT1' TO LG-TAG
            PERFORM LOG-RESP
            EXEC CICS RETURN TRANSID('PC62') CHANNEL(WS-CHAN)
+           END-EXEC.
+       DROP-PARA.
+           EXEC CICS PUT CONTAINER('STATE') CHANNEL(WS-CHAN)
+                     FROM(WS-CARRY) CHAR
+                     RESP(WS-RESP) RESP2(WS-RESP2)
+           END-EXEC
+           MOVE 'PUT1' TO LG-TAG
+           PERFORM LOG-RESP
+           EXEC CICS RETURN TRANSID('PC62')
            END-EXEC.
        LINK-PARA.
            EXEC CICS LINK PROGRAM('PCRCL')
