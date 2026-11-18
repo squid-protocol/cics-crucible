@@ -15,8 +15,8 @@
        WORKING-STORAGE SECTION.
        01  WS-CUR                PIC X(16).
        01  WS-STATE.
-           05  ST-STAGE          PIC X.
-           05  ST-TEXT           PIC X(7).
+           05  ST-STAGE          PIC X     VALUE SPACE.
+           05  ST-TEXT           PIC X(7)  VALUE SPACES.
        01  WS-NEW1               PIC X(8)  VALUE '2CHANGED'.
        01  WS-NEW2               PIC X(8)  VALUE '3AGAIN-2'.
        01  WS-EXTRA              PIC X(5)  VALUE 'EXTRA'.
@@ -36,8 +36,10 @@
                      FLENGTH(WS-LEN) RESP(WS-RESP) RESP2(WS-RESP2)
            END-EXEC
            MOVE 'GETB' TO LG-TAG
-           MOVE WS-LEN TO LG-LEN
-           MOVE WS-STATE TO LG-DATA
+           IF WS-RESP = 0
+               MOVE WS-LEN TO LG-LEN
+               MOVE WS-STATE TO LG-DATA
+           END-IF
            PERFORM LOG-RESP
            EVALUATE ST-STAGE
                WHEN '1'

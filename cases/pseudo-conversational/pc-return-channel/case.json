@@ -77,6 +77,49 @@
         }
       ],
       "until": 60
+    },
+    {
+      "id": "drop-channel",
+      "path": "trap",
+      "summary": "PC61 PUTs container STATE in channel PCCHAN but RETURNs TRANSID(PC62) with no CHANNEL: the next task has no current channel (ASSIGN CHANNEL blanks, GET CONTAINER INVREQ RESP2 4)",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "PC61 D"
+        },
+        {
+          "at": 10,
+          "aid": "ENTER"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "no-channel",
+      "path": "trap",
+      "summary": "The operator types PC62 directly: no task ever gave it a channel, so ASSIGN CHANNEL is blank and GET CONTAINER INVREQ RESP2 4",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "PC62"
+        }
+      ],
+      "until": 60
+    },
+    {
+      "id": "unknown-mode",
+      "path": "happy",
+      "summary": "A mode letter PC61 does not know (X): RECEIVE and a plain RETURN, nothing else",
+      "steps": [
+        {
+          "at": 0,
+          "aid": "ENTER",
+          "text": "PC61 X"
+        }
+      ],
+      "until": 60
     }
   ]
 }

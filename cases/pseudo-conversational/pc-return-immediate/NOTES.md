@@ -58,10 +58,21 @@ Model (SPEC sections 2 and 4): T001 is the one terminal; every program is local.
   RETURN IMMEDIATE is INVREQ RESP2 1, "A RETURN command with the TRANSID option is issued in a program that is not
   associated with a terminal" [RETURN]: logged `S1  R=16 2=01`, then the plain RETURN ends the task.
 
+* **`restart`** (I, steps `PC51 I` at 0, ENTER at 10, `PC51 I` at 20): tasks 1 to 3 are `immediate`. Task 3 ends the
+  conversation with a plain RETURN (no TRANSID), so the step at 20 seconds is unformatted input whose first word is the
+  transaction id (SPEC 4): task 4 is `PC51` with EIBCALEN 0 and no COMMAREA, not a continuation. Its RETURN IMMEDIATE
+  attaches task 5 (`PC52`) at once with the new `1MENU-A1`, so it logs stage 1 (`B1`) again and RETURNs TRANSID(PC52)
+  (not immediate): no further step, so the scenario ends there. The log shows the same A1 / B1 pair twice, with the B2
+  of the first conversation between them.
+* **`unknown-mode`** (`PC51 X`): `EVALUATE` has no matching WHEN; the program RECEIVEs and issues a plain RETURN. No
+  TS queue is written.
+
 ## What a correct port must do
 
 * Treat IMMEDIATE as the next task: attach TRANSID at once, with the COMMAREA, ahead of the terminal's next input, and
   leave the next operator step for whatever the new task RETURNs.
+* Start a conversation over from nothing when a plain RETURN has ended it: a new `PC51` has EIBCALEN 0, not the
+  COMMAREA of the last task.
 * Accept SYNCONRETURN on a local LINK and do nothing with it.
 * Raise INVREQ RESP2 2 for IMMEDIATE below the highest logical level and INVREQ RESP2 1 for a task with no terminal,
   and let the program go on (it did not end).
