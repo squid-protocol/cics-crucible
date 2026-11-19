@@ -34,6 +34,10 @@
     {"id": "invalid-option", "path": "trap",
      "summary": "ENTER with option 9: RECEIVE MAP succeeds, no HANDLE AID label applies, and the EVALUATE's WHEN OTHER redisplays the menu with INVALID OPTION",
      "steps": [{"at": 0, "aid": "ENTER", "text": "PC11"},
-               {"at": 10, "aid": "ENTER", "map": "PCMN", "fields": {"OPT": "9"}}]}
+               {"at": 10, "aid": "ENTER", "map": "PCMN", "fields": {"OPT": "9"}}]},
+    {"id": "enter-sends-no-data", "path": "trap",
+     "summary": "ENTER with the option field left empty: the FSET field is transmitted with length 0, so RECEIVE MAP is NORMAL (never MAPFAIL) and OPTI, still LOW-VALUES, takes WHEN OTHER",
+     "steps": [{"at": 0, "aid": "ENTER", "text": "PC11"},
+               {"at": 10, "aid": "ENTER", "map": "PCMN", "fields": {"OPT": ""}}]}
   ]
 }

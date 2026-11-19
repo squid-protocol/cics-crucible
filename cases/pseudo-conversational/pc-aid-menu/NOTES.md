@@ -78,6 +78,18 @@ TRANSID('PC11') COMMAREA LENGTH(10). OPT's attribute comes from the map: (UNPROT
      [HANDLE-AID]. EIBAID is ENTER. OPTI = `9` matches neither WHEN, so WHEN OTHER sets
      `INVALID OPTION` and SHOW-MENU redisplays the menu (visits `0002`) and RETURNs
      TRANSID('PC11') with visits 2.
+* **`enter-sends-no-data`**
+  1. Task 1: `PC11` typed → visits 1, WELCOME.
+  2. Task 2 (ENTER, OPT left empty): visits 2, not CLEAR. OPT is `FSET`, so its MDT is on
+     [DFHMDF] and the terminal transmits it with length 0 even though the operator typed
+     nothing. The data stream carries the AID, cursor address and an SBA for OPT, so
+     RECEIVE MAP is NORMAL, not MAPFAIL [RECEIVE-MAP] (the same reading as `aid-keys` PF5).
+     ENTER has no HANDLE AID label [HANDLE-AID]. OPTL is 0 and BMS leaves OPTI at the
+     LOW-VALUES the program moved in, which matches neither `'1'` nor `'2'`, so WHEN OTHER
+     sets `INVALID OPTION` and SHOW-MENU redisplays the menu (visits `0002`) and RETURNs
+     TRANSID('PC11') with visits 2. The log is the same as `invalid-option` apart from the
+     input: what differs is the path, a transmitted empty field, and a port that treats "no
+     typed data" as MAPFAIL would abend or take another path.
 
 ## What a correct port must do
 
